@@ -1,0 +1,1 @@
+<h1>Plop <?php echo $params["name"] ?></h1>
