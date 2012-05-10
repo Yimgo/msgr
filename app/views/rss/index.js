@@ -26,6 +26,8 @@ function toggle_list_articles() {
 }
 
 function click_flux() {
+    $('#titre_liste_articles').html($(this).html());
+
     // Chercher la liste des articles correspondant
     $("#liste_flux tr").removeClass("ligne_flux_selectionne");
     $(this).parent().addClass("ligne_flux_selectionne");
@@ -48,11 +50,13 @@ function click_flux() {
 
     .success(function() {
         $("#liste_articles_chargement").slideUp('slow');
+        $('#div_dropdown').show();
     })
     .error(function() {
         $("#liste_articles_chargement").slideUp('slow');
         $("#liste_articles_erreur").slideDown('slow');
         $("#liste_flux tr").removeClass("ligne_flux_selectionne");
+        $('#div_dropdown').hide();
     });
 }
 
@@ -66,6 +70,35 @@ function click_dossier() {
     return;
 }
 
+function changer_flux_de_dossier() {
+    // $(this).data('id')
+    // TODO: ENVOYER LES DONNES POUR SIGNIFIER A PHP LE CHANGEMENT DE DOSSIER
+    get_liste_flux();
+}
+
+function store_liste_dossiers(data) {
+    $('#div_dropdown').empty();
+    // Calcul 
+    var html_li_dossiers = $('<ul>', {'class' : 'dropdown-menu'});
+    $.each(data, function(index, dossier) {
+        $('<li>').append(
+            $('<a>', {'href' : '#', 'html':' ' + dossier.titre})
+                .prepend($('<i>', {'class':'icon-hand-right'}))
+                .data('id', dossier.id)
+                .click(changer_flux_de_dossier)
+        )
+        .appendTo($(html_li_dossiers));
+    }); 
+
+    // Calcul de l'élément dropdown de la liste des dossiers à choisir
+    $('#div_dropdown')
+        .append($('<a>', {'class' : 'btn dropdown-toggle', 'data-toggle' : 'dropdown', 'data-target':'#', 'href':'#', 'html': ' Déplacer dans un autre dossier'})
+            .prepend($('<i>', {'class':'icon-list-alt'}))
+        )
+        .append(html_li_dossiers)
+    ;
+}
+
 /* GET LISTE DOSSIER + LISTE FLUX */
 function get_liste_flux() {
     $("#liste_flux_chargement").slideDown('slow');
@@ -75,6 +108,9 @@ function get_liste_flux() {
 
     $.getJSON('../get_flux_dossiers')
         .success(function(data) {
+            // Stocker la liste des dossiers (pour faire le dropdown)
+            store_liste_dossiers(data);
+
             $.each(data, function(index, dossier) {
                 // DOSSIER
                 $('<tr>', { class: 'dossier' })
