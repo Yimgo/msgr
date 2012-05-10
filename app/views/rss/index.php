@@ -25,7 +25,7 @@
         <div class="span4">
             <form>
                 <div class="input-append">
-                    <input type="text" class="span3" />
+                    <input name="url" type="text" class="span3" />
                     <button type="submit" class="btn"><i class="icon-plus-sign"></i></button>
                     <a id='refresh_liste_flux' href='#' class='btn pull-right'><i class='icon-refresh'></i></a>
                 </div>
