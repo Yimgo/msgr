@@ -82,21 +82,19 @@ function add_article_to_dom(id, titre, contenu) {
 function click_flux() {
 
     // Mettre le titre du flux dans la colonne de droite
-    $('#titre_liste_articles').html($(this).html());
+    $('#titre_liste_articles').html($(this).data('titre'));
 
     // Coloriage de la ligne courante
     $("#liste_flux tr").removeClass("ligne_flux_selectionne");
-    $(this).parent().addClass("ligne_flux_selectionne");
+    $(this).addClass("ligne_flux_selectionne");
 
     // Affichage de la barre de chargement
-    var flux_id = $(this).parent().data('id');
-    var flux_titre= $('td:first', $(this).parent()).text();
     $("#liste_articles_chargement").slideDown('slow');
     $("#liste_articles_erreur").slideUp('fast');
     
     // --- Recuperation des articles ---
     $("#flux_container").html("");
-    $.getJSON('../get_articles/' + flux_id, function(data) {
+    $.getJSON('../get_articles/' + $(this).data('id'), function(data) {
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
             add_article_to_dom(elem.id, elem.titre, elem.contenu);
@@ -234,14 +232,14 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
 
     $('<tr>')
         .data('id', id)
-        .append($('<td>', {'html' : titre }).click(click_flux))
+        .data('titre', titre)
+        .click(click_flux)
+        .append($('<td>', {'html' : titre }))
         .append($('<td>')
                 .append($('<span>', {'class': 'badge ' + type_badge, 'html':nb_nonlus}))
-                .click(click_flux)
                )
         .append($('<td>')
                 .append($('<i>', {'class': 'icon-circle-arrow-right'}))
-                .click(click_flux)
                )
         .appendTo('#liste_flux')
     ;
