@@ -1,4 +1,0 @@
-<IfModule mod_rewrite.c>
-  RewriteEngine on
-  RewriteRule ^pokemon/(.*) index.php?request_path=$1 [QSA]
-</IfModule>
