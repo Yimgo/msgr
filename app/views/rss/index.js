@@ -25,61 +25,56 @@ function toggle_list_articles() {
         });
 }
 
-// Regle le comportement au click sur un flux/dossier
-function click_flux_dossier() {
-    $('#liste_flux tr').click(function() {
+function click_flux() {
+    // Chercher la liste des articles correspondant
+    $("#liste_flux tr").removeClass("ligne_flux_selectionne");
+    $(this).parent().addClass("ligne_flux_selectionne");
 
-        // Quand on clique sur un dossier : afficher/cacher ses enfants
-        if ($(this).hasClass('dossier')) {
-            var elem = $(this).next();
-            while (! $(elem).hasClass('dossier')) {
-                $(elem).toggle();
-                elem = $(elem).next();
-            }
-            return;
-        }
+    // Affichage de la barre de chargement
+    var flux_id = $(this).parent().data('id');
+    var flux_titre= $('td:first', $(this).parent()).text();
 
-        // Sinon, on a cliqué sur un flux : il faut chercher la liste des articles correspondant
-        $("#liste_flux tr").removeClass("ligne_flux_selectionne");
-        $(this).addClass("ligne_flux_selectionne");
-
-        // Affichage de la barre de chargement
-        var flux_id = $(this).data('id');
-        var flux_titre= $('td:first', $(this)).text();
-
-        $("#liste_articles_chargement").slideDown('slow');
-        $("#liste_articles_erreur").slideUp('fast');
-        
-        // Recuperation des articles
-        $("#flux_container").html("");
-        $.getJSON('../get_articles/' + flux_id, function(data) {
-            $.each(data, function(index, elem) {
-                add_article(elem.id, elem.titre, elem.contenu);
-            });
-            toggle_list_articles();
-        })
-
-        .success(function() {
-            $("#liste_articles_chargement").slideUp('slow');
-        })
-        .error(function() {
-            $("#liste_articles_chargement").slideUp('slow');
-            $("#liste_articles_erreur").slideDown('slow');
-            $("#liste_flux tr").removeClass("ligne_flux_selectionne");
+    $("#liste_articles_chargement").slideDown('slow');
+    $("#liste_articles_erreur").slideUp('fast');
+    
+    // Recuperation des articles
+    $("#flux_container").html("");
+    $.getJSON('../get_articles/' + flux_id, function(data) {
+        $.each(data, function(index, elem) {
+            add_article(elem.id, elem.titre, elem.contenu);
         });
+        toggle_list_articles();
+    })
+
+    .success(function() {
+        $("#liste_articles_chargement").slideUp('slow');
+    })
+    .error(function() {
+        $("#liste_articles_chargement").slideUp('slow');
+        $("#liste_articles_erreur").slideDown('slow');
+        $("#liste_flux tr").removeClass("ligne_flux_selectionne");
     });
+}
+
+// Quand on clique sur un dossier : afficher/cacher ses enfants
+function click_dossier() {
+    var elem = $(this).next();
+    while (! $(elem).hasClass('dossier')) {
+        $(elem).toggle();
+        elem = $(elem).next();
+    }
+    return;
 }
 
 /* GET LISTE DOSSIER + LISTE FLUX */
 function get_liste_flux() {
     $("#liste_flux_chargement").slideDown('slow');
     $("#liste_flux_erreur").slideUp('fast');
+    // RAZ de la liste
     $('#liste_flux').html('');
 
     $.getJSON('../get_flux_dossiers')
         .success(function(data) {
-            // RAZ de la liste
-
             $.each(data, function(index, dossier) {
                 // DOSSIER
                 $('<tr>', { class: 'dossier' })
@@ -87,6 +82,7 @@ function get_liste_flux() {
                                 .append($('<i>', {class: 'icon-folder-open pull-left'}))
                                 .append($('<b>', {html : dossier.titre}))
                     )
+                    .click(click_dossier)
                 .appendTo('#liste_flux');
                 
                 $.each(dossier.liste_flux, function(index2, flux) {
@@ -98,23 +94,21 @@ function get_liste_flux() {
 
                     $('<tr>')
                         .data('id', flux.id)
-                        .append($('<td>', {html : flux.titre }))
-                        .append($('<td>').append(
-                                    $('<span>', {class: 'badge ' + type_badge, html: flux.nb_nonlus})
-                                ))
+                        .append($('<td>', {html : flux.titre }).click(click_flux))
                         .append($('<td>')
-                                    .append($('<a>', {href: '#'}))
-                                    .append($('<i>', {class: 'icon-circle-arrow-right'}))
-                                )
+                                .append($('<span>', {class: 'badge ' + type_badge, html: flux.nb_nonlus}))
+                                .click(click_flux)
+                        )
+                        .append($('<td>')
+                                .append($('<i>', {class: 'icon-circle-arrow-right'}))
+                                .click(click_flux)
+                            )
                     .appendTo('#liste_flux')
                 });
             });
 
             // "Dossier" final invisible, pour que le javascript s'arrete de boucler
             $('<tr>', {class: 'dossier'}).appendTo('#liste_flux');
-
-            // onclick
-            click_flux_dossier();
         })
     .success(function() {
         $("#liste_flux_chargement").slideUp('slow');
