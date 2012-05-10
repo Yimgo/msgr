@@ -1,4 +1,4 @@
-<?php render_partial("header"); ?>
+<?php render_partial("header", null); ?>
 
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
@@ -57,7 +57,6 @@
             </div>
 
             <table class="table" id="liste_flux">
-                <?php echo $html_liste_flux; ?>
             </table>
 
         </div>
@@ -79,6 +78,6 @@
     </div>
 </div>
 
-<?php render_partial("footer"); ?>
+<?php render_partial("footer", null); ?>
 <!-- JS à la fin, après les includes de jQuery -->
 <script src="/app/views/rss/index.js"></script>
