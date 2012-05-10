@@ -25,8 +25,9 @@
         <div class="span4">
             <form>
                 <div class="input-append">
-                    <input type="text" />
-                    <button type="submit" class="btn"><i class="icon-plus-sign"></i> Ajouter un flux</button>
+                    <input type="text" class="span3" />
+                    <button type="submit" class="btn"><i class="icon-plus-sign"></i></button>
+                    <a id='refresh_liste_flux' href='#' class='btn pull-right'><i class='icon-refresh'></i></a>
                 </div>
             </form>
         </div>
@@ -46,6 +47,10 @@
     <div class="row">
         <div class="span4">
             <h1>Liste des flux RSS</h1>
+            
+            <div id="liste_flux_chargement" class="alert alert-info fade in hide">
+                <strong>Chargement</strong> de la liste des flux en cours…
+            </div>
 
             <div id="liste_flux_erreur" class="alert alert-error fade in hide">
                 <strong>Erreur</strong> lors du chargement de la liste des flux !
