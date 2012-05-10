@@ -30,7 +30,19 @@ class RssController extends BaseController {
         // Renvoie tous les flux et l'organisation en dossier (TODO: login)
         $flux = array(
             array(
+                "titre" => "Non classé", // DOSSIER qui contient tous les flux… sans dossier ;-)
+                "id" => -1,
+                "liste_flux" => array(
+                    array(
+                        "titre" => "Le site le plus bête du monde",
+                        "nb_nonlus" => 987,
+                        "id" => 12
+                    )
+                )
+            ),
+            array(
                 "titre" => "Informations Françaises",
+                "id" => 1,
                 "liste_flux" => array(
                     array(
                         "titre" => "Le Monde",
@@ -56,6 +68,7 @@ class RssController extends BaseController {
             ),
             array(
                 "titre" => "Informatique",
+                "id" => 2,
                 "liste_flux" => array(
                     array(
                         "titre" => "PCInpact",
