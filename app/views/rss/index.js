@@ -1,5 +1,70 @@
-// Ajouter un article à la liste 
-function add_article(id, titre, contenu) {
+/* --------------------------
+   INITIALISATION DU DOCUMENT
+   -------------------------- */
+
+$(document).ready(function() {
+    // Récupérér initialement la liste des flux + dossiers pour l'afficher
+    get_liste_flux();
+    // Bouton pour rafraichir la liste des flux
+    $('#refresh_liste_flux').click(function() {
+        get_liste_flux();
+    });
+
+    // Gestion des tags
+    $.get('../get_tags', function(data) {
+        $("#search").attr('data-source', data); // Données utilisées pour l'auto-complétion
+
+        $('#search').typeahead({
+            source: function(typeahead, query) {
+                // ne pas proposer à l'autocomplétion les tags déjà utilisés
+                var all_tags = eval($(".typeahead").attr("data-source"));
+                var used_tags = [];
+                var showed_tags = [];
+
+                $("#tag-list a").each(function() {
+                    used_tags.push($(this).text());
+                });
+
+                $(all_tags).each(function(index) {
+                    if ($.inArray(all_tags[index].titre + ' ', used_tags) == -1)
+                        showed_tags.push(all_tags[index]);
+                });
+
+                return showed_tags;
+            },
+            property: "titre", // champ de 'data' qui sera utilisé pour les comparaisons
+            onselect: function(obj) {
+                // Ajouter le tag
+                add_tag_to_dom(obj.titre, obj.id);
+                // Réinitialiser la barre de recherche
+                $("#search").val("");
+            }
+        });
+    });
+
+    // Gestion de la recherche : 
+    //   - on ajoute manuellement les tags comme input caché à la validation
+    $("#form-search").submit(function() {
+        var tags_id = [];
+        $("#tag-list a").each(function() {
+            tags_id.push($(this).data('id'));
+        });
+
+        $('#form-search').append(
+            $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "tags_id")
+                .val(tags_id)
+        );
+     });
+});
+
+/* --------------------------------
+   GESTION DE LA LISTE DES ARTICLES
+   -------------------------------- */
+
+// Ajouter un article à la liste des articles
+function add_article_to_dom(id, titre, contenu) {
     $('#flux_container').append(
         $('<div>')
             .data('id', id)
@@ -11,43 +76,33 @@ function add_article(id, titre, contenu) {
     );
 }
 
-// Toggle onclick sur les articles
-function toggle_list_articles() {
-    $("#flux_container div p")
-        .unbind('click')
-        .click(function() {
-            $(this).siblings().each(function() {
-                if ($(this).is(':hidden'))
-                    $(this).slideDown('slow');
-                else
-                    $(this).slideUp('slow');
-            });
-        });
-}
-
+// Appelée quand on clique sur un flux
+// - colore la ligne pour signifier qu'on a cliqué dessus
+// - Récupère les articles correspondants et les insère
 function click_flux() {
+
+    // Mettre le titre du flux dans la colonne de droite
     $('#titre_liste_articles').html($(this).html());
 
-    // Chercher la liste des articles correspondant
+    // Coloriage de la ligne courante
     $("#liste_flux tr").removeClass("ligne_flux_selectionne");
     $(this).parent().addClass("ligne_flux_selectionne");
 
     // Affichage de la barre de chargement
     var flux_id = $(this).parent().data('id');
     var flux_titre= $('td:first', $(this).parent()).text();
-
     $("#liste_articles_chargement").slideDown('slow');
     $("#liste_articles_erreur").slideUp('fast');
     
-    // Recuperation des articles
+    // --- Recuperation des articles ---
     $("#flux_container").html("");
     $.getJSON('../get_articles/' + flux_id, function(data) {
+        // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
-            add_article(elem.id, elem.titre, elem.contenu);
+            add_article_to_dom(elem.id, elem.titre, elem.contenu);
         });
-        toggle_list_articles();
+        click_list_articles();
     })
-
     .success(function() {
         $("#liste_articles_chargement").slideUp('slow');
         $('#div_dropdown').show();
@@ -60,6 +115,25 @@ function click_flux() {
     });
 }
 
+// Pour chaque article, permettre de le cacher/le déplier en cliquant dessus
+function click_list_articles() {
+    $("#flux_container div p")
+        .unbind('click')
+        .click(function() {
+            $(this).siblings().each(function() {
+                if ($(this).is(':hidden'))
+                    $(this).slideDown('slow');
+                else
+                    $(this).slideUp('slow');
+            });
+        });
+}
+
+
+/* ---------------------------------------
+   GESTION DE LA LISTE DES FLUX + DOSSIERS
+   --------------------------------------- */
+
 // Quand on clique sur un dossier : afficher/cacher ses enfants
 function click_dossier() {
     var elem = $(this).next();
@@ -70,15 +144,18 @@ function click_dossier() {
     return;
 }
 
+// Déplacer un flux de dossier
 function changer_flux_de_dossier() {
     // $(this).data('id')
-    // TODO: ENVOYER LES DONNES POUR SIGNIFIER A PHP LE CHANGEMENT DE DOSSIER
+    // TODO: ENVOYER LES DONNEES POUR SIGNIFIER A PHP LE CHANGEMENT DE DOSSIER
     get_liste_flux();
 }
 
-function store_liste_dossiers(data) {
+// Créer le bouton "Déplacer le flux vers un autre dossier"
+function creer_bouton_liste_dossiers(data) {
     $('#div_dropdown').empty();
-    // Calcul 
+
+    // Liste de tous les dossiers dans un <ul>…</ul>
     var html_li_dossiers = $('<ul>', {'class' : 'dropdown-menu'});
     $.each(data, function(index, dossier) {
         $('<li>').append(
@@ -90,16 +167,19 @@ function store_liste_dossiers(data) {
         .appendTo($(html_li_dossiers));
     }); 
 
-    // Calcul de l'élément dropdown de la liste des dossiers à choisir
+    // Création du bouton "dropdown", auquel on ajoute la liste des dossiers
     $('#div_dropdown')
-        .append($('<a>', {'class' : 'btn dropdown-toggle', 'data-toggle' : 'dropdown', 'data-target':'#', 'href':'#', 'html': ' Déplacer dans un autre dossier'})
+        .append($('<a>', {'class' : 'btn dropdown-toggle', 'data-toggle' : 'dropdown', 'data-target':'#', 'href':'#', 'html': ' Déplacer dans un autre dossier '})
             .prepend($('<i>', {'class':'icon-list-alt'}))
+            .append($('<span>', {class:'caret'}))
         )
         .append(html_li_dossiers)
     ;
 }
 
-/* GET LISTE DOSSIER + LISTE FLUX */
+// Rafraichit la liste des dossiers + flux
+// - Récupère la liste depuis PHP
+// - Insère les éléments dans le DOM
 function get_liste_flux() {
     $("#liste_flux_chargement").slideDown('slow');
     $("#liste_flux_erreur").slideUp('fast');
@@ -109,37 +189,16 @@ function get_liste_flux() {
     $.getJSON('../get_flux_dossiers')
         .success(function(data) {
             // Stocker la liste des dossiers (pour faire le dropdown)
-            store_liste_dossiers(data);
+            creer_bouton_liste_dossiers(data);
 
+            // Insérer les données dans le DOM
             $.each(data, function(index, dossier) {
-                // DOSSIER
-                $('<tr>', { class: 'dossier' })
-                    .append($('<td>', {colspan: 3, style: 'text-align: center; background-color: #eee;'})
-                                .append($('<i>', {class: 'icon-folder-open pull-left'}))
-                                .append($('<b>', {html : dossier.titre}))
-                    )
-                    .click(click_dossier)
-                .appendTo('#liste_flux');
-                
+                // Insérer le dossier dans le tableau
+                add_dossier_to_dom(dossier.titre);
+               
+                // Ajouter chaque flux du dossier dans le tableau
                 $.each(dossier.liste_flux, function(index2, flux) {
-                    // FLUX
-                    if (flux.nb_nonlus == 0) type_badge = "";
-                    else if (flux.nb_nonlus > 0 && flux.nb_nonlus < 10) type_badge = "badge-success";
-                    else if (flux.nb_nonlus >= 10 && flux.nb_nonlus <= 50) type_badge = "badge-warning";
-                    else type_badge = "badge-important";
-
-                    $('<tr>')
-                        .data('id', flux.id)
-                        .append($('<td>', {html : flux.titre }).click(click_flux))
-                        .append($('<td>')
-                                .append($('<span>', {class: 'badge ' + type_badge, html: flux.nb_nonlus}))
-                                .click(click_flux)
-                        )
-                        .append($('<td>')
-                                .append($('<i>', {class: 'icon-circle-arrow-right'}))
-                                .click(click_flux)
-                            )
-                    .appendTo('#liste_flux')
+                    add_flux_to_dom(flux.titre, flux.nb_nonlus, flux.id);
                 });
             });
 
@@ -155,76 +214,56 @@ function get_liste_flux() {
     });
 }
 
-$(document).ready(function() {
+// Ajouter un dossier au tableau contenant la liste des dossiers + flux
+function add_dossier_to_dom(nom) {
+    $('<tr>', { class: 'dossier' })
+        .append($('<td>', {colspan: 3, style: 'text-align: center; background-color: #eee;'})
+                .append($('<i>', {class: 'icon-folder-open pull-left'}))
+                .append($('<b>', {html : nom}))
+               )
+        .click(click_dossier)
+        .appendTo('#liste_flux');
+}
 
-    /* GET LISTE TAGS + BARRE DE RECHERCHE */
-    $.get('../get_tags', function(data) {
-        $("#search").attr('data-source', data); // Données utilisées pour l'auto-complétion
+// Ajouter un flux au tableau contenant la liste des dossiers + flux
+function add_flux_to_dom(titre, nb_nonlus, id) {
+    if (nb_nonlus == 0) type_badge = "";
+    else if (nb_nonlus > 0 && nb_nonlus < 10) type_badge = "badge-success";
+    else if (nb_nonlus >= 10 && nb_nonlus <= 50) type_badge = "badge-warning";
+    else type_badge = "badge-important";
 
-        $('#search').typeahead({
-            source: function(typeahead, query) {
-                var all_tags = eval($(".typeahead").attr("data-source"));
-                var used_tags = [];
-                var showed_tags = [];
+    $('<tr>')
+        .data('id', id)
+        .append($('<td>', {'html' : titre }).click(click_flux))
+        .append($('<td>')
+                .append($('<span>', {'class': 'badge ' + type_badge, 'html':nb_nonlus}))
+                .click(click_flux)
+               )
+        .append($('<td>')
+                .append($('<i>', {'class': 'icon-circle-arrow-right'}))
+                .click(click_flux)
+               )
+        .appendTo('#liste_flux')
+    ;
+}
 
-                // Enlever les tags déjà utilisés
-                $("#tag-list a").each(function() {
-                    used_tags.push($(this).text());
-                });
 
-                $(all_tags).each(function(index) {
-                    if ($.inArray(all_tags[index].titre + ' ', used_tags) == -1)
-                        showed_tags.push(all_tags[index]);
-                });
+// Ajouter le tag au DOM
+function add_tag_to_dom(titre, id) {
+    // DOM
+    $('<a>', {
+        class: 'btn btn-primary hide',
+        href: '#',
+        html: titre + ' '
+    })
+    .append($('<i>', {
+        class: 'icon-remove icon-white'}))
+        .data('id', id)
+        .appendTo("#tag-list")
+        .slideDown('fast');
 
-                return showed_tags;
-            },
-            property: "titre",
-            onselect: function(obj) {
-                // Ajouter le tag
-                $('<a>', {
-                    class: 'btn btn-primary hide',
-                    href: '#',
-                    html: obj.titre + ' '
-                })
-                .append($('<i>', {
-                    class: 'icon-remove icon-white'}))
-                .data('id', obj.id)
-                .appendTo("#tag-list")
-                .slideDown('fast');
-
-                // Ajouter l'événement
-                $("#tag-list a").click(function() {
-                    $(this).hide('fast', function() { $(this).remove(); });
-                });
-
-                $("#search").val("");
-            }
-        });
+    // Evénement
+    $("#tag-list a").click(function() {
+        $(this).hide('fast', function() { $(this).remove(); });
     });
-
-    /* GESTION RECHECHE : on ajoute manuellement les tags comme input caché à la validation */
-    $("#form-search").submit(function() {
-        var tags_id = [];
-        $("#tag-list a").each(function() {
-            tags_id.push($(this).data('id'));
-        });
-
-
-        $('#form-search').append(
-            $("<input>")
-                .attr("type", "hidden")
-                .attr("name", "tags_id")
-                .val(tags_id)
-        );
-        
-        return true;
-     });
-
-    // Récupérér initialement la liste des flux
-    get_liste_flux();
-    /* Bouton pour rafraichir la liste des flux */
-    $('#refresh_liste_flux').click(function() {
-        get_liste_flux();
-    });
-});
+}
