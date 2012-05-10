@@ -17,7 +17,10 @@ function toggle_list_articles() {
         .unbind('click')
         .click(function() {
             $(this).siblings().each(function() {
-                $(this).toggle();
+                if ($(this).is(':hidden'))
+                    $(this).slideDown('slow');
+                else
+                    $(this).slideUp('slow');
             });
         });
 }
@@ -67,6 +70,61 @@ function click_flux_dossier() {
     });
 }
 
+/* GET LISTE DOSSIER + LISTE FLUX */
+function get_liste_flux() {
+    $("#liste_flux_chargement").slideDown('slow');
+    $("#liste_flux_erreur").slideUp('fast');
+    $('#liste_flux').html('');
+
+    $.getJSON('../get_flux_dossiers')
+        .success(function(data) {
+            // RAZ de la liste
+
+            $.each(data, function(index, dossier) {
+                // DOSSIER
+                $('<tr>', { class: 'dossier' })
+                    .append($('<td>', {colspan: 3, style: 'text-align: center; background-color: #eee;'})
+                                .append($('<i>', {class: 'icon-folder-open pull-left'}))
+                                .append($('<b>', {html : dossier.titre}))
+                    )
+                .appendTo('#liste_flux');
+                
+                $.each(dossier.liste_flux, function(index2, flux) {
+                    // FLUX
+                    if (flux.nb_nonlus == 0) type_badge = "";
+                    else if (flux.nb_nonlus > 0 && flux.nb_nonlus < 10) type_badge = "badge-success";
+                    else if (flux.nb_nonlus >= 10 && flux.nb_nonlus <= 50) type_badge = "badge-warning";
+                    else type_badge = "badge-important";
+
+                    $('<tr>')
+                        .data('id', flux.id)
+                        .append($('<td>', {html : flux.titre }))
+                        .append($('<td>').append(
+                                    $('<span>', {class: 'badge ' + type_badge, html: flux.nb_nonlus})
+                                ))
+                        .append($('<td>')
+                                    .append($('<a>', {href: '#'}))
+                                    .append($('<i>', {class: 'icon-circle-arrow-right'}))
+                                )
+                    .appendTo('#liste_flux')
+                });
+            });
+
+            // "Dossier" final invisible, pour que le javascript s'arrete de boucler
+            $('<tr>', {class: 'dossier'}).appendTo('#liste_flux');
+
+            // onclick
+            click_flux_dossier();
+        })
+    .success(function() {
+        $("#liste_flux_chargement").slideUp('slow');
+    })
+    .error( function() {
+        $("#liste_flux_chargement").slideUp('slow');
+        $("#liste_flux_erreur").slideDown('slow');
+    });
+}
+
 $(document).ready(function() {
 
     /* GET LISTE TAGS + BARRE DE RECHERCHE */
@@ -97,7 +155,7 @@ $(document).ready(function() {
                 $('<a>', {
                     class: 'btn btn-primary hide',
                     href: '#',
-                    html: obj.titre
+                    html: obj.titre + ' '
                 })
                 .append($('<i>', {
                     class: 'icon-remove icon-white'}))
@@ -115,50 +173,6 @@ $(document).ready(function() {
         });
     });
 
-    /* GET LISTE DOSSIER + LISTE FLUX */
-    $.getJSON('../get_flux_dossiers', function(data) {
-        
-        $.each(data, function(index, dossier) {
-            // DOSSIER
-            $('<tr>', { class: 'dossier' })
-                .append($('<td>', {colspan: 3, style: 'text-align: center; background-color: #eee;'})
-                            .append($('<i>', {class: 'icon-folder-open pull-left'}))
-                            .append($('<b>', {html : dossier.titre}))
-                )
-            .appendTo('#liste_flux');
-            
-            $.each(dossier.liste_flux, function(index2, flux) {
-                // FLUX
-                if (flux.nb_nonlus == 0) type_badge = "";
-                else if (flux.nb_nonlus > 0 && flux.nb_nonlus < 10) type_badge = "badge-success";
-                else if (flux.nb_nonlus >= 10 && flux.nb_nonlus <= 50) type_badge = "badge-warning";
-                else type_badge = "badge-important";
-
-                $('<tr>')
-                    .data('id', flux.id)
-                    .append($('<td>', {html : flux.titre }))
-                    .append($('<td>').append(
-                                $('<span>', {class: 'badge ' + type_badge, html: flux.nb_nonlus})
-                            ))
-                    .append($('<td>')
-                                .append($('<a>', {href: '#'}))
-                                .append($('<i>', {class: 'icon-circle-arrow-right'}))
-                            )
-                .appendTo('#liste_flux')
-            });
-        });
-
-        // "Dossier" final invisible, pour que le javascript s'arrete de boucler
-        $('<tr>', {class: 'dossier'}).appendTo('#liste_flux');
-
-        // onclick
-        click_flux_dossier();
-    })
-    .error( function() {
-        $("#liste_flux_erreur").slideDown('slow');
-    });
-
-     
     /* GESTION RECHECHE : on ajoute manuellement les tags comme input caché à la validation */
     $("#form-search").submit(function() {
         var tags_id = [];
@@ -176,4 +190,11 @@ $(document).ready(function() {
         
         return true;
      });
+
+    // Récupérér initialement la liste des flux
+    get_liste_flux();
+    /* Bouton pour rafraichir la liste des flux */
+    $('#refresh_liste_flux').click(function() {
+        get_liste_flux();
+    });
 });
