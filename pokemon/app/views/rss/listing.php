@@ -81,4 +81,4 @@
 
 <?php render_partial("footer", null); ?>
 <!-- JS à la fin, après les includes de jQuery -->
-<script src="/pokemon/static/javascript/index.js"></script>
+<script src="/pokemon/static/javascript/listing.js"></script>

@@ -4,7 +4,20 @@ require_once "lib/controller.php";
 
 class RssController extends BaseController {
     public function index($route) {
-        $this->render_view("index", array());
+        $is_connected = true;
+
+        if ($is_connected)
+            $this->redirect_to('listing');
+        else
+            $this->redirect_to('login');
+    }
+
+    public function listing($route) {
+        $this->render_view('listing', null);
+    }
+
+    public function login($route) {
+        echo "ok";
     }
 
     public function search($route) {
