@@ -9,14 +9,13 @@ require_once "lib/mysql_connect.php";
 
 class RssController extends BaseController {
     public function index($route) {
-		if ($this->session_get("user_id", null)!=null){
-			$is_connected = true;
-		}else{
-			$is_connected = false;
-		}
+        if ($this->session_get("user_id", null)!=null){
+            $is_connected = true;
+        }else{
+            $is_connected = false;
+        }
+        $is_connected = true;
 
-		
-		$is_connected = true;
         if ($is_connected)
             $this->redirect_to('listing');
         else
@@ -28,23 +27,23 @@ class RssController extends BaseController {
     }
 
     public function login($route) {
-		if (isset($_POST["user_login"])){
-			$user_id = $_POST["user_login"];
-			$user_password = $_POST["user_password"];
-			
-			//Faire requête
-			$connection_success = true;
-			$user_id = 1;
-			
-			if ($connection_success){
-				$this->session_set("user_id", $user_id);
-				$this->redirect_to('index');
-			}else{
-				$this->render_view('login', array("state" => "ERROR_CONN"));
-			}
-		}else{
-			$this->render_view('login', array("state" => "NEW_CONN"));
-		}
+        if (isset($_POST["user_login"])) {
+            $user_login = $_POST["user_login"];
+            $user_password = $_POST["user_password"];
+
+            //Faire requête
+            $connection_success = true;
+            $user_id = 1;
+
+            if ($connection_success){
+                $this->session_set("user_id", $user_id);
+                $this->redirect_to('index');
+            }else{
+                $this->render_view('login', array("state" => "ERROR_CONN"));
+            }
+        }else{
+            $this->render_view('login', array("state" => "NEW_CONN"));
+        }
     }
 
     public function search($route) {
@@ -54,13 +53,13 @@ class RssController extends BaseController {
 
     public function get_tags() {
         // Renvoie les tags pour un utilisateur (TODO: login)
-		$sql = 'SELECT * FROM tag';
-		$result = execute_query($sql);
-		$tags = array(); 
-		while ($row = mysql_fetch_assoc($result)) {
-			array_push($tags, array("titre" => $row["tag_nom"], "id" => $row["tag_id"]));
-		}
-		echo json_encode($tags);
+        $sql = 'SELECT * FROM tag';
+        $result = execute_query($sql);
+        $tags = array(); 
+        while ($row = mysql_fetch_assoc($result)) {
+            array_push($tags, array("titre" => $row["tag_nom"], "id" => $row["tag_id"]));
+        }
+        echo json_encode($tags);
     }
 
     public function get_flux_dossiers() {
@@ -131,18 +130,18 @@ class RssController extends BaseController {
 
         $articles = array(
             array("titre" => "Test 1",
-                  "id" => 0,
-                  "contenu" => $lorem),
+            "id" => 0,
+            "contenu" => $lorem),
             array("titre" => "Test numero bis",
-                  "id" => 1,
-                  "contenu" => $lorem),
+            "id" => 1,
+            "contenu" => $lorem),
             array("titre" => "Un troisieme article",
-                  "id" => 2,
-                  "contenu" => $lorem),
+            "id" => 2,
+            "contenu" => $lorem),
             array("titre" => "Last one",
-                  "id" => 10,
-                  "contenu" => $lorem . $lorem . $lorem . $lorem)
-              );
+            "id" => 10,
+            "contenu" => $lorem . $lorem . $lorem . $lorem)
+        );
 
         // pour tester le rendu en cas d'erreur cote client
         if (rand(0, 10) == 0) echo "erreur json; df ;d;f d;";
