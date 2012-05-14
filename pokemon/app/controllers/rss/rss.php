@@ -4,8 +4,14 @@ require_once "lib/controller.php";
 
 class RssController extends BaseController {
     public function index($route) {
-        $is_connected = true;
+		if ($this->session_get("user_id", null)!=null){
+			$is_connected = true;
+		}else{
+			$is_connected = false;
+		}
 
+		
+		$is_connected = true;
         if ($is_connected)
             $this->redirect_to('listing');
         else
@@ -17,7 +23,23 @@ class RssController extends BaseController {
     }
 
     public function login($route) {
-        echo "ok";
+		if (isset($_POST["user_login"])){
+			$user_id = $_POST["user_login"];
+			$user_password = $_POST["user_password"];
+			
+			//Faire requête
+			$connection_success = true;
+			$user_id = 1;
+			
+			if ($connection_success){
+				$this->session_set("user_id", $user_id);
+				$this->redirect_to('index');
+			}else{
+				$this->render_view('login', array("state" => "ERROR_CONN"));
+			}
+		}else{
+			$this->render_view('login', array("state" => "NEW_CONN"));
+		}
     }
 
     public function search($route) {
