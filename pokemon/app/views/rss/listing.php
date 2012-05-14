@@ -13,7 +13,13 @@
                 <ul class="nav">
                     <li class="active"><a href="#">Home</a></li>
                 </ul>
-            </div><!--/.nav-collapse -->
+            </div>
+
+        <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li><a href="/pokemon/rss/logout">Déconnexion</a></li>
+          </ul>
+
         </div>
     </div>
 </div>
