@@ -9,12 +9,11 @@ require_once "lib/mysql_connect.php";
 
 class RssController extends BaseController {
     public function index($route) {
-        if ($this->session_get("user_id", null)!=null){
-            $is_connected = true;
-        }else{
+        if (is_null($this->session_get("user_id", null))){
             $is_connected = false;
+        }else{
+            $is_connected = true;
         }
-        $is_connected = true;
 
         if ($is_connected)
             $this->redirect_to('listing');
@@ -51,6 +50,11 @@ class RssController extends BaseController {
         }else{
             $this->render_view('login', array("state" => "NEW_CONN"));
         }
+    }
+
+    public function logout($route) {
+        $this->session_unset_var('user_id');
+        $this->redirect_to('index');
     }
 
     public function search($route) {
