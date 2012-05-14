@@ -1,4 +1,12 @@
 <?php render_partial("header", null); ?>
+
+<?php
+if ($params['state'] == 'ERROR_CONN')
+    $class_input = "error";
+else
+    $class_input = "";
+?>
+
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -24,14 +32,14 @@
                 <fieldset>
                     <legend>Connectez-vous...</legend>
 
-                    <div class="control-group">
+                    <div class="control-group <?php echo $class_input; ?>" >
                         <label class="control-label" for="user_login">Login :</label>
                         <div class="controls">
                             <input type="text" placeholder="Nom d'utilisateur..." name="user_login" id="user_login" />
                         </div>
                     </div>
                     
-                    <div class="control-group">
+                    <div class="control-group <?php echo $class_input; ?>" >
                         <label class="control-label" for="user_password">Mot de passe :</label>
                         <div class="controls">
                             <input type="password" placeholder="*******" name="user_password" id="user_password" />
