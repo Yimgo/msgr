@@ -28,6 +28,13 @@ else
 <div class="container">
     <div class="row">
         <div class="offset3 span6">
+
+            <?php if ($params['state'] == 'ERROR_CONN') { ?>
+                <div id="liste_flux_chargement" class="alert alert-error fade in">
+                    <strong>Erreur</strong> lors de la connexion !
+                </div>
+            <?php } ?>
+
             <form class="form-horizontal well" method="POST" action="/pokemon/rss/login">
                 <fieldset>
                     <legend>Connectez-vous...</legend>
