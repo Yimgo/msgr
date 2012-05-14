@@ -30,11 +30,18 @@ class RssController extends BaseController {
         if (isset($_POST["user_login"])) {
             $user_login = $_POST["user_login"];
             $user_password = $_POST["user_password"];
+            $sel='qsdfhsdherh';
+            $password_hash = hash('sha256',$user_password.$sel);
 
-            //Faire requête
-            $connection_success = true;
-            $user_id = 1;
-
+            $sql = 'SELECT * FROM user WHERE user_login='.$user_login.' AND user_password='.$password_hash;
+            $result = execute_query($sql);
+            if ($user = mysql_fetch_assoc($result)){
+				$connection_success = true;
+				$user_id=$user["user_id"];
+			}else{
+				$connection_success = false;
+			}
+            
             if ($connection_success){
                 $this->session_set("user_id", $user_id);
                 $this->redirect_to('index');
