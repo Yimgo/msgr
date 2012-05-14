@@ -2,6 +2,11 @@
 
 require_once "lib/controller.php";
 
+require_once "lib/params.php";
+require_once "lib/mysql_connect.php";
+
+
+
 class RssController extends BaseController {
     public function index($route) {
 		if ($this->session_get("user_id", null)!=null){
@@ -49,16 +54,13 @@ class RssController extends BaseController {
 
     public function get_tags() {
         // Renvoie les tags pour un utilisateur (TODO: login)
-        $tags = array(
-            array("titre" => "Intéressant", "id" => 0),
-            array("titre" => "Nul", "id" => 1),
-            array("titre" => "Linux", "id" => 2),
-            array("titre" => "C/C++", "id" => 3),
-            array("titre" => "A relire", "id" => 4),
-            array("titre" => "Science", "id" => 5),
-        );
-        
-        echo json_encode($tags);
+		$sql = 'SELECT * FROM tag';
+		$result = execute_query($sql);
+		$tags = array(); 
+		while ($row = mysql_fetch_assoc($result)) {
+			array_push($tags, array("titre" => $row["tag_nom"], "id" => $row["tag_id"]));
+		}
+		echo json_encode($tags);
     }
 
     public function get_flux_dossiers() {
