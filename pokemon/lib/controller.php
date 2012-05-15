@@ -42,12 +42,12 @@ class BaseController
     
     function session_unset_var($key)
     {
-		unset($_SESSION[$key]);
-	}
+	unset($_SESSION[$key]);
+    }
     
     function render_view($view_name, $params)
     {
-		$controller_name=explode("controller",strtolower(get_class($this)));
+	$controller_name=explode("controller",strtolower(get_class($this)));
         require_once "app/views/".$controller_name[0]."/".$view_name.".php";
     }
     
@@ -56,9 +56,10 @@ class BaseController
         require_once "static/html/error.php";
     }
     
-    function redirect_to($url)
+    function redirect_to($action)
     {
-        header("Location: $url");
+        $controller_name=explode("controller",strtolower(get_class($this)));
+        header("Location: /pokemon/".$controller_name[0]."/$action");
         exit;
     }
 }
