@@ -6,12 +6,13 @@ require_once 'lib/ConnectionWrapper.php';
 
 class RssController extends BaseController {
     public function index($route) {
-        if (is_null($this->session_get("user_id", null))){
+        if (is_null($this->session_get("user_id", null))) {
             $is_connected = false;
-        }else{
+        }
+        else {
             $is_connected = true;
         }
-        
+
         if ($is_connected)
             $this->redirect_to('listing');
         else
@@ -23,24 +24,55 @@ class RssController extends BaseController {
     }
 
     public function login($route) {
-      if (isset($_POST["user_login"])) {			
-			  $wrapper = new ConnectionWrapper('MySQL');
-			  if($user_id = $wrapper->authUser($_POST["user_login"], $_POST["user_password"]) === FALSE) {
-			    $this->render_view('login', array("state" => "ERROR_CONN"));
-			  }
-			  else {
-			   $this->session_set("user_id", $user_id);
-         $this->redirect_to('index'); 
-       }
-     }
-     else {
-      $this->render_view('login', array("state" => "NEW_CONN"));
-      }
+        if (isset($_POST["user_login"])) {
+            $wrapper = new ConnectionWrapper('MySQL');
+            if ($user_id = $wrapper->signin($_POST["user_login"], $_POST["user_password"]) === FALSE) {
+                $this->render_view('login', array('type' => 'login', 'state' => 'error', 'error' => 'credentials'));
+            }
+            else {
+                $this->session_set("user_id", $user_id);
+                $this->redirect_to('index'); 
+            }
+        }
+        else {
+            $this->render_view('login', array('type' => 'login', 'state' => 'new_conn', 'error' => ''));
+        }
     }
 
     public function logout($route) {
         $this->session_unset_var('user_id');
         $this->redirect_to('index');
+    }
+
+    public function signup($route) {
+        $wrapper = new ConnectionWrapper('MySQL');
+
+        $user_login = $_POST['user_login'];
+        $user_password = $_POST['user_password'];
+        $user_email = $_POST['user_email'];
+        
+        /* Si un des champs n'est pas rempli */
+        if (empty($user_login)) {
+            $this->render_view('login', array('type' => 'signup', 'state' => 'error', 'error' => 'user_login'));
+            return;
+        }
+        else if (empty($user_password)) {
+            $this->render_view('login', array('type' => 'signup', 'state' => 'error', 'error' => 'user_password'));
+            return;
+        }
+        else if (empty($user_email)) {
+            $this->render_view('login', array('type' => 'signup', 'state' => 'error', 'error' => 'user_email'));
+            return;
+        }
+
+        /* Inscription dans la base de données */
+        if ($user_id = $wrapper->signup($user_login, $user_password, $user_email) === FALSE) {
+            $this->render_view('login', array("type" => "signup", 'state' => 'error', 'error' => 'db'));
+        }
+        else {
+            $this->session_set("user_id", $user_id);
+            $this->redirect_to('index'); 
+        }
     }
 
     public function search($route) {
