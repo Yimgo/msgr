@@ -24,7 +24,6 @@ class RssController extends BaseController {
     }
 
     public function login($route) {
-        $connection = DatabaseConnectionFactory::get('MySQL');
         if (isset($_POST["user_login"])) {
             $user_login = $_POST["user_login"];
             $user_password = $_POST["user_password"];
@@ -32,7 +31,7 @@ class RssController extends BaseController {
             $password_hash = hash('sha256',$user_password.$sel);
 
             $sql = 'SELECT * FROM user WHERE user_login="'.$user_login.'" AND user_password="'.$password_hash.'";';
-            $result = $connection->query($sql);
+            $result = DatabaseConnectionFactory::get('MySQL')->query($sql);
             if ($user = $result->fetch()){
 				$connection_success = true;
 				$user_id=$user["user_id"];
@@ -63,9 +62,8 @@ class RssController extends BaseController {
 
     public function get_tags() {
         // Renvoie les tags pour un utilisateur (TODO: login)
-        $connection = DatabaseConnectionFactory::get('MySQL');
         $sql = 'SELECT * FROM tag';
-        $result = $connection->query($sql);
+        $result = DatabaseConnectionFactory::get('MySQL')->query($sql);
         $tags = array(); 
         while ($row = $result->fetch()) {
             array_push($tags, array("titre" => $row["tag_nom"], "id" => $row["tag_id"]));
