@@ -41,7 +41,7 @@ class ConnectionWrapper {
     $insertStatement->bindParam(':pwd', hash('sha256', $pwd.self::sel));
     $insertStatement->bindParam(':email', $email);
     
-    if($statement->execute() === FALSE) {
+    if($insertStatement->execute() === FALSE) {
       return FALSE;
     }
     return $this->signIn($login, $pwd);
