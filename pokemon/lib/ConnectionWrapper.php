@@ -36,10 +36,10 @@ class ConnectionWrapper {
   }
   
   public function signUp($login, $pwd, $email) {
-    $insert_statement = $this->connection->prepare('INSERT INTO user(user_login, user_password, user_email) VALUES(:login, :pwd, :email);');
-    $insserert_statement->bindParam(':login', $login);
-    $insert_statement->bindParam(':pwd', hash('sha256', $pwd.self::sel));
-    $insert_statement->bindParam(':email', $email);
+    $insertStatement = $this->connection->prepare('INSERT INTO user(user_login, user_password, user_email) VALUES(:login, :pwd, :email);');
+    $insertStatement->bindParam(':login', $login);
+    $insertStatement->bindParam(':pwd', hash('sha256', $pwd.self::sel));
+    $insertStatement->bindParam(':email', $email);
     
     if($statement->execute() === FALSE) {
       return FALSE;
