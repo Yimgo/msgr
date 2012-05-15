@@ -1,27 +1,12 @@
 <?php
-  class MySQLConnection {
+  class MySQLConnection extends PDO {
   private static $instance;
-  private $connection;
-  
-  private function __construct($params) {
-    try { 
-      $this->connection = new PDO('mysql:host='.$params['host'].';dbname='.$params['base'].';port='.$params['port'], $params['login'], $params['pwd']);
-    } catch (PDOException $e) {
-      die($e->getMessage());
-    }
-  }
   
   public static function getInstance($params) {
     if(!isset(self::$instance)) {
-      self::$instance = new MySQLConnection($params);
+      self::$instance = new MySQLConnection($params['dsn'], $params['login'], $params['pwd']);
     }
     return self::$instance;
   }
-  
-  public function query($sql) {
-    return $this->connection->query($sql);
-  }
-  
-  
 }
 ?>
