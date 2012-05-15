@@ -1,9 +1,8 @@
 <?php
 
 require_once 'lib/controller.php';
-require_once "lib/DatabaseConnectionFactory.php";
-
-
+require_once 'lib/DatabaseConnectionFactory.php';
+require_once 'lib/ConnectionWrapper.php';
 
 class RssController extends BaseController {
     public function index($route) {
@@ -24,30 +23,19 @@ class RssController extends BaseController {
     }
 
     public function login($route) {
-        if (isset($_POST["user_login"])) {
-            $user_login = $_POST["user_login"];
-            $user_password = $_POST["user_password"];
-            $sel='qsdfhsdherh';
-            $password_hash = hash('sha256',$user_password.$sel);
-
-            $sql = 'SELECT * FROM user WHERE user_login="'.$user_login.'" AND user_password="'.$password_hash.'";';
-            $result = DatabaseConnectionFactory::get('MySQL')->query($sql);
-            if ($user = $result->fetch()){
-				$connection_success = true;
-				$user_id=$user["user_id"];
-			}else{
-				$connection_success = false;
-			}
-            
-            if ($connection_success){
-                $this->session_set("user_id", $user_id);
-                $this->redirect_to('index');
-            }else{
-                $this->render_view('login', array("state" => "ERROR_CONN"));
-            }
-        }else{
-            $this->render_view('login', array("state" => "NEW_CONN"));
-        }
+      if (isset($_POST["user_login"])) {			
+			  $wrapper = new ConnectionWrapper('MySQL');
+			  if($user_id = $wrapper->authUser($_POST["user_login"], $_POST["user_password"]) === FALSE) {
+			    $this->render_view('login', array("state" => "ERROR_CONN"));
+			  }
+			  else {
+			   $this->session_set("user_id", $user_id);
+         $this->redirect_to('index'); 
+       }
+     }
+     else {
+      $this->render_view('login', array("state" => "NEW_CONN"));
+      }
     }
 
     public function logout($route) {
@@ -62,13 +50,8 @@ class RssController extends BaseController {
 
     public function get_tags() {
         // Renvoie les tags pour un utilisateur (TODO: login)
-        $sql = 'SELECT * FROM tag';
-        $result = DatabaseConnectionFactory::get('MySQL')->query($sql);
-        $tags = array(); 
-        while ($row = $result->fetch()) {
-            array_push($tags, array("titre" => $row["tag_nom"], "id" => $row["tag_id"]));
-        }
-        echo json_encode($tags);
+        $wrapper = new ConnectionWrapper('MySQL');
+        echo json_encode($wrapper->getTags());
     }
 
     public function get_flux_dossiers() {
