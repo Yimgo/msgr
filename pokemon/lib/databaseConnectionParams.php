@@ -21,4 +21,3 @@ function getMySQLParams() {
                 'pwd' => $pwd);
 }
 ?>
-
