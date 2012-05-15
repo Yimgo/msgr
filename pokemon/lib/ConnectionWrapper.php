@@ -9,7 +9,7 @@ class ConnectionWrapper {
     $this->connection=DatabaseConnectionFactory::get($type);
   }
   
-  public function authUser($login, $pwd) {
+  public function signIn($login, $pwd) {
     $statement = $this->connection->prepare('SELECT * FROM user WHERE user_login = :login AND user_password = :pwd;');
     $statement->bindParam(':login', $login);
     $statement->bindParam(':pwd', hash('sha256',$pwd.self::sel));
@@ -29,5 +29,18 @@ class ConnectionWrapper {
     }
     return $tags;
   }
+  
+  public function signUp($login, $pwd, $email) {
+    $statement = $this->connection->prepare('INSERT INTO user(user_login, user_password, user_email) VALUES(:login, :pwd, :email);');
+    $statement->bindParam(':login', $login);
+    $statement->bindParam(':pwd', $pwd);
+    $statement->bindParam(':email', $email);
+    $statement->execute();
+    
+    print_r($statement->fetchAll());
+    
+    return FALSE;
+  }
+    
 }
 ?>
