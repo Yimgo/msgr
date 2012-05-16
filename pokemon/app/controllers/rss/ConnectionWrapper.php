@@ -5,8 +5,9 @@ class ConnectionWrapper {
   private $connection;
   const sel = 'qsdfhsdherh';
   
-  public function __construct($type) {
-    $this->connection = DatabaseConnectionFactory::get($type);
+  public function __construct() {
+    require_once('lib/databaseConnectionProfiles.php');
+    $this->connection = DatabaseConnectionFactory::get($defaultDatabaseConnectionProfile);
   }
   
   public function signIn($login, $pwd) {
