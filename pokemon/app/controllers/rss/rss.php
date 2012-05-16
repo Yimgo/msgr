@@ -7,9 +7,12 @@ require_once 'app/controllers/rss/ConnectionWrapper.php';
 class RssController extends BaseController {
     private $connectionWrapper;
     
-    public function __construct() {
-      parent::__construct();
-      $this->connectionWrapper = new ConnectionWrapper();
+    private function getConnectionWrapper() {
+        if(!isset($this->connectionWrapper)) {
+            $this->connectionWrapper = new ConnectionWrapper();
+        }
+        
+        return $this->connectionWrapper;
     }
     
     public function index($route) {
@@ -32,7 +35,7 @@ class RssController extends BaseController {
 
     public function login($route) {
         if (isset($_POST["user_login"])) {
-            if ($user_id = $this->connectionWrapper->signIn($_POST["user_login"], $_POST["user_password"]) === FALSE) {
+            if ($user_id = $this->getConnectionWrapper()->signIn($_POST["user_login"], $_POST["user_password"]) === FALSE) {
                 $this->render_view('login', array('type' => 'login', 'state' => 'error', 'error' => 'credentials'));
             }
             else {
@@ -70,7 +73,7 @@ class RssController extends BaseController {
         }
 
         /* Inscription dans la base de données */
-        if ($user_id = $this->connectionWrapper->signUp($user_login, $user_password, $user_email) === FALSE) {
+        if ($user_id = $this->getConnectionWrapper()->signUp($user_login, $user_password, $user_email) === FALSE) {
             $this->render_view('login', array("type" => "signup", 'state' => 'error', 'error' => 'db'));
         }
         else {
@@ -86,7 +89,7 @@ class RssController extends BaseController {
 
     public function get_tags() {
         // Renvoie les tags pour un utilisateur (TODO: login)
-        echo json_encode($this->connectionWrapper->getTags());
+        echo json_encode($this->getConnectionWrapper()->getTags());
     }
 
     public function get_flux_dossiers() {
