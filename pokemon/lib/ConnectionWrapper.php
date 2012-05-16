@@ -12,7 +12,8 @@ class ConnectionWrapper {
   public function signIn($login, $pwd) {
     $statement = $this->connection->prepare('SELECT user_id FROM user WHERE user_login = :login AND user_password = :pwd;');
     $statement->bindParam(':login', $login);
-    $statement->bindParam(':pwd', hash('sha256', $pwd.self::sel));
+    $saltedPwd=hash('sha256', $pwd.self::sel);
+    $statement->bindParam(':pwd', $saltedPwd);
     if ($statement->execute() === FALSE) {
       return FALSE;
     }
@@ -38,7 +39,8 @@ class ConnectionWrapper {
   public function signUp($login, $pwd, $email) {
     $insertStatement = $this->connection->prepare('INSERT INTO user(user_login, user_password, user_email) VALUES(:login, :pwd, :email);');
     $insertStatement->bindParam(':login', $login);
-    $insertStatement->bindParam(':pwd', hash('sha256', $pwd.self::sel));
+    $saltedPwd=hash('sha256', $pwd.self::sel);
+    $insertStatement->bindParam(':pwd', $saltedPwd);
     $insertStatement->bindParam(':email', $email);
     
     if($insertStatement->execute() === FALSE) {

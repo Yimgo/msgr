@@ -8,10 +8,11 @@ class PDOConnection extends PDO {
   
   
   public static function getInstance($params) {
-    if(!isset(self::$instances[$params['dsn']][$params['pwd']])) {
-      self::$instances[$params['dsn']][$params['pwd']] = new PDOConnection($params['dsn'], $params['login'], $params['pwd']);
+    if(!isset(self::$instances[$params['dsn']][$params['login']])) {
+      self::$instances[$params['dsn']][$params['login']] = new PDOConnection($params['dsn'], $params['login'], 
+$params['pwd']);
     }
-    return self::$instances[$params['dsn']][$params['pwd']];
+    return self::$instances[$params['dsn']][$params['login']];
   }
 }
 ?>
