@@ -2,9 +2,16 @@
 
 require_once 'lib/controller.php';
 require_once 'lib/DatabaseConnectionFactory.php';
-require_once 'lib/ConnectionWrapper.php';
+require_once 'app/controllers/rss/ConnectionWrapper.php';
 
 class RssController extends BaseController {
+    private $connectionWrapper;
+    
+    public function __construct() {
+      parent::__construct();
+      $this->connectionWrapper = new ConnectionWrapper();
+    }
+    
     public function index($route) {
         if (is_null($this->session_get("user_id", null))) {
             $is_connected = false;
@@ -25,8 +32,7 @@ class RssController extends BaseController {
 
     public function login($route) {
         if (isset($_POST["user_login"])) {
-            $wrapper = new ConnectionWrapper('MySQL');
-            if ($user_id = $wrapper->signin($_POST["user_login"], $_POST["user_password"]) === FALSE) {
+            if ($user_id = $this->connectionWrapper->signIn($_POST["user_login"], $_POST["user_password"]) === FALSE) {
                 $this->render_view('login', array('type' => 'login', 'state' => 'error', 'error' => 'credentials'));
             }
             else {
@@ -45,8 +51,6 @@ class RssController extends BaseController {
     }
 
     public function signup($route) {
-        $wrapper = new ConnectionWrapper('MySQL');
-
         $user_login = $_POST['user_login'];
         $user_password = $_POST['user_password'];
         $user_email = $_POST['user_email'];
@@ -66,7 +70,7 @@ class RssController extends BaseController {
         }
 
         /* Inscription dans la base de données */
-        if ($user_id = $wrapper->signup($user_login, $user_password, $user_email) === FALSE) {
+        if ($user_id = $this->connectionWrapper->signUp($user_login, $user_password, $user_email) === FALSE) {
             $this->render_view('login', array("type" => "signup", 'state' => 'error', 'error' => 'db'));
         }
         else {
@@ -82,8 +86,7 @@ class RssController extends BaseController {
 
     public function get_tags() {
         // Renvoie les tags pour un utilisateur (TODO: login)
-        $wrapper = new ConnectionWrapper('MySQL');
-        echo json_encode($wrapper->getTags());
+        echo json_encode($this->connectionWrapper->getTags());
     }
 
     public function get_flux_dossiers() {
