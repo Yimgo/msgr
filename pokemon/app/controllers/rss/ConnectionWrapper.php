@@ -6,6 +6,13 @@ class ConnectionWrapper {
   const sel = 'qsdfhsdherh';
   
   public function __construct() {
+    if(file_exists('lib/config.ini')) {
+        $config = parse_ini_file('lib/config.ini', true);
+        if(isset($config['DatabaseConnection']['profile']) && !empty($config['DatabaseConnection']['profile'])) {
+            $this->connection = DatabaseConnectionFactory::get($config['DatabaseConnection']['profile']);
+            return;
+        }
+    }
     require_once('lib/databaseConnectionProfiles.php');
     $this->connection = DatabaseConnectionFactory::get($defaultDatabaseConnectionProfile);
   }
