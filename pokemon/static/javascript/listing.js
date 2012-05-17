@@ -12,6 +12,7 @@ $(document).ready(function() {
 
     // Gestion des tags
     $.get('/pokemon/rss/get_tags', function(data) {
+        // AUTOCOMPLETION
         $("#search").attr('data-source', data); // Données utilisées pour l'auto-complétion
 
         $('#search').typeahead({
@@ -64,16 +65,73 @@ $(document).ready(function() {
    -------------------------------- */
 
 // Ajouter un article à la liste des articles
-function add_article_to_dom(id, titre, contenu) {
-    $('#flux_container').append(
-        $('<div>')
+function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, dropdown_tags) {
+    toto = $('<div>')
             .data('id', id)
-            .append($('<p>', { html: titre }))
+            .append($('<p>')
+                .append($('<span>', {html:titre}))
+                .append($('<div>', {'class': 'article_properties btn-group'})
+                    .append($('<button>', {'class':'btn dropdown-toggle', 'data-toggle':'dropdown'})
+                        .append($('<i>', {'class': 'icon-tags'}))
+                    )
+                    .append(dropdown_tags.clone(true))
+                    .append($('<button>', {'class':'btn'})
+                        .append($('<i>', {'class': lu ? 'icon-eye-open' : 'icon-eye-close'}))
+                        .click(article_lu_nonlu)
+                    )
+                    .append($('<button>', {'class':'btn'})
+                        .append($('<i>', {'class': favori ? 'icon-star' : 'icon-star-empty'}))
+                        .click(article_favori)
+                    )
+                    .append($('<button>', {'class':'btn'})
+                        .append($('<i>', {'class':'icon-chevron-down'}))
+                        .click(function() {
+                            if ($(this).children().hasClass('icon-chevron-down'))
+                                $(this).children().removeClass('icon-chevron-down').addClass('icon-chevron-up');
+                            else
+                                $(this).children().removeClass('icon-chevron-up').addClass('icon-chevron-down');
+                            $(this).parent().parent().siblings().toggle()
+                        })
+                    )
+                )
+            )
             .append($('<div>', {
-                html: contenu,
-                style: 'display: none'
-            }))
-    );
+                'html': contenu,
+                'style': 'display: none'
+            }));
+
+
+    // Pour chaque tag de l'article, on met une icone sur le tag
+    $.each(liste_tags, function(index, idtag) {
+
+        // On trouve l'élément concerné dans la liste pour lui mettre la bonne icone
+        $.each($('p div ul li', toto), function(index2, li) {
+            if ($(li).data('id') == idtag)
+                $('a i', li).removeClass('icon-white');
+        });
+    });
+
+    // Event click sur le tag : activer/désactiver le tag
+    $.each($('p div ul li', toto), function(index, li) {
+        $(li).click(function() {
+            id_tag =  $(li).data('id');
+            id_article = $(li).parent().parent().parent().parent().data('id');
+
+            if ($('a i', li).hasClass('icon-white')) {
+                $('a i', li).removeClass('icon-white');
+                $.get('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':true});
+            }
+            else {
+                $('a i', li).addClass('icon-white');
+                $.get('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':false});
+            }
+            return false;
+            
+        });
+    });
+
+
+    $('#flux_container').append(toto);
 }
 
 // Appelée quand on clique sur un flux
@@ -95,38 +153,64 @@ function click_flux() {
     // --- Recuperation des articles ---
     $("#flux_container").html("");
     $.getJSON('/pokemon/rss/get_articles/' + $(this).data('id'), function(data) {
-        // Ajouter les articles dans la colonne de droite
-        $.each(data, function(index, elem) {
-            add_article_to_dom(elem.id, elem.titre, elem.contenu);
+        // On récupère les tags pour tager les articles
+        $.getJSON('/pokemon/rss/get_tags', function(tags) {
+            dropdown_tags = make_dropdown_tags(tags);
+
+            // Ajouter les articles dans la colonne de droite
+            $.each(data, function(index, elem) {
+                add_article_to_dom(elem.id, elem.titre, elem.contenu, elem.favori, elem.lu, elem.tags, dropdown_tags);
+            });
+            click_list_articles();
         });
-        click_list_articles();
     })
     .success(function() {
         $("#liste_articles_chargement").slideUp('slow');
-        $('#div_dropdown').show();
+        $('#div_dropdown_move_folder').show();
     })
     .error(function() {
         $("#liste_articles_chargement").slideUp('slow');
         $("#liste_articles_erreur").slideDown('slow');
         $("#liste_flux tr").removeClass("ligne_flux_selectionne");
-        $('#div_dropdown').hide();
+        $('#div_dropdown_move_folder').hide();
     });
 }
 
 // Pour chaque article, permettre de le cacher/le déplier en cliquant dessus
 function click_list_articles() {
-    $("#flux_container div p")
+    $("#flux_container div p span")
         .unbind('click')
         .click(function() {
-            $(this).siblings().each(function() {
-                if ($(this).is(':hidden'))
-                    $(this).slideDown('slow');
-                else
-                    $(this).slideUp('slow');
+            $(this).parent().siblings().each(function() {
+                $(this).toggle();
             });
         });
 }
 
+// Met en favori/non favori un article
+function article_favori() {
+    id = $(this).parent().parent().parent().data('id');
+
+    if ($(this).children().hasClass('icon-star')) {
+        $.get('/pokemon/rss/set_favori', {'id' : id, 'favori': 'false'});
+        $(this).children().removeClass('icon-star').addClass('icon-star-empty');
+    } else {
+        $.get('/pokemon/rss/set_favori', {'id' : id, 'favori' : 'true'});
+        $(this).children().removeClass('icon-star-empty').addClass('icon-star');
+    }
+}
+
+function article_lu_nonlu() {
+    id = $(this).parent().parent().parent().data('id');
+
+    if ($(this).children().hasClass('icon-eye-open')) {
+        $.get('/pokemon/rss/set_lu', {'id' : id, 'lu': 'false'});
+        $(this).children().removeClass('icon-eye-open').addClass('icon-eye-close');
+    } else {
+        $.get('/pokemon/rss/set_lu', {'id' : id, 'lu' : 'true'});
+        $(this).children().removeClass('icon-eye-close').addClass('icon-eye-open');
+    }
+}
 
 /* ---------------------------------------
    GESTION DE LA LISTE DES FLUX + DOSSIERS
@@ -151,7 +235,7 @@ function changer_flux_de_dossier() {
 
 // Créer le bouton "Déplacer le flux vers un autre dossier"
 function creer_bouton_liste_dossiers(data) {
-    $('#div_dropdown').empty();
+    $('#div_dropdown_move_folder').empty();
 
     // Liste de tous les dossiers dans un <ul>…</ul>
     var html_li_dossiers = $('<ul>', {'class' : 'dropdown-menu'});
@@ -166,8 +250,8 @@ function creer_bouton_liste_dossiers(data) {
     }); 
 
     // Création du bouton "dropdown", auquel on ajoute la liste des dossiers
-    $('#div_dropdown')
-        .append($('<a>', {'class' : 'btn dropdown-toggle', 'data-toggle' : 'dropdown', 'data-target':'#', 'href':'#', 'html': ' Déplacer dans un autre dossier '})
+    $('#div_dropdown_move_folder')
+        .append($('<a>', {'class' : 'btn dropdown-toggle', 'data-toggle' : 'dropdown', 'data-target':'#', 'href':'#', 'html': ' Déplacer '})
             .prepend($('<i>', {'class':'icon-list-alt'}))
             .append($('<span>', {class:'caret'}))
         )
@@ -264,4 +348,19 @@ function add_tag_to_dom(titre, id) {
     $("#tag-list a").click(function() {
         $(this).hide('fast', function() { $(this).remove(); });
     });
+}
+
+function make_dropdown_tags(tags) {
+    dropdown_tags = $('<ul>', {'class' : 'dropdown-menu'});
+    $.each(tags, function(index, elem) {
+        dropdown_tags.append(
+            $('<li>')
+                .data('id',elem.id)
+                .append($('<a>', {'html': ' ' +elem.titre, 'href':'#'})
+                    .prepend($('<i>', {'class' : 'icon-tag icon-white'}))
+                )
+        );
+    });
+
+    return dropdown_tags;
 }

@@ -69,7 +69,7 @@
 
         <div class="span8">
             <h1 id="titre_liste_articles"></h1>
-            <div id="div_dropdown" class="dropdown pull-right" style="display:none"></div>
+            <div id="div_dropdown_move_folder" class="dropdown" style="display:none"></div>
         
             <div id="liste_articles_chargement" class="alert alert-info fade in hide">
                 <strong>Chargement</strong> des articles en cours…
