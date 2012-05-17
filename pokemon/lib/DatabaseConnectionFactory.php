@@ -1,21 +1,17 @@
 <?php 
   require_once 'lib/PDOConnection.php';
+  require_once 'lib/Config.php';
   
 class DatabaseConnectionFactory {
   public static function get($profile) {
     $params = array();
-    
-    if(!file_exists('lib/db_profiles/'.$profile.'.ini')) {
-      return FALSE;
-    }
-    
-    $config = parse_ini_file('lib/db_profiles/'.$profile.'.ini', true);
+    $config = new Config('lib/db_profiles/'.$profile.'.ini');
 
-    $params['dsn'] = self::getDSN($config['General']['driver'], $config['General']['host'], $config['General']['port'], $config['General']['dbname']);
-    $params['username'] = $config['General']['username'];
-    $params['password'] = $config['General']['password'];
-    if(isset($config['DriverOptions'])) {
-      $params['driver_options'] = self::getDriverOptions($config['DriverOptions']);
+    $params['dsn'] = self::getDSN($config->getParam('General', 'driver'), $config->getParam('General', 'host'), $config->getParam('General','port'), $config->getParam('General', 'dbname'));
+    $params['username'] = $config->getParam('General', 'username');
+    $params['password'] = $config->getParam('General', 'password');
+    if($config->getCategory('DriverOptions') != FALSE) {
+      $params['driver_options'] = self::getDriverOptions($config->getCategory('DriverOptions'));
     }
     else {
       $params['driver_options']=array();

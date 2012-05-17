@@ -1,4 +1,5 @@
 <?php
+require_once 'lib/Config.php';
 require_once 'lib/DatabaseConnectionFactory.php';
 
 class ConnectionWrapper {
@@ -6,27 +7,7 @@ class ConnectionWrapper {
   const sel = 'qsdfhsdherh';
   
   public function __construct() {
-    if(file_exists('lib/config.ini')) {    
-      $config = parse_ini_file('lib/config.ini', true);
-             
-      if (isset($config['DatabaseConnection']['default_profile']) && !empty($config['DatabaseConnection']['default_profile'])) {
-        $profile = $config['DatabaseConnection']['default_profile'];
-      }
-
-      if (isset($config['General']['debug']) && $config['General']['debug'] && file_exists('lib/override.ini')) {
-        $override = parse_ini_file('lib/override.ini', true);
-        if (isset($override['DatabaseConnection']['default_profile']) && !empty($override['DatabaseConnection']['default_profile'])) {
-          $profile = $override['DatabaseConnection']['default_profile'];
-        }
-      }
-    }
-    
-    if (isset($profile)) {
-      $this->connection = DatabaseConnectionFactory::get($profile);
-    }
-    else {
-      die('No database profile found');
-    }
+    $this->connection = DatabaseConnectionFactory::get(Config::getConfigParam('DatabaseConnection', 'default_profile'));
   }
   
   public function signIn($login, $pwd) {
