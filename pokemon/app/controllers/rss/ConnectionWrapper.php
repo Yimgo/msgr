@@ -27,9 +27,9 @@ class ConnectionWrapper {
     }
     
     if ($user = $statement->fetch()){
-		  return $user["user_id"];
-		}
-		return FALSE;
+      return $user["user_id"];
+    }
+    return FALSE;
   }
   
   public function getTags() { 
