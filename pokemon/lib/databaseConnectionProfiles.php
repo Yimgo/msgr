@@ -20,7 +20,11 @@ function getPmolParams() {
   $pwd = 'insa';
   return array( 'dsn' => $driver.':host='.$host.';port='.$port.';dbname='.$db,
                 'login' => $login,
-                'pwd' => $pwd);
+                'pwd' => $pwd,
+                'driver_options' => array(
+                                          PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+                                          )
+                );
 }
 
 /* Get parameters for MySQL DBs @localhost */ 
@@ -33,6 +37,10 @@ function getLocalhostParams() {
   $pwd = 'insa';
   return array( 'dsn' => $driver.':host='.$host.';port='.$port.';dbname='.$db,
                 'login' => $login,
-                'pwd' => $pwd);
+                'pwd' => $pwd,
+                'driver_options' => array(
+                                          PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+                                          )
+                );
 }
 ?>
