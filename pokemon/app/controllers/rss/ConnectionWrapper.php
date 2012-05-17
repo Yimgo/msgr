@@ -6,15 +6,27 @@ class ConnectionWrapper {
   const sel = 'qsdfhsdherh';
   
   public function __construct() {
-    if(file_exists('lib/config.ini')) {
-        $config = parse_ini_file('lib/config.ini', true);
-        if(isset($config['DatabaseConnection']['profile']) && !empty($config['DatabaseConnection']['profile'])) {
-            $this->connection = DatabaseConnectionFactory::get($config['DatabaseConnection']['profile']);
-            return;
+    if(file_exists('lib/config.ini')) {    
+      $config = parse_ini_file('lib/config.ini', true);
+             
+      if (isset($config['DatabaseConnection']['default_profile']) && !empty($config['DatabaseConnection']['default_profile'])) {
+        $profile = $config['DatabaseConnection']['default_profile'];
+      }
+
+      if (isset($config['General']['debug']) && $config['General']['debug'] && file_exists('lib/override.ini')) {
+        $override = parse_ini_file('lib/override.ini', true);
+        if (isset($override['DatabaseConnection']['default_profile']) && !empty($override['DatabaseConnection']['default_profile'])) {
+          $profile = $override['DatabaseConnection']['default_profile'];
         }
+      }
     }
-    require_once('lib/databaseConnectionProfiles.php');
-    $this->connection = DatabaseConnectionFactory::get($defaultDatabaseConnectionProfile);
+    
+    if (isset($profile)) {
+      $this->connection = DatabaseConnectionFactory::get($profile);
+    }
+    else {
+      die('No database profile found');
+    }
   }
   
   public function signIn($login, $pwd) {
