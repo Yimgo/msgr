@@ -161,21 +161,54 @@ class RssController extends BaseController {
         $articles = array(
             array("titre" => "Test 1",
             "id" => 0,
-            "contenu" => $lorem),
+            "contenu" => $lorem,
+            "favori" => true,
+            "lu" => true,
+            "tags" => array(1,2)),
             array("titre" => "Test numero bis",
             "id" => 1,
-            "contenu" => $lorem),
+            "contenu" => $lorem,
+            "favori" => false,
+            "lu" => false,
+            "tags" => array()),
             array("titre" => "Un troisieme article",
             "id" => 2,
-            "contenu" => $lorem),
+            "contenu" => $lorem,
+            "favori" => true,
+            "lu" => true,
+            "tags" => array(3)),
             array("titre" => "Last one",
             "id" => 10,
-            "contenu" => $lorem . $lorem . $lorem . $lorem)
+            "contenu" => $lorem . $lorem . $lorem . $lorem,
+            "favori" => false,
+            "lu" => true,
+            "tags" => array())
         );
 
         // pour tester le rendu en cas d'erreur cote client
         if (rand(0, 10) == 0) echo "erreur json; df ;d;f d;";
         else echo json_encode($articles);
+    }
+
+    public function set_tag($route) {
+        /*
+         * $_GET['id_tag'
+         *       'id_article'
+         *       'tag' : true/false
+         *      ]
+         */
+    }
+
+    public function set_favori($route) {
+        /* $_GET['id' : id article
+         *       'favori' : true/false
+         */
+    }
+
+    public function set_lu($route) {
+        /* $_GET['id' : id article
+         *       'lu' : true/false
+         */
     }
 }
 
