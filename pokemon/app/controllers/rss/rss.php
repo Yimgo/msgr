@@ -176,13 +176,13 @@ class RssController extends BaseController {
             "contenu" => $lorem,
             "favori" => true,
             "lu" => true,
-            "tags" => array(3)),
+            "tags" => array(4)),
             array("titre" => "Last one",
             "id" => 10,
             "contenu" => $lorem . $lorem . $lorem . $lorem,
             "favori" => false,
             "lu" => true,
-            "tags" => array())
+            "tags" => array(6,7))
         );
 
         // pour tester le rendu en cas d'erreur cote client

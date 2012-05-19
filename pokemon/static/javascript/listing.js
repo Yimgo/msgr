@@ -12,6 +12,9 @@ $(document).ready(function() {
 
     // Gestion des tags
     $.get('/pokemon/rss/get_tags', function(data) {
+        raw_tags = data;
+        fresh_dropdown_tags = make_dropdown_tags(eval(raw_tags));
+
         // AUTOCOMPLETION
         $("#search").attr('data-source', data); // Données utilisées pour l'auto-complétion
 
@@ -65,7 +68,27 @@ $(document).ready(function() {
    -------------------------------- */
 
 // Ajouter un article à la liste des articles
-function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, dropdown_tags) {
+function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags) {
+    var new_dropdown_tags = $(fresh_dropdown_tags).clone(true, true);
+
+    $('input', new_dropdown_tags)
+        .click(function() { return false; })
+        .typeahead({
+            source: function(typeahead, query) {
+                        return eval(raw_tags);
+                    },
+            property: "titre",
+            onselect: function(obj) {
+                $('li', new_dropdown_tags).each(function(index, li) {
+                    if ($(li).data('id') == obj.id) {
+                        $(li).show();
+                        $.get('/pokemon/rss/set_tag', {'id_tag':obj.id, 'id_article':id, 'tag':true});
+                        $('input', new_dropdown_tags).val("");
+                    }
+                });
+            }
+        });
+
     toto = $('<div>')
             .data('id', id)
             .append($('<p>')
@@ -74,7 +97,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, dropdown
                     .append($('<button>', {'class':'btn dropdown-toggle', 'data-toggle':'dropdown'})
                         .append($('<i>', {'class': 'icon-tags'}))
                     )
-                    .append(dropdown_tags.clone(true))
+                    .append(new_dropdown_tags)
                     .append($('<button>', {'class':'btn'})
                         .append($('<i>', {'class': lu ? 'icon-eye-open' : 'icon-eye-close'}))
                         .click(article_lu_nonlu)
@@ -90,7 +113,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, dropdown
                                 $(this).children().removeClass('icon-chevron-down').addClass('icon-chevron-up');
                             else
                                 $(this).children().removeClass('icon-chevron-up').addClass('icon-chevron-down');
-                            $(this).parent().parent().siblings().toggle()
+                            $(this).parent().parent().siblings().toggle();
                         })
                     )
                 )
@@ -100,36 +123,25 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, dropdown
                 'style': 'display: none'
             }));
 
-
-    // Pour chaque tag de l'article, on met une icone sur le tag
+    // Actuellement, tous les tags sont affichés dans une liste, tous masqués
+    // On affiche uniquement les tags marqués pour cet article
     $.each(liste_tags, function(index, idtag) {
-
-        // On trouve l'élément concerné dans la liste pour lui mettre la bonne icone
         $.each($('p div ul li', toto), function(index2, li) {
             if ($(li).data('id') == idtag)
-                $('a i', li).removeClass('icon-white');
+                $(li).show();
         });
     });
 
-    // Event click sur le tag : activer/désactiver le tag
-    $.each($('p div ul li', toto), function(index, li) {
-        $(li).click(function() {
-            id_tag =  $(li).data('id');
-            id_article = $(li).parent().parent().parent().parent().data('id');
-
-            if ($('a i', li).hasClass('icon-white')) {
-                $('a i', li).removeClass('icon-white');
-                $.get('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':true});
-            }
-            else {
-                $('a i', li).addClass('icon-white');
-                $.get('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':false});
-            }
-            return false;
-            
-        });
+    // Event click sur le tag : désactiver le tag
+    $('p div ul li i.icon-minus-sign', toto)
+    .click(function() {
+        var li = $(this).parent().parent();
+        id_tag =  $(li).data('id');
+        id_article = $(li).parent().parent().parent().parent().data('id');
+        $(li).hide();
+        $.get('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':false});
+        return false;
     });
-
 
     $('#flux_container').append(toto);
 }
@@ -153,16 +165,11 @@ function click_flux() {
     // --- Recuperation des articles ---
     $("#flux_container").html("");
     $.getJSON('/pokemon/rss/get_articles/' + $(this).data('id'), function(data) {
-        // On récupère les tags pour tager les articles
-        $.getJSON('/pokemon/rss/get_tags', function(tags) {
-            dropdown_tags = make_dropdown_tags(tags);
-
-            // Ajouter les articles dans la colonne de droite
-            $.each(data, function(index, elem) {
-                add_article_to_dom(elem.id, elem.titre, elem.contenu, elem.favori, elem.lu, elem.tags, dropdown_tags);
-            });
-            click_list_articles();
+        // Ajouter les articles dans la colonne de droite
+        $.each(data, function(index, elem) {
+            add_article_to_dom(elem.id, elem.titre, elem.contenu, elem.favori, elem.lu, elem.tags);
         });
+        click_list_articles();
     })
     .success(function() {
         $("#liste_articles_chargement").slideUp('slow');
@@ -354,13 +361,22 @@ function make_dropdown_tags(tags) {
     dropdown_tags = $('<ul>', {'class' : 'dropdown-menu'});
     $.each(tags, function(index, elem) {
         dropdown_tags.append(
-            $('<li>')
+            $('<li>', {'style':'display:none'})
                 .data('id',elem.id)
-                .append($('<a>', {'html': ' ' +elem.titre, 'href':'#'})
-                    .prepend($('<i>', {'class' : 'icon-tag icon-white'}))
+                .append($('<a>', {'html': ' ' +elem.titre, 'href':'/pokemon/rss/tag/' + elem.id})
+                    .prepend($('<i>', {'class' : 'icon-tag'}))
+                    .append($('<i>', {'class' : 'icon-minus-sign pull-right'}))
                 )
         );
     });
+
+    dropdown_tags
+    .append($('<hr>'))
+    .append($('<li>')
+        .append($('<form>', {'style' : 'text-align:center'})
+            .append($('<input>', {'type':'text', 'class': 'input-small typeahead', 'data-items':4}))
+        )
+    );
 
     return dropdown_tags;
 }
