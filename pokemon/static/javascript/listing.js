@@ -75,7 +75,22 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags) {
         .click(function() { return false; })
         .typeahead({
             source: function(typeahead, query) {
-                        return eval(raw_tags);
+                        var all_tags = eval(raw_tags);
+                        var used_tags = [];
+                        var showed_tags = [];
+                        
+                        $('li:visible', new_dropdown_tags).each(function() {
+                            if ($(this).data('id') != undefined) {
+                                used_tags.push($(this).text());
+                            }
+                        });
+
+                        $(all_tags).each(function(index) {
+                            if ($.inArray(' ' + all_tags[index].titre, used_tags) == -1)
+                                showed_tags.push(all_tags[index]);
+                        });
+
+                        return showed_tags;
                     },
             property: "titre",
             onselect: function(obj) {
