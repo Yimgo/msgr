@@ -25,13 +25,15 @@ class ConnectionWrapper {
     return FALSE;
   }
   
-  public function getTags() { 
-    if (($result = $this->connection->query('SELECT * FROM tag')) === FALSE) {
+  public function getTags($id_user) {
+    $statement = $this->connection->prepare('SELECT * FROM tag WHERE tag_id_user = :id_user;');
+    $statement->bindParam(':id_user', $id_user);
+    if ($statement->execute() === FALSE) {
       return array();
     }
     
     $tags = array();
-    while ($row = $result->fetch()) {
+    while ($row = $statement->fetch()) {
         array_push($tags, array("titre" => $row["tag_nom"], "id" => $row["tag_id"]));
     }
     return $tags;
@@ -122,6 +124,26 @@ class ConnectionWrapper {
       return FALSE;
     }
     return $this->signIn($login, $pwd);
-  }    
+  }
+  
+  public function setTag($id_tag, $id_article, $tag) {
+    if($tag){
+      $insertStatement = $this->connection->prepare('INSERT INTO tag_article(tag_article_id_article, tag_article_id_tag) VALUES ( :id_article, :id_tag);');
+      $insertStatement->bindParam(':id_article', $id_article);
+      $insertStatement->bindParam(':id_tag', $id_tag);
+      
+      if($insertStatement->execute() === FALSE) {
+        return FALSE;
+      }
+    }else{
+      $insertStatement = $this->connection->prepare('DELETE FROM tag_article WHERE tag_article_id_article = :id_article AND tag_article_id_tag = :id_tag;');
+      $insertStatement->bindParam(':id_article', $id_article);
+      $insertStatement->bindParam(':id_tag', $id_tag);
+      
+      if($insertStatement->execute() === FALSE) {
+        return FALSE;
+      }
+    }
+  }
 }
 ?>

@@ -88,8 +88,8 @@ class RssController extends BaseController {
     }
 
     public function get_tags() {
-        // Renvoie les tags pour un utilisateur (TODO: login)
-        echo json_encode($this->getConnectionWrapper()->getTags());
+        // Renvoie les tags pour un utilisateur
+        echo json_encode($this->getConnectionWrapper()->getTags($this->session_get("user_id", null)));
     }
 
     public function get_flux_dossiers() {
