@@ -189,26 +189,41 @@ class RssController extends BaseController {
         if (rand(0, 10) == 0) echo "erreur json; df ;d;f d;";
         else echo json_encode($articles);
     }
-
+	
+	
     public function set_tag($route, $params) {
-        /*
-         * POST['id_tag'
-         *       'id_article'
-         *       'tag' : true/false
-         *      ]
-         */
+		$id_article = $params['id_article'];
+		$id_tag = $params['id_tag'];
+        if ($res = $this->getConnectionWrapper()->setTags($id_article,$id_tag) === FALSE) {
+            $this->redirect_to('index'); 
+        }
+        else {
+            $this->redirect_to('index'); 
+        }
     }
 
     public function set_favori($route, $params) {
-        /* POST['id' : id article
-         *       'favori' : true/false
-         */
+        $id_user = $this->session_get('user_id');
+        $id_article = $params['id_article'];
+        $bool_favori = $params['favori']; // O ou 1
+        if ($res = $this->getConnectionWrapper()->setFavori($id_user, $id_article, $bool_favori) === FALSE) {
+            $this->redirect_to('index'); 
+        }
+        else {
+            $this->redirect_to('index'); 
+        }
     }
 
     public function set_lu($route, $params) {
-        /* POST['id' : id article
-         *       'lu' : true/false
-         */
+        $id_user = $this->session_get('user_id');
+        $id_article = $params['id_article'];
+        $bool_lu = $params['lu']; // O ou 1
+        if ($res = $this->getConnectionWrapper()->setLu($id_user, $id_article, $lu) === FALSE) {
+            $this->redirect_to('index'); 
+        }
+        else {
+            $this->redirect_to('index'); 
+        }
     }
 }
 

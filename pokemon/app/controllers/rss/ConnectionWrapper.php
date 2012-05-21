@@ -37,6 +37,80 @@ class ConnectionWrapper {
     return $tags;
   }
   
+  public function setTags($tag_article_id_article, $tag_article_id_tag) {
+        $insertStatement = $this->connection->prepare('SELECT COUNT(*) FROM tag_article WHERE tag_article_id_article=:id_article');
+        $insertStatement->bindParam(':id_article', $tag_article_id_article);
+		$res = $insertStatement->execute();
+		$result = $insertStatement->fetch(PDO::FETCH_ASSOC);
+		if($result['COUNT(*)'] == 0){
+			return FALSE; //id_article pas dans bdd
+		}
+        $insertStatement = $this->connection->prepare('SELECT COUNT(*) FROM tag_article WHERE tag_article_id_article=:id_article AND tag_article_id_tag=:id_tag');
+        $insertStatement->bindParam(':id_article', $tag_article_id_article);
+		$insertStatement->bindParam(':id_tag', $tag_article_id_tag);
+		$res = $insertStatement->execute();
+		$result = $insertStatement->fetch(PDO::FETCH_ASSOC);
+		print_r($result);
+		if($result['COUNT(*)'] == 0){ //id_tag pas présent pour cet id_article
+			$insertStatement = $this->connection->prepare('INSERT INTO tag_article(tag_article_id_article, tag_article_id_tag) VALUES(:id_article, :id_tag);');
+			$insertStatement->bindParam(':id_article', $tag_article_id_article);
+			$insertStatement->bindParam(':id_tag', $tag_article_id_tag);
+			if($insertStatement->execute() === FALSE) {
+			  return FALSE;
+			}
+		}
+	}
+	
+  public function setFavori($id_user,$id_article, $bool_favori) {
+		$insertStatement = $this->connection->prepare('SELECT COUNT(*) FROM lecture WHERE lecture_id_user=:id_user AND lecture_id_article=:id_article');
+        $insertStatement->bindParam(':id_user', $id_user);
+        $insertStatement->bindParam(':id_article', $id_article);
+		$res = $insertStatement->execute();
+		$result = $insertStatement->fetch(PDO::FETCH_ASSOC);
+		if($result['COUNT(*)'] == 0){
+			return FALSE; //couple id_user / id_article pas dans la table lecture
+		}
+        $insertStatement = $this->connection->prepare('SELECT * FROM lecture WHERE lecture_id_user=:id_user AND lecture_id_article=:id_article');
+        $insertStatement->bindParam(':id_user', $id_user);
+        $insertStatement->bindParam(':id_article', $id_article);
+		$res = $insertStatement->execute();
+		$result = $insertStatement->fetch(PDO::FETCH_ASSOC);
+		if($result['lecture_sauvegarde'] != $bool_favori){
+			$insertStatement = $this->connection->prepare('UPDATE lecture SET lecture_sauvegarde=:bool WHERE lecture_id_user=:id_user AND lecture_id_article=:id_article');
+			$insertStatement->bindParam(':bool', $bool_favori);
+			$insertStatement->bindParam(':id_user', $id_user);
+			$insertStatement->bindParam(':id_article', $id_article);
+			if($insertStatement->execute() === FALSE) {
+			  return FALSE;
+			}
+		}
+	}
+	
+  public function setLu($id_user,$id_article, $bool_lu) {
+		$insertStatement = $this->connection->prepare('SELECT COUNT(*) FROM lecture WHERE lecture_id_user=:id_user AND lecture_id_article=:id_article');
+        $insertStatement->bindParam(':id_user', $id_user);
+        $insertStatement->bindParam(':id_article', $id_article);
+		$res = $insertStatement->execute();
+		$result = $insertStatement->fetch(PDO::FETCH_ASSOC);
+		if($result['COUNT(*)'] == 0){
+			return FALSE; //couple id_user / id_article pas dans la table lecture
+		}
+        $insertStatement = $this->connection->prepare('SELECT * FROM lecture WHERE lecture_id_user=:id_user AND lecture_id_article=:id_article');
+        $insertStatement->bindParam(':id_user', $id_user);
+        $insertStatement->bindParam(':id_article', $id_article);
+		$res = $insertStatement->execute();
+		$result = $insertStatement->fetch(PDO::FETCH_ASSOC);
+		if($result['lecture_lu_nonlu'] != $bool_lu){
+			$insertStatement = $this->connection->prepare('UPDATE lecture SET lecture_lu_nonlu=:bool WHERE lecture_id_user=:id_user AND lecture_id_article=:id_article');
+			$insertStatement->bindParam(':bool', $bool_lu);
+			$insertStatement->bindParam(':id_user', $id_user);
+			$insertStatement->bindParam(':id_article', $id_article);
+			if($insertStatement->execute() === FALSE) {
+			  return FALSE;
+			}
+		}
+	}
+  
   public function signUp($login, $pwd, $email) {
     $insertStatement = $this->connection->prepare('INSERT INTO user(user_login, user_password, user_email) VALUES(:login, :pwd, :email);');
     $insertStatement->bindParam(':login', $login);
