@@ -1,4 +1,6 @@
+
 <IfModule mod_rewrite.c>
+  
   RewriteEngine on
   RewriteBase /pokemon
   RewriteCond %{REQUEST_URI} !^/pokemon/static(.*)$
