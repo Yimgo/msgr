@@ -11,13 +11,13 @@
             <a class="brand" href="#">RSS</a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
+                    <li class="active"><a href="#"><i class="icon-home icon-white"></i> Accueil</a></li>
                 </ul>
             </div>
 
         <ul class="nav pull-right">
             <li class="divider-vertical"></li>
-            <li><a href="/pokemon/rss/logout">Déconnexion</a></li>
+            <li><a href="/pokemon/rss/logout"><i class="icon-user icon-white"></i> Déconnexion</a></li>
           </ul>
 
         </div>
