@@ -97,7 +97,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags) {
                 $('li', new_dropdown_tags).each(function(index, li) {
                     if ($(li).data('id') == obj.id) {
                         $(li).show();
-                        $.get('/pokemon/rss/set_tag', {'id_tag':obj.id, 'id_article':id, 'tag':true});
+                        $.post('/pokemon/rss/set_tag', {'id_tag':obj.id, 'id_article':id, 'tag':true});
                         $('input', new_dropdown_tags).val("");
                     }
                 });
@@ -154,7 +154,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags) {
         id_tag =  $(li).data('id');
         id_article = $(li).parent().parent().parent().parent().data('id');
         $(li).hide();
-        $.get('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':false});
+        $.post('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':false});
         return false;
     });
 
@@ -214,10 +214,10 @@ function article_favori() {
     id = $(this).parent().parent().parent().data('id');
 
     if ($(this).children().hasClass('icon-star')) {
-        $.get('/pokemon/rss/set_favori', {'id' : id, 'favori': 'false'});
+        $.post('/pokemon/rss/set_favori', {'id' : id, 'favori': 'false'});
         $(this).children().removeClass('icon-star').addClass('icon-star-empty');
     } else {
-        $.get('/pokemon/rss/set_favori', {'id' : id, 'favori' : 'true'});
+        $.post('/pokemon/rss/set_favori', {'id' : id, 'favori' : 'true'});
         $(this).children().removeClass('icon-star-empty').addClass('icon-star');
     }
 }
@@ -226,10 +226,10 @@ function article_lu_nonlu() {
     id = $(this).parent().parent().parent().data('id');
 
     if ($(this).children().hasClass('icon-eye-open')) {
-        $.get('/pokemon/rss/set_lu', {'id' : id, 'lu': 'false'});
+        $.post('/pokemon/rss/set_lu', {'id' : id, 'lu': 'false'});
         $(this).children().removeClass('icon-eye-open').addClass('icon-eye-close');
     } else {
-        $.get('/pokemon/rss/set_lu', {'id' : id, 'lu' : 'true'});
+        $.post('/pokemon/rss/set_lu', {'id' : id, 'lu' : 'true'});
         $(this).children().removeClass('icon-eye-close').addClass('icon-eye-open');
     }
 }

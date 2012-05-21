@@ -33,9 +33,9 @@ class RssController extends BaseController {
         $this->render_view('listing', null);
     }
 
-    public function login($route) {
-        if (isset($_POST["user_login"])) {
-            if ($user_id = $this->getConnectionWrapper()->signIn($_POST["user_login"], $_POST["user_password"]) === FALSE) {
+    public function login($route, $params) {
+        if (isset($params["user_login"])) {
+            if ($user_id = $this->getConnectionWrapper()->signIn($params["user_login"], $params["user_password"]) === FALSE) {
                 $this->render_view('login', array('type' => 'login', 'state' => 'error', 'error' => 'credentials'));
             }
             else {
@@ -53,10 +53,10 @@ class RssController extends BaseController {
         $this->redirect_to('index');
     }
 
-    public function signup($route) {
-        $user_login = $_POST['user_login'];
-        $user_password = $_POST['user_password'];
-        $user_email = $_POST['user_email'];
+    public function signup($route, $params) {
+        $user_login = $params['user_login'];
+        $user_password = $params['user_password'];
+        $user_email = $params['user_email'];
         
         /* Si un des champs n'est pas rempli */
         if (empty($user_login)) {
@@ -190,23 +190,23 @@ class RssController extends BaseController {
         else echo json_encode($articles);
     }
 
-    public function set_tag($route) {
+    public function set_tag($route, $params) {
         /*
-         * $_GET['id_tag'
+         * POST['id_tag'
          *       'id_article'
          *       'tag' : true/false
          *      ]
          */
     }
 
-    public function set_favori($route) {
-        /* $_GET['id' : id article
+    public function set_favori($route, $params) {
+        /* POST['id' : id article
          *       'favori' : true/false
          */
     }
 
-    public function set_lu($route) {
-        /* $_GET['id' : id article
+    public function set_lu($route, $params) {
+        /* POST['id' : id article
          *       'lu' : true/false
          */
     }
