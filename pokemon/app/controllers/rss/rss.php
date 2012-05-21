@@ -35,7 +35,7 @@ class RssController extends BaseController {
 
     public function login($route, $params) {
         if (isset($params["user_login"])) {
-            if ($user_id = $this->getConnectionWrapper()->signIn($params["user_login"], $params["user_password"]) === FALSE) {
+            if (($user_id = $this->getConnectionWrapper()->signIn($params["user_login"], $params["user_password"])) === FALSE) {
                 $this->render_view('login', array('type' => 'login', 'state' => 'error', 'error' => 'credentials'));
             }
             else {

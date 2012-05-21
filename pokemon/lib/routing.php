@@ -30,11 +30,15 @@ function route_to($route)
 				  $controlleur->$route["action"]($route["id"], $_POST);
 				}
 				else {
-				  $controlleur->$route["action"]($route["id"]);
+				  $controlleur->$route["action"]($route["id"], array());
 				}
 			}else{
-				
-				$controlleur->$route["action"](null);
+                            if(isset($_POST) && !empty($_POST)) {
+                              $controlleur->$route["action"](null, $_POST);
+                            }
+                            else {
+                                $controlleur->$route["action"](null, array());
+                            }
 			}
 		}else{
 			require_once "static/html/404.php";
