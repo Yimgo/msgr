@@ -26,7 +26,12 @@ function route_to($route)
 		$controlleur=new $class_name;
 		if (method_exists($controlleur,$route["action"])){
 			if (isset($route["id"])){
-				$controlleur->$route["action"](($route["id"]));
+				if(isset($_POST) && !empty($_POST)) {
+				  $controlleur->$route["action"]($route["id"], $_POST);
+				}
+				else {
+				  $controlleur->$route["action"]($route["id"]);
+				}
 			}else{
 				
 				$controlleur->$route["action"](null);
