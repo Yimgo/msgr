@@ -156,7 +156,7 @@ class RssController extends BaseController {
 
     public function get_articles($id_flux) {
         // Renvoie tous les articles pour un flux donné (TODO: login)
-        $lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
+        /*$lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
 
         $articles = array(
             array("titre" => "Test 1",
@@ -183,11 +183,15 @@ class RssController extends BaseController {
             "favori" => false,
             "lu" => true,
             "tags" => array(6,7))
-        );
+					);*/
+
+			$articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $id_flux);
 
         // pour tester le rendu en cas d'erreur cote client
-        if (rand(0, 10) == 0) echo "erreur json; df ;d;f d;";
-        else echo json_encode($articles);
+			if (rand(0, 10) == 0) 
+				echo "erreur json; df ;d;f d;";
+			else 
+				echo json_encode($articles);
     }
 	
 	

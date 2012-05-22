@@ -144,6 +144,44 @@ class ConnectionWrapper {
         return FALSE;
       }
     }
-  }
+	}
+
+	public function getArticles($id_user, $id_flux) {
+		$selectArticleLecture = $this->connection->prepare('SELECT article_id, article_contenu, article_titre, article_url, lecture_lu_nonlu, lecture_sauvegarde FROM article INNER JOIN lecture ON article_id = lecture_id_article WHERE article_id_flux = :id_flux AND lecture_id_user = :id_user;');
+		$selectArticleLecture->bindParam(':id_flux', $id_flux);
+		$selectArticleLecture->bindParam(':id_user', $id_user);
+		if ($selectArticleLecture->execute() === FALSE) {
+			return array();
+		}
+		
+		$selectTag_Article = $this->connection->prepare('SELECT tag_article_id_tag FROM tag_article WHERE tag_article_id_article = :id_article;');
+		
+		$articles = array();
+		while ($row = $selectArticleLecture->fetch()) {
+			$tags = array();
+			$selectTag_Article->bindParam('id_article', $row['article_id']);
+			if($selectTag_Article->execute() !== FALSE) {
+				$tags = $selectTag_Article->fetchAll(PDO::FETCH_COLUMN, 0);
+			}
+
+			$tags = array_map('intval', $tags);
+
+			$selectTag_Article->closeCursor();
+
+			array_push($articles, array(
+				'id' => intval($row['article_id']),
+				'contenu' => $row['article_contenu'],
+				'titre' => $row['article_titre'],
+				'url'  => $row['article_url'],
+				'lu' => filter_var($row['lecture_lu_nonlu'], FILTER_VALIDATE_BOOLEAN),
+				'tags' => $tags,
+				'favori' => filter_var($row['lecture_sauvegarde'], FILTER_VALIDATE_BOOLEAN)
+				));
+		}
+
+		return $articles;
+	}
+
+
 }
 ?>
