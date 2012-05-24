@@ -68,7 +68,7 @@ $(document).ready(function() {
    -------------------------------- */
 
 // Ajouter un article à la liste des articles
-function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags) {
+function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
     var new_dropdown_tags = $(fresh_dropdown_tags).clone(true, true);
 
     $('input', new_dropdown_tags)
@@ -107,7 +107,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags) {
     toto = $('<div>')
             .data('id', id)
             .append($('<p>')
-                .append($('<span>', {html:titre}))
+                .append($('<a>', {html:titre, href:url}))
                 .append($('<div>', {'class': 'article_properties btn-group'})
                     .append($('<button>', {'class':'btn dropdown-toggle', 'data-toggle':'dropdown'})
                         .append($('<i>', {'class': 'icon-tags'}))
@@ -182,7 +182,7 @@ function click_flux() {
     $.getJSON('/pokemon/rss/get_articles/' + $(this).data('id'), function(data) {
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
-            add_article_to_dom(elem.id, elem.titre, elem.contenu, elem.favori, elem.lu, elem.tags);
+            add_article_to_dom(elem.id, elem.titre, elem.contenu, elem.favori, elem.lu, elem.tags, elem.url);
         });
         click_list_articles();
     })
@@ -226,10 +226,10 @@ function article_lu_nonlu() {
     id = $(this).parent().parent().parent().data('id');
 
     if ($(this).children().hasClass('icon-eye-open')) {
-        $.post('/pokemon/rss/set_lu', {'id' : id, 'lu': 'false'});
+        $.post('/pokemon/rss/set_lu', {'article_id' : id, 'lu': 'false'});
         $(this).children().removeClass('icon-eye-open').addClass('icon-eye-close');
     } else {
-        $.post('/pokemon/rss/set_lu', {'id' : id, 'lu' : 'true'});
+        $.post('/pokemon/rss/set_lu', {'article_id' : id, 'lu' : 'true'});
         $(this).children().removeClass('icon-eye-close').addClass('icon-eye-open');
     }
 }

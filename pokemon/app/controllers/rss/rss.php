@@ -185,13 +185,13 @@ class RssController extends BaseController {
             "tags" => array(6,7))
 					);*/
 
-			$articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $id_flux);
+        $articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $id_flux);
 
         // pour tester le rendu en cas d'erreur cote client
-			if (rand(0, 10) == 0) 
-				echo "erreur json; df ;d;f d;";
-			else 
-				echo json_encode($articles);
+        if (rand(0, 10) == 0) 
+            echo "erreur json; df ;d;f d;";
+        else 
+            echo json_encode($articles);
     }
 	
 	
