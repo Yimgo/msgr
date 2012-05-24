@@ -97,7 +97,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
                 $('li', new_dropdown_tags).each(function(index, li) {
                     if ($(li).data('id') == obj.id) {
                         $(li).show();
-                        $.post('/pokemon/rss/set_tag', {'id_tag':obj.id, 'id_article':id, 'tag':true});
+                        $.post('/pokemon/rss/set_tag', {'tag_id':obj.id, 'article_id':id, 'tag':true});
                         $('input', new_dropdown_tags).val("");
                     }
                 });
@@ -154,7 +154,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
         id_tag =  $(li).data('id');
         id_article = $(li).parent().parent().parent().parent().data('id');
         $(li).hide();
-        $.post('/pokemon/rss/set_tag', {'id_tag':id_tag, 'id_article':id_article, 'tag':false});
+        $.post('/pokemon/rss/set_tag', {'tag_id':id_tag, 'article_id':id_article, 'tag':false});
         return false;
     });
 
@@ -214,10 +214,10 @@ function article_favori() {
     id = $(this).parent().parent().parent().data('id');
 
     if ($(this).children().hasClass('icon-star')) {
-        $.post('/pokemon/rss/set_favori', {'id' : id, 'favori': 'false'});
+        $.post('/pokemon/rss/set_favori', {'article_id' : id, 'favori': 'false'});
         $(this).children().removeClass('icon-star').addClass('icon-star-empty');
     } else {
-        $.post('/pokemon/rss/set_favori', {'id' : id, 'favori' : 'true'});
+        $.post('/pokemon/rss/set_favori', {'article_id' : id, 'favori' : 'true'});
         $(this).children().removeClass('icon-star-empty').addClass('icon-star');
     }
 }
