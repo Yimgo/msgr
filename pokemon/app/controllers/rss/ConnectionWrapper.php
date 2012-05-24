@@ -52,6 +52,39 @@ class ConnectionWrapper {
 		return $tags;
 	}
 	
+
+	public function getTaggedArticles($tag_id) {
+		$statement = $this->connection->prepare('SELECT article_id FROM map_tag_article WHERE tag_id = :tag_id;');
+		$statement->bindParam(':tag_id', $tag_id);
+		if ($statement->execute() === FALSE) {
+		  return array();
+		}
+		$articles = array();
+		while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+			$statement_article = $this->connection->prepare('SELECT titre,id,contenu,lu,favori FROM article,lecture WHERE article.id = lecture.article_id = :article_id;');
+			$statement_tags = $this->connection->prepare('SELECT tag_id FROM map_tag_article WHERE article_id = :article_id;');
+			$statement_article->bindParam(':article_id', $row["article_id"]);
+			$statement_tags->bindParam(':article_id', $row["article_id"]);
+			if ($statement_article->execute() === FALSE) {
+			  return array();
+			}
+			$fetch = $statement_article->fetch(PDO::FETCH_ASSOC);
+			if($fetch != ""){
+				$array = array("titre" => $fetch["titre"], "id" => $fetch["id"], "contenu" => $fetch["contenu"], "favori" => $fetch["favori"], "lu" => $fetch["lu"], "tags" => array());
+				if ($statement_tags->execute() === FALSE) {
+					  return array();
+				}
+				$tags_array = array();
+				while ($row_tag = $statement_tags->fetch(PDO::FETCH_ASSOC)) {
+					array_push($array["tags"], $row_tag["tag_id"]);
+				}		
+				array_push($articles, $array);
+			}
+		}
+		return $articles;
+	}
+
+	
 	public function setTags($article_id, $tag_id) {
 		$insertStatement = $this->connection->prepare('INSERT INTO map_tag_article(article_id, tag_id) VALUES(:article_id, :tag_id);');
 		$insertStatement->bindParam(':article_id', $article_id);
