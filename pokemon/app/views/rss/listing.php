@@ -42,7 +42,7 @@
             <form class="form-search" action="/pokemon/rss/search" id="form-search" >
                 <div class="input-append input-prepend">
                     <span id="tag-list"></span>
-                    <input type="text" id="search" name="search" class="search-query typeahead" data-items="4" />
+                    <input type="text" id="search" name="search" class="search-query typeahead" data-items="4" autocomplete="off" />
                     <button type="submit" class="btn"><i class="icon-search"></i> Rechercher un article</button>
                 </div>
             </form>
