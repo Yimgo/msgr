@@ -14,7 +14,7 @@ CREATE TABLE dossier (
 
 CREATE TABLE flux (
     id INT(10) AUTO_INCREMENT PRIMARY KEY,
-    url VARCHAR(100) NOT NULL UNIQUE,
+    url TEXT NOT NULL UNIQUE,
     nom VARCHAR(50) NOT NULL,
     description TEXT
 );
@@ -40,7 +40,7 @@ CREATE TABLE article (
     id INT(10) PRIMARY KEY AUTO_INCREMENT,
     flux_id INT(10),
     titre VARCHAR(100) NOT NULL,
-    url VARCHAR(200) NOT NULL,
+    url TEXT NOT NULL,
     contenu TEXT,
     date DATETIME,
     FOREIGN KEY (flux_id) REFERENCES flux(id)
