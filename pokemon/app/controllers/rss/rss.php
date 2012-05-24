@@ -219,10 +219,10 @@ class RssController extends BaseController {
     }
 
     public function set_lu($route, $params) {
-        $id_user = $this->session_get('user_id');
-        $id_article = $params['id_article'];
-        $bool_lu = $params['lu']; // O ou 1
-        if ($res = $this->getConnectionWrapper()->setLu($id_user, $id_article, $lu) === FALSE) {
+        $user_id = $this->session_get('user_id', null);
+        $article_id = $params['article_id'];
+        $lu = $params['lu']; // O ou 1
+        if ($res = $this->getConnectionWrapper()->setLu($user_id, $article_id, $lu) === FALSE) {
             $this->redirect_to('index'); 
         }
         else {
