@@ -194,6 +194,11 @@ class RssController extends BaseController {
 			echo json_encode($articles);
 	}
 	
+	public function getTagged() {
+			// Renvoie les tags pour un utilisateur
+			echo json_encode($this->getConnectionWrapper()->getTaggedArticles($this->session_get("user_id", null)));
+	}
+	
 	
 	public function set_tag($route, $params) {
 		$article_id = $params['article_id'];
