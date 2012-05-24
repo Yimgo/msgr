@@ -196,38 +196,23 @@ class RssController extends BaseController {
 	
 	
     public function set_tag($route, $params) {
-		$id_article = $params['id_article'];
-		$id_tag = $params['id_tag'];
-        if ($res = $this->getConnectionWrapper()->setTags($id_article,$id_tag) === FALSE) {
-            $this->redirect_to('index'); 
-        }
-        else {
-            $this->redirect_to('index'); 
-        }
+		$article_id = $params['article_id'];
+		$tag_id = $params['tag_id'];
+    $this->getConnectionWrapper()->setTags($article_id, $tag_id);
     }
 
     public function set_favori($route, $params) {
-        $id_user = $this->session_get('user_id');
-        $id_article = $params['id_article'];
-        $bool_favori = $params['favori']; // O ou 1
-        if ($res = $this->getConnectionWrapper()->setFavori($id_user, $id_article, $bool_favori) === FALSE) {
-            $this->redirect_to('index'); 
-        }
-        else {
-            $this->redirect_to('index'); 
-        }
+        $user_id = $this->session_get('user_id');
+        $article_id = $params['article_id'];
+        $favori = filter_var($params['favori'], FILTER_VALIDATE_BOOLEAN);
+        $this->getConnectionWrapper()->setFavori($user_id, $article_id, $favori);
     }
 
     public function set_lu($route, $params) {
         $user_id = $this->session_get('user_id', null);
         $article_id = $params['article_id'];
-        $lu = filter_var($params['lu'], FILTER_VALIDATE_BOOLEAN); // O ou 1
-        if ($res = $this->getConnectionWrapper()->setLu($user_id, $article_id, $lu) === FALSE) {
-            $this->redirect_to('index'); 
-        }
-        else {
-            $this->redirect_to('index'); 
-        }
+        $lu = filter_var($params['lu'], FILTER_VALIDATE_BOOLEAN);
+        $this->getConnectionWrapper()->setLu($user_id, $article_id, $lu);
     }
 }
 
