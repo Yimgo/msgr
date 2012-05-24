@@ -73,7 +73,7 @@ class RssController extends BaseController {
         }
 
         /* Inscription dans la base de données */
-        if ($user_id = $this->getConnectionWrapper()->signUp($user_login, $user_password, $user_email) === FALSE) {
+        if (($user_id = $this->getConnectionWrapper()->signUp($user_login, $user_password, $user_email)) === FALSE) {
             $this->render_view('login', array("type" => "signup", 'state' => 'error', 'error' => 'db'));
         }
         else {
