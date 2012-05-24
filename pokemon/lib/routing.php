@@ -8,12 +8,16 @@ function route_for_request_path($path)
 	if ((array_key_exists(0,$array)==false)||(array_key_exists(1,$array)==false)){
 		return "error";
 	}elseif (array_key_exists(2,$array)==false){
-		return array("controller"=>$array[0],
-					"action"=>$array[1]);
+		return	array(
+				"controller"=>$array[0],
+				"action"=>$array[1]
+			);
 	}else{
-		return array("controller"=>$array[0],
-					"action"=>$array[1],
-					"id"=>$array[2]);
+		return	array(
+				"controller"=>$array[0],
+				"action"=>$array[1],
+				"id"=>$array[2]
+			);
 	}		 
 }
 
@@ -28,19 +32,17 @@ function route_to($route)
 			if (isset($route["id"])){
 				if(isset($_POST) && !empty($_POST)) {
 				  $controlleur->$route["action"]($route["id"], $_POST);
-				}
-				else {
+				} else {
 				  $controlleur->$route["action"]($route["id"], array());
 				}
 			}else{
-                            if(isset($_POST) && !empty($_POST)) {
-                              $controlleur->$route["action"](null, $_POST);
-                            }
-                            else {
-                                $controlleur->$route["action"](null, array());
-                            }
+				if(isset($_POST) && !empty($_POST)) {
+					$controlleur->$route["action"](null, $_POST);
+				} else {
+					$controlleur->$route["action"](null, array());
+				}
 			}
-		}else{
+		} else {
 			require_once "static/html/404.php";
 		}
 	}else{
