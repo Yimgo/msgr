@@ -40,7 +40,7 @@ CREATE TABLE article (
     id INT(10) PRIMARY KEY AUTO_INCREMENT,
     flux_id INT(10),
     titre VARCHAR(100) NOT NULL,
-    url VARCHAR(100) NOT NULL,
+    url VARCHAR(200) NOT NULL,
     contenu TEXT,
     date DATETIME,
     FOREIGN KEY (flux_id) REFERENCES flux(id)
