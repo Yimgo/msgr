@@ -196,13 +196,16 @@ class RssController extends BaseController {
 	
 	
     public function set_tag($route, $params) {
-		$article_id = $params['article_id'];
-		$tag_id = $params['tag_id'];
-    $this->getConnectionWrapper()->setTags($article_id, $tag_id);
+		  $article_id = $params['article_id'];
+		  $tag_id = $params['tag_id'];
+		  if(filter_var($params['tag'], FILTER_VALIDATE_BOOLEAN))
+        $this->getConnectionWrapper()->tagArticle($article_id, $tag_id);
+      else
+        $this->getConnectionWrapper()->untagArticle($article_id, $tag_id);
     }
 
     public function set_favori($route, $params) {
-        $user_id = $this->session_get('user_id');
+        $user_id = $this->session_get('user_id', null);
         $article_id = $params['article_id'];
         $favori = filter_var($params['favori'], FILTER_VALIDATE_BOOLEAN);
         $this->getConnectionWrapper()->setFavori($user_id, $article_id, $favori);
