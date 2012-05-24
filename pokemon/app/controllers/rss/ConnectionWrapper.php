@@ -102,7 +102,7 @@ class ConnectionWrapper {
 	}
 
 	public function getArticles($user_id, $flux_id) {
-		$selectArticleLecture = $this->connection->prepare('SELECT article.id, article.contenu, article.titre, article.url, lecture.lu, lecture.favori FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id;');
+		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id;');
 		$selectArticleLecture->bindParam(':flux_id', $flux_id);
 		$selectArticleLecture->bindParam(':user_id', $user_id);
 		if ($selectArticleLecture->execute() === FALSE) {
@@ -114,7 +114,7 @@ class ConnectionWrapper {
 		$articles = array();
 		while ($row = $selectArticleLecture->fetch()) {
 			$tags = array();
-			$selectTag_Article->bindParam('article_id', $row['article.id']);
+			$selectTag_Article->bindParam('article_id', $row['id']);
 			if($selectTag_Article->execute() !== FALSE) {
 				$tags = $selectTag_Article->fetchAll(PDO::FETCH_COLUMN, 0);
 			}
@@ -124,13 +124,13 @@ class ConnectionWrapper {
 			$selectTag_Article->closeCursor();
 
 			array_push($articles, array(
-				'id' => intval($row['article.id']),
-				'contenu' => $row['article.contenu'],
-				'titre' => $row['article.titre'],
-				'url'  => $row['article.url'],
-				'lu' => filter_var($row['lecture.lu'], FILTER_VALIDATE_BOOLEAN),
+				'id' => intval($row['id']),
+				'contenu' => $row['contenu'],
+				'titre' => $row['titre'],
+				'url'  => $row['url'],
+				'lu' => filter_var($row['lu'], FILTER_VALIDATE_BOOLEAN),
 				'tags' => $tags,
-				'favori' => filter_var($row['lecture.favori'], FILTER_VALIDATE_BOOLEAN)
+				'favori' => filter_var($row['favori'], FILTER_VALIDATE_BOOLEAN)
 				));
 		}
 
