@@ -11,7 +11,7 @@ BEGIN
   REPEAT
     FETCH ids_article INTO id_article;
     IF NOT done THEN
-      INSERT INTO tag_article(lecture_id_user, lecture_id_article, lecture_lu_nonlu, lecture_sauvegarde) VALUES(NEW.abonnement_id_user, id_article, 0, 0);
+      INSERT INTO lecture(lecture_id_user, lecture_id_article, lecture_lu_nonlu, lecture_sauvegarde) VALUES(NEW.abonnement_id_user, id_article, 0, 0);
     END IF;
   UNTIL done END REPEAT;
 
