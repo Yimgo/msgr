@@ -286,6 +286,17 @@ class ConnectionWrapper {
 			return FALSE;
 		}
 	}
+
+	public function renameFolder($user_id, $folder_id, $nom) {
+		$statement = $this->connection->prepare('UPDATE dossier SET nom=:nom WHERE user_id = :user_id AND id = :folder_id;');
+		$statement->bindParam(':nom', $nom);
+		$statement->bindParam(':user_id', $user_id);
+		$statement->bindParam(':folder_id', $folder_id);
+		
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+	}
 	
 	public function getFluxByFolders($user_id) {
 		$tab2=array();

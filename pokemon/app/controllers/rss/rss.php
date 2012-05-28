@@ -122,8 +122,7 @@ class RssController extends BaseController {
 	}
 
 	public function rename_folder($route, $params) {
-		// $params['id']
-		// $params['titre']
+		$this->getConnectionWrapper()->renameFolder($this->session_get("user_id", null), $params['id'], $params['titre']);
 		$this->redirect_to("folders");
 	}
 
