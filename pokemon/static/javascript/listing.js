@@ -61,6 +61,12 @@ $(document).ready(function() {
                 .val(tags_id)
         );
      });
+
+    // Empecher d'ajouter un flux quand l'URL est vide
+    $('#form_add_flux').submit(function() {
+        if ($("#form_add_flux_URL").val() == "") return false;
+        else return true;
+    });
 });
 
 /* --------------------------------
