@@ -30,9 +30,9 @@
     <div class="row">
         <!-- Ajouter Abonnement --> 
         <div class="span4">
-            <form method="POST" action="/pokemon/rss/parse_single_feed">
+            <form method="POST" action="/pokemon/rss/parse_single_feed" id="form_add_flux">
                 <div class="input-append">
-                    <input name="url" type="text" placeholder="Saisir une URL" class="span3" autocomplete="off" />
+                    <input id="form_add_flux_URL" name="url" type="text" placeholder="Saisir une URL" class="span3" autocomplete="off" />
                     <button type="submit" class="btn" ><i class="icon-plus-sign"></i></button>
                     <a id='refresh_liste_flux' href='#' class='btn pull-right'><i class='icon-refresh'></i></a>
                 </div>
