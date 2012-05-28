@@ -168,6 +168,7 @@ function click_flux() {
 
     // Mettre le titre du flux dans la colonne de droite
     $('#titre_liste_articles').html($(this).data('titre'));
+    $('#titre_liste_articles').data('id', $(this).data('id'));
 
     // Coloriage de la ligne courante
     $("#liste_flux tr").removeClass("ligne_flux_selectionne");
@@ -250,9 +251,11 @@ function click_dossier() {
 
 // Déplacer un flux de dossier
 function changer_flux_de_dossier() {
-    // $(this).data('id')
-    // TODO: ENVOYER LES DONNEES POUR SIGNIFIER A PHP LE CHANGEMENT DE DOSSIER
-    get_liste_flux();
+    var dossier_id = $(this).data('id');
+    var flux_id =  $('#titre_liste_articles').data('id');
+    $.post('/pokemon/rss/move_flux_folder',{'flux_id' : flux_id, 'dossier_id': dossier_id})
+     .success(get_liste_flux)
+    ;
 }
 
 // Créer le bouton "Déplacer le flux vers un autre dossier"
