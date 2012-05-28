@@ -3,8 +3,8 @@
 require_once 'lib/controller.php';
 require_once 'lib/DatabaseConnectionFactory.php';
 require_once 'app/controllers/rss/ConnectionWrapper.php';
-//require_once ($_SERVER["DOCUMENT_ROOT"].'/pokemon/'.'app/controllers/rss/rssparser.inc.php');
-require_once 'app/controllers/rss/rssparser.inc.php';
+require_once ($_SERVER["DOCUMENT_ROOT"].'/pokemon/'.'app/controllers/rss/rssparser.inc.php');
+//require_once 'app/controllers/rss/rssparser.inc.php';
 
 class RssController extends BaseController {
 	private $connectionWrapper;
@@ -16,26 +16,6 @@ class RssController extends BaseController {
 		}
 		
 		return $this->connectionWrapper;
-	}
-	
-	public function parse_single_feed($flux)
-	{
-		$feed= new SimplePie();
-		$feed->set_feed_url($_POST['url']);
-		$feed->init();
-		$feed->handle_content_type();
-		$exist=$this->getConnectionWrapper()->addFlux($feed->get_permalink(),$feed->get_title(),$feed->get_description());
-		$idFlux=$this->getConnectionWrapper()->getFluxId($feed->get_title());
-		
-		if(!$exist) {
-			foreach ($feed->get_items() as $item): 
-				$this->getConnectionWrapper()->addArticle($idFlux,$item->get_title(),$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
-			endforeach;	
-		}
-
-		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),self::NON_CLASSE,$idFlux);
-		
-		$this->redirect_to('listing');
 	}
 	
 	public function index($route) {
@@ -129,6 +109,7 @@ class RssController extends BaseController {
 	public function move_flux_folder($route, $params) {
 		// $params["flux_id"] : flux concerné
 		// $params["dossier_id"] : nouveau dossier
+		$this->getConnectionWrapper()->changeFolder($this->session_get("user_id", null),$params['flux_id'], $params['dossier_id']);	
 	}
 
 	public function search($route) {
@@ -211,6 +192,26 @@ class RssController extends BaseController {
 		$article_id = $params['article_id'];
 		$lu = filter_var($params['lu'], FILTER_VALIDATE_BOOLEAN);
 		$this->getConnectionWrapper()->setLu($user_id, $article_id, $lu);
+	}
+	
+	public function parse_single_feed($flux)
+	{
+		$feed= new SimplePie();
+		$feed->set_feed_url($_POST['url']);
+		$feed->init();
+		$feed->handle_content_type();
+		$exist=$this->getConnectionWrapper()->addFlux($feed->get_permalink(),$feed->get_title(),$feed->get_description());
+		$idFlux=$this->getConnectionWrapper()->getFluxId($feed->get_title());
+		
+		if(!$exist) {
+			foreach ($feed->get_items() as $item): 
+				$this->getConnectionWrapper()->addArticle($idFlux,$item->get_title(),$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
+			endforeach;	
+		}
+
+		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),self::NON_CLASSE,$idFlux);
+		
+		$this->redirect_to('listing');
 	}
 }
 
