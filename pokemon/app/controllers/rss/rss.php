@@ -99,6 +99,12 @@ class RssController extends BaseController {
 		// $route[0] = id à supprimer
 		$this->redirect_to("folders");
 	}
+
+	public function rename_folder($route, $params) {
+		// $params['id']
+		// $params['titre']
+		$this->redirect_to("folders");
+	}
 	
 	public function search($route) {
 		$search = $_GET["search"];

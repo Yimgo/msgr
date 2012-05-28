@@ -29,13 +29,13 @@
     <!-- Ajouter Abonnement + Recherche -->
     <div class="row">
     
-    	<div class="offset2 span8">
+    	<div class="offset1 span10">
 
     		<table class="table table-bordered table-striped span6">
     			<thead>
     				<tr>
-    					<th class="span4" style="text-align: center;">Titre du flux</th>
-    					<th class="span2" style="text-align: center;">Actions associées</th>
+    					<th class="span5" style="text-align: center;">Titre du flux</th>
+    					<th class="span5" style="text-align: center;">Actions associées</th>
     				</tr>
     			</thead>
 
@@ -43,8 +43,18 @@
     				<!-- Liste des dossiers existants -->
 	    			<?php foreach ($params as $folder) { ?>
 	    			<tr>
-	    				<td><?php echo $folder["titre"] ?></td>
-	    				<td><a class="btn" href="delete_folder/<?php echo $folder["id"]; ?>"><i class="icon-minus-sign"></i> Supprimer</a></td>
+	    				<td>
+                            <span><?php echo $folder["titre"] ?></span>
+                            <form method="POST" action="rename_folder" class="form-inline" style="display:none" id="form-<?php echo $folder['id'] ; ?>">
+                                <input type="hidden" name="id" value="<?php echo $folder["id"] ; ?>" />
+                                <input type="text" id="titre" name="titre" value="<?php echo $folder["titre"]; ?>"/>
+                                <button type="submit" class="btn"><i class="icon-check"></i> OK</button>
+                            </form>
+                        </td>
+	    				<td>
+	    					<a class="btn renommer" href="#" id="renommer-<?php echo $folder["id"];?>"><i class="icon-pencil"></i> Renommer</a>
+	    					<a class="btn" href="delete_folder/<?php echo $folder["id"]; ?>"><i class="icon-minus-sign"></i> Supprimer</a>
+                        </td>
 	    			</tr>
 	    			<?php } ?>
 
@@ -55,7 +65,7 @@
 	    						<input type="text" placeholder="Nom du nouveau dossier" id="titre" name="titre" />
 	    					</td>
 	    					<td>
-	    						<button type="submit" class="btn"><i class="icon-plus-sign"></i> Ajouter</button>
+	    						<button type="submit" class="btn"><i class="icon-plus-sign"></i> Ajouter un dossier</button>
 	    					</td>
 	    				</form>
 	    			</tr>
@@ -67,4 +77,4 @@
 </div>
 <?php render_partial("footer", null); ?>
 <!-- JS à la fin, après les includes de jQuery -->
-<script src="/pokemon/static/javascript/listing.js"></script>
+<script src="/pokemon/static/javascript/folders.js"></script>
