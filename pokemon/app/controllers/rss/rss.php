@@ -126,6 +126,11 @@ class RssController extends BaseController {
 		$this->redirect_to("folders");
 	}
 
+	public function move_flux_folder($route, $params) {
+		// $params["flux_id"] : flux concerné
+		// $params["dossier_id"] : nouveau dossier
+	}
+
 	public function search($route) {
 		$search = $_GET["search"];
 		$tags_id = explode(',', $_GET["tags_id"]);
