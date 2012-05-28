@@ -3,8 +3,8 @@
 require_once 'lib/controller.php';
 require_once 'lib/DatabaseConnectionFactory.php';
 require_once 'app/controllers/rss/ConnectionWrapper.php';
-require_once ($_SERVER["DOCUMENT_ROOT"].'/pokemon/'.'app/controllers/rss/rssparser.inc.php');
-//require_once 'app/controllers/rss/rssparser.inc.php';
+//require_once ($_SERVER["DOCUMENT_ROOT"].'/pokemon/'.'app/controllers/rss/rssparser.inc.php');
+require_once 'app/controllers/rss/rssparser.inc.php';
 
 class RssController extends BaseController {
 	private $connectionWrapper;
