@@ -11,8 +11,8 @@
             <a class="brand" href="#">RSS</a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class="active"><a href="listing"><i class="icon-home icon-white"></i> Accueil</a></li>
-                    <li class=""><a href="folders"><i class="icon-folder-close icon-white"></i> Gérer les dossiers</a></li>
+ 	                <li class="active"><a href="listing"><i class="icon-home icon-white"></i> Accueil</a></li>
+ 	                <li class=""><a href="folders"><i class="icon-folder-close icon-white"></i> Gérer les dossiers</a></li>
                 </ul>
             </div>
 
@@ -30,10 +30,10 @@
     <div class="row">
         <!-- Ajouter Abonnement --> 
         <div class="span4">
-            <form>
+            <form method="POST" action="/pokemon/rss/parse_single_feed">
                 <div class="input-append">
-                    <input name="url" type="text" class="span3" autocomplete="off" />
-                    <button type="submit" class="btn"><i class="icon-plus-sign"></i></button>
+                    <input name="url" type="text" placeholder="Saisir une URL" class="span3" autocomplete="off" />
+                    <button type="submit" class="btn" ><i class="icon-plus-sign"></i></button>
                     <a id='refresh_liste_flux' href='#' class='btn pull-right'><i class='icon-refresh'></i></a>
                 </div>
             </form>

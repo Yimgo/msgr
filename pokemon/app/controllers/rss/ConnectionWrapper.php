@@ -2,6 +2,7 @@
 require_once 'lib/Config.php';
 require_once 'lib/DatabaseConnectionFactory.php';
 
+
 class ConnectionWrapper {
 	private $connection;
 	const sel = 'qsdfhsdherh';
@@ -170,41 +171,146 @@ class ConnectionWrapper {
 		return $articles;
 	}
     
-	public function addArticle($flux_id,$titre,$url,$contenu) {
-		//Pour l'instant pas de date
-		$insertArticle = $this->connection->prepare('INSERT INTO article(flux_id, titre, url, contenu) VALUES (:flux_id,:titre,:url,:contenu);');
+	public function addArticle($flux_id,$titre,$url,$contenu,$date) {		
+		$insertArticle = $this->connection->prepare('INSERT INTO article(flux_id, titre, url, contenu,date) VALUES (:flux_id,:titre,:url,:contenu,:date);');
 		$insertArticle->bindParam(':flux_id', $flux_id);
 		$insertArticle->bindParam(':titre', $titre);
 		$insertArticle->bindParam(':url', $url);
 		$insertArticle->bindParam(':contenu', $contenu);
+		$insertArticle->bindParam(':date', $date);
 		
-		if ($selectArticleLecture->execute() === FALSE) {
+		if ($insertArticle->execute() === FALSE) {
 			return False;
 		}
+	}
+	
+	public function getFluxId($nom) {	
+		$statement = $this->connection->prepare('SELECT id FROM flux WHERE nom = :nom;');
+		$statement->bindParam(':nom', $nom);
+		if ($statement->execute() === FALSE) {
+			return False;
+		}
+		$donnees = $statement->fetch();
+		$statement->closeCursor();
+		return $donnees['id'];
 	}
 	
 	public function addFlux($url,$nom,$description) {
-		$insertArticle = $this->connection->prepare('INSERT INTO flux(id, url, nom, description) VALUES (:url,:nom,:description);');
-		$insertArticle->bindParam(':url', $url);
-		$insertArticle->bindParam(':nom', $nom);
-		$insertArticle->bindParam(':description', $description);
-		
-		if ($selectArticleLecture->execute() === FALSE) {
+		$statement = $this->connection->prepare('SELECT * FROM flux WHERE nom = :nom;');
+		$statement->bindParam(':nom', $nom);
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+
+		if (count($statement->fetchAll())==0) {
+			$exist=FALSE;		
+			$insertFlux = $this->connection->prepare('INSERT INTO flux(url, nom, description) VALUES (:url,:nom,:description);');
+			$insertFlux->bindParam(':url', $url);
+			$insertFlux->bindParam(':nom', $nom);
+			$insertFlux->bindParam(':description', $description);
+			if ($insertFlux->execute() === FALSE) {
+				return FALSE;
+			}	
+		}
+		else{
+			$exist=TRUE;
+		}
+		$statement->closeCursor();
+		return $exist;	
+	}
+	
+	public function addAbonnement($user_id,$dossier_id,$flux_id) {
+		$insertAbonnement = $this->connection->prepare('INSERT INTO abonnement(user_id, dossier_id, flux_id) VALUES (:user_id, :dossier_id, :flux_id);');
+		$insertAbonnement->bindParam(':user_id', $user_id);
+		$insertAbonnement->bindParam(':dossier_id', $dossier_id);
+		$insertAbonnement->bindParam(':flux_id', $flux_id);
+		if ($insertAbonnement->execute() === FALSE) {
 			return False;
 		}
 	}
 	
-	public function addAbonnement($user_id,$dossier_id,$flux_id) {
-		$insertArticle = $this->connection->prepare('INSERT INTO abonnement(user_id, dossier_id, flux_id) VALUES (:user_id, :dossier_id, :flux_id);');
-		$insertArticle->bindParam(':user_id', $user_id);
-		$insertArticle->bindParam(':dossier_id', $dossier_id);
-		$insertArticle->bindParam(':flux_id', $flux_id);
-		
-		if ($selectArticleLecture->execute() === FALSE) {
+	public function addFolder($user_id,$nom) {
+		$insertFolder = $this->connection->prepare('INSERT INTO dossier(nom, user_id) VALUES (:nom, :user_id);');
+		$insertFolder->bindParam(':nom', $nom);
+		$insertFolder->bindParam(':user_id', $user_id);
+		if ($insertFolder->execute() === FALSE) {
 			return False;
 		}
 	}
+	
+	public function getNbTotalArticles($flux_id) {
+		$statement = $this->connection->prepare('SELECT * FROM article WHERE flux_id = :flux_id;');
+		$statement->bindParam(':flux_id', $flux_id);
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+		$result=count($statement->fetchAll());
+		$statement->closeCursor();
+		return $result;
+	}
+	
+	public function getNbArticlesNotRead($flux_id) {
+		$statement = $this->connection->prepare('SELECT * FROM article a INNER JOIN lecture l ON a.id = l.article_id
+				WHERE a.flux_id =:flux_id AND l.lu=0;');
+		$statement->bindParam(':flux_id', $flux_id);
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+		$result=count($statement->fetchAll());
+		$statement->closeCursor();
+		return $result;
+	}
+	
+	public function getFolders($user_id) {
+		$donnees=array();
+		$statement = $this->connection->prepare('SELECT * FROM dossier WHERE user_id = :user_id;');
+		$statement->bindParam(':user_id', $user_id);
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+		
+		while ($result = $statement->fetch())
+		{
+			array_push($donnees,array("titre" =>$result['nom'],"id" =>$result['id']));
+		}
+		
+		$statement->closeCursor();
+		return $donnees;
+	}
+	
+	public function deleteFolder($user_id,$folder_id) {
+		$statement = $this->connection->prepare('DELETE FROM dossier WHERE user_id = :user_id AND id = :folder_id;');
+		$statement->bindParam(':folder_id', $folder_id);
+		$statement->bindParam(':user_id', $user_id);
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+	}
+	
+	public function getFluxByFolders($user_id) {
+		$tab2=array();
+		$donnees=array();
+		$folder=$this->getFolders($user_id);
+		
+		for($i=0;$i<sizeof($folder);$i++) 
+		{
+			$statement = $this->connection->prepare('SELECT flux.nom,abonnement.flux_id FROM flux,abonnement WHERE abonnement.dossier_id=:dossier_id AND abonnement.flux_id=flux.id;');
+			$statement->bindParam(':dossier_id', $folder[$i]['id']);
+			if ($statement->execute() === FALSE) {
+				return FALSE;
+			}
 
+			while ($result = $statement->fetch())
+			{
+				array_push($donnees,array("titre" =>$result['nom'],"nb_nonlus" =>$this->getNbArticlesNotRead($result['flux_id']),"id" =>$result['flux_id']));
+			}
+			
+			$statement->closeCursor();
+			array_push($tab2,array("titre" =>$folder[$i]['titre'],"id"=>$folder[$i]['id'],"liste_flux"=>$donnees));
+			$donnees=array();
+		} 
 
+		return $tab2;
+	}
 }
 ?>
