@@ -11,7 +11,8 @@
             <a class="brand" href="#">RSS</a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class="active"><a href="#"><i class="icon-home icon-white"></i> Accueil</a></li>
+                    <li class="active"><a href="listing"><i class="icon-home icon-white"></i> Accueil</a></li>
+                    <li class=""><a href="folders"><i class="icon-folder-close icon-white"></i> Gérer les dossiers</a></li>
                 </ul>
             </div>
 

@@ -81,6 +81,24 @@ class RssController extends BaseController {
 		$this->redirect_to('index'); 
 		}
 	}
+
+	public function folders($route) {
+		$params = array(
+			array("titre" => "toto", "id" => 0),
+			array("titre" => "tata", "id" => 1)
+		);
+		$this->render_view("folders", $params);
+	}
+
+	public function add_folder($route, $params) {
+		// $params["titre"]
+		$this->redirect_to("folders");
+	}
+
+	public function delete_folder($route) {
+		// $route[0] = id à supprimer
+		$this->redirect_to("folders");
+	}
 	
 	public function search($route) {
 		$search = $_GET["search"];
