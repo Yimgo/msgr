@@ -3,9 +3,12 @@
 require_once 'lib/controller.php';
 require_once 'lib/DatabaseConnectionFactory.php';
 require_once 'app/controllers/rss/ConnectionWrapper.php';
+require_once ($_SERVER["DOCUMENT_ROOT"].'/pokemon/'.'app/controllers/rss/rssparser.inc.php');
+//require_once 'app/controllers/rss/rssparser.inc.php';
 
 class RssController extends BaseController {
 	private $connectionWrapper;
+	const NON_CLASSE = 1;
 	
 	private function getConnectionWrapper() {
 		if(!isset($this->connectionWrapper)) {
@@ -13,6 +16,26 @@ class RssController extends BaseController {
 		}
 		
 		return $this->connectionWrapper;
+	}
+	
+	public function parse_single_feed($flux)
+	{
+		$feed= new SimplePie();
+		$feed->set_feed_url($_POST['url']);
+		$feed->init();
+		$feed->handle_content_type();
+		$exist=$this->getConnectionWrapper()->addFlux($feed->get_permalink(),$feed->get_title(),$feed->get_description());
+		$idFlux=$this->getConnectionWrapper()->getFluxId($feed->get_title());
+		
+		if(!$exist) {
+			foreach ($feed->get_items() as $item): 
+				$this->getConnectionWrapper()->addArticle($idFlux,$item->get_title(),$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
+			endforeach;	
+		}
+
+		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),self::NON_CLASSE,$idFlux);
+		
+		$this->redirect_to('listing');
 	}
 	
 	public function index($route) {
@@ -78,7 +101,8 @@ class RssController extends BaseController {
 		}
 		else {
 			$this->session_set("user_id", $user_id);
-		$this->redirect_to('index'); 
+			$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),'Non classé');
+			$this->redirect_to('index'); 
 		}
 	}
 
@@ -106,6 +130,21 @@ class RssController extends BaseController {
 		$this->redirect_to("folders");
 	}
 	
+	 public function folders($route) {
+		 $folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
+         $this->render_view("folders", $folder);
+        }
+
+        public function add_folder($route, $params) {
+                $this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),$params["titre"]);
+                $this->redirect_to("folders");
+        }
+
+        public function delete_folder($route) {
+                $this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
+                $this->redirect_to("folders");
+        }
+
 	public function search($route) {
 		$search = $_GET["search"];
 		$tags_id = explode(',', $_GET["tags_id"]);
@@ -116,63 +155,9 @@ class RssController extends BaseController {
 			echo json_encode($this->getConnectionWrapper()->getTags($this->session_get("user_id", null)));
 	}
 	
-	public function get_flux_dossiers() {
+	public function get_flux_dossiers() {		
 		// Renvoie tous les flux et l'organisation en dossier (TODO: login)
-		$flux = array(
-				array(
-					"titre" => "Non classé", // DOSSIER qui contient tous les flux… sans dossier ;-)
-					"id" => -1,
-					"liste_flux" => array(
-								array(
-									"titre" => "Le site le plus bête du monde",
-									"nb_nonlus" => 987,
-									"id" => 12
-								)
-							)
-				),
-				array(
-					"titre" => "Informations Françaises",
-					"id" => 1,
-					"liste_flux" => array(
-								array(
-									"titre" => "Le Monde",
-									"nb_nonlus" => 14,
-									"id" => 0
-								),
-								array(
-									"titre" => "Le Figaro",
-									"nb_nonlus" => 2,
-									"id" => 1
-								),
-								array(
-									"titre" => "Le Progrès",
-									"nb_nonlus" => 0,
-									"id" => 2
-								),
-								array(
-									"titre" => "Le Canard Enchainé",
-									"nb_nonlus" => 130,
-									"id" => 3
-								)
-							)
-				),
-				array(
-					"titre" => "Informatique",
-					"id" => 2,
-					"liste_flux" => array(
-								array(
-									"titre" => "PCInpact",
-									"nb_nonlus" => 2,
-									"id" => 4
-								),
-								array(
-									"titre" => "LinuxFR",
-									"nb_nonlus" => 20,
-									"id" => 5
-								)
-							)
-				)
-			);
+		$flux = $this->getConnectionWrapper()->getFluxByFolders($this->session_get("user_id", null));
 		// pour tester le rendu en cas d'erreur cote client
 		if (rand(0, 10) == 0) echo "erreur json; df ;d;f d;";
 			else echo json_encode($flux);
