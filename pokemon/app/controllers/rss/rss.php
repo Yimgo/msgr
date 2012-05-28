@@ -105,22 +105,19 @@ class RssController extends BaseController {
 			$this->redirect_to('index'); 
 		}
 	}
-
+	
 	public function folders($route) {
-		$params = array(
-			array("titre" => "toto", "id" => 0),
-			array("titre" => "tata", "id" => 1)
-		);
-		$this->render_view("folders", $params);
+		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
+		$this->render_view("folders", $folder);
 	}
 
 	public function add_folder($route, $params) {
-		// $params["titre"]
+		$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),$params["titre"]);
 		$this->redirect_to("folders");
 	}
 
 	public function delete_folder($route) {
-		// $route[0] = id à supprimer
+		$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
 		$this->redirect_to("folders");
 	}
 
@@ -129,21 +126,6 @@ class RssController extends BaseController {
 		// $params['titre']
 		$this->redirect_to("folders");
 	}
-	
-	 public function folders($route) {
-		 $folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
-         $this->render_view("folders", $folder);
-        }
-
-        public function add_folder($route, $params) {
-                $this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),$params["titre"]);
-                $this->redirect_to("folders");
-        }
-
-        public function delete_folder($route) {
-                $this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
-                $this->redirect_to("folders");
-        }
 
 	public function search($route) {
 		$search = $_GET["search"];
