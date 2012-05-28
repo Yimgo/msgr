@@ -323,5 +323,19 @@ class ConnectionWrapper {
 
 		return $tab2;
 	}
+	
+	public function changeFolder($user_id,$flux_id,$folder_id) {
+		$statement = $this->connection->prepare('UPDATE abonnement SET dossier_id=:dossier_id WHERE flux_id = :flux_id AND user_id=:user_id;');
+		$statement->bindParam(':dossier_id', $folder_id);
+		$statement->bindParam(':flux_id', $flux_id);
+		$statement->bindParam(':user_id', $user_id);
+		
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+		
+		
+		
+	}
 }
 ?>
