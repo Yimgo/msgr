@@ -140,8 +140,7 @@ class RssController extends BaseController {
 		// Renvoie tous les flux et l'organisation en dossier (TODO: login)
 		$flux = $this->getConnectionWrapper()->getFluxByFolders($this->session_get("user_id", null));
 		// pour tester le rendu en cas d'erreur cote client
-		if (rand(0, 10) == 0) echo "erreur json; df ;d;f d;";
-			else echo json_encode($flux);
+		echo json_encode($flux);
 	}
 	
 	public function get_articles($id_flux) {
@@ -177,11 +176,7 @@ class RssController extends BaseController {
 		
 		$articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $id_flux);
 		
-		// pour tester le rendu en cas d'erreur cote client
-		if (rand(0, 10) == 0) 
-			echo "erreur json; df ;d;f d;";
-		else 
-			echo json_encode($articles);
+		echo json_encode($articles);
 	}
 	
 	public function getTagged() {
