@@ -237,6 +237,16 @@ class ConnectionWrapper {
 		if ($insertFolder->execute() === FALSE) {
 			return False;
 		}
+		
+		$statement = $this->connection->prepare('SELECT id FROM dossier WHERE nom = :nom AND user_id=:user_id;');
+		$statement->bindParam(':user_id', $user_id);
+		$statement->bindParam(':nom', $nom);
+		if ($statement->execute() === FALSE) {
+			return False;
+		}
+		$donnees = $statement->fetch();
+		$statement->closeCursor();
+		return $donnees['id'];
 	}
 	
 	public function getNbTotalArticles($flux_id) {
@@ -322,7 +332,6 @@ class ConnectionWrapper {
 			array_push($tab2,array("titre" =>$folder[$i]['titre'],"id"=>$folder[$i]['id'],"liste_flux"=>$donnees));
 			$donnees=array();
 		} 
-
 		return $tab2;
 	}
 	
