@@ -224,7 +224,7 @@ class RssController extends BaseController {
 
 		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),self::NON_CLASSE,$idFlux);
 		
-		$this->redirect_to('listing');
+		//$this->redirect_to('listing');
 	}
 }
 
