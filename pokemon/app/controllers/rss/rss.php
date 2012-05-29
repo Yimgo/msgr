@@ -1,11 +1,8 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors','1');
 
 require_once 'lib/controller.php';
 require_once 'lib/DatabaseConnectionFactory.php';
 require_once 'app/controllers/rss/ConnectionWrapper.php';
-//require_once ($_SERVER["DOCUMENT_ROOT"].'/pokemon/'.'app/controllers/rss/rssparser.inc.php');
 require_once 'app/controllers/rss/rssparser.inc.php';
 
 class RssController extends BaseController {
@@ -236,12 +233,11 @@ class RssController extends BaseController {
 	{
 		$feed= new SimplePie();
 		$feed->set_feed_url($_POST['url']);
-		$feed->strip_htmltags();
 		$feed->init();
 		$feed->enable_cache(false);
 		$feed->handle_content_type();
 		
-		$feed_title=$feed->get_title();
+		$feed_title=strip_tags($feed->get_title());
 		
 		if(strlen($feed_title)>50) {
 			$feed_title=substr($feed_title,0,47).'...';
@@ -252,30 +248,21 @@ class RssController extends BaseController {
 		
 		if(!$exist) {
 			foreach ($feed->get_items() as $item): 
-				$item_title=$item->get_title();
+				$item_title=strip_tags($item->get_title());
 				if(strlen($item_title)>50) {
 					$item_title=substr($item_title,0,47).'...';
 				}
-				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
+				$item_desc=strip_tags($item->get_description());
+				if(strlen($item_desc)==0) {
+					$item_desc='Aucune description disponible: '.$item->get_permalink();
+				}
+				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item_desc,$item->get_date('Y-m-j G:i:s'));
 			endforeach;	
 		}
 		
 		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),$this->NON_CLASSE,$idFlux);
 		
 		$this->redirect_to('listing');
-	}
-	
-	public function shorten($string, $length)
-	{
-		$suffix = '&hellip;';
-		$short_desc = trim(str_replace(array("\r","\n", "\t"), ' ', strip_tags($string)));
-
-		$desc = trim(substr($short_desc, 0, $length));
-		$lastchar = substr($desc, -1, 1);
-		if ($lastchar == '.' || $lastchar == '!' || $lastchar == '?') $suffix='';
-		$desc .= $suffix;
-	 
-		return $desc;
 	}
 }
 
