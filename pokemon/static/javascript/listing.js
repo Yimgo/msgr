@@ -188,8 +188,8 @@ function click_flux() {
     $(this).addClass("ligne_flux_selectionne");
 
     // Affichage de la barre de chargement
-    $("#liste_articles_chargement").slideDown('slow');
-    $("#liste_articles_erreur").slideUp('fast');
+    $("#liste_articles_chargement").show();
+    $("#liste_articles_erreur").hide();
     
     // --- Recuperation des articles ---
     $("#flux_container").html("");
@@ -201,12 +201,12 @@ function click_flux() {
         click_list_articles();
     })
     .success(function() {
-        $("#liste_articles_chargement").slideUp('slow');
+        $("#liste_articles_chargement").hide();
         $('#div_dropdown_move_folder').show();
     })
     .error(function() {
-        $("#liste_articles_chargement").slideUp('slow');
-        $("#liste_articles_erreur").slideDown('slow');
+        $("#liste_articles_chargement").hide();
+        $("#liste_articles_erreur").show();
         $("#liste_flux tr").removeClass("ligne_flux_selectionne");
         $('#div_dropdown_move_folder').hide();
     });
@@ -301,8 +301,8 @@ function creer_bouton_liste_dossiers(data) {
 // - Récupère la liste depuis PHP
 // - Insère les éléments dans le DOM
 function get_liste_flux() {
-    $("#liste_flux_chargement").slideDown('slow');
-    $("#liste_flux_erreur").slideUp('fast');
+    $("#liste_flux_chargement").show();
+    $("#liste_flux_erreur").hide();
     // RAZ de la liste
     $('#liste_flux').html('');
 
@@ -326,11 +326,11 @@ function get_liste_flux() {
             $('<tr>', {class: 'dossier'}).appendTo('#liste_flux');
         })
     .success(function() {
-        $("#liste_flux_chargement").slideUp('slow');
+        $("#liste_flux_chargement").hide();
     })
     .error( function() {
-        $("#liste_flux_chargement").slideUp('slow');
-        $("#liste_flux_erreur").slideDown('slow');
+        $("#liste_flux_chargement").hide();
+        $("#liste_flux_erreur").show();
     });
 }
 
@@ -380,11 +380,11 @@ function add_tag_to_dom(titre, id) {
         class: 'icon-remove icon-white'}))
         .data('id', id)
         .appendTo("#tag-list")
-        .slideDown('fast');
+        .show();
 
     // Evénement
     $("#tag-list a").click(function() {
-        $(this).hide('fast', function() { $(this).remove(); });
+        $(this).hide(function() { $(this).remove(); });
     });
 }
 

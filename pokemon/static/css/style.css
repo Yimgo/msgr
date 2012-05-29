@@ -17,10 +17,8 @@
     margin-top: 2em;
 }
 
-#flux_container p {
+#flux_container > div > p:first-child {
     font-weight: bold;
-    /* background-color: #eee;*/
-    /* padding: 2px;*/
     border-bottom: 1px solid #DDD;
 }
 
@@ -36,5 +34,4 @@
 
 .article_properties {
     float: right;
-    clear: both;
 }
