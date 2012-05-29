@@ -67,6 +67,13 @@ $(document).ready(function() {
         if ($("#form_add_flux_URL").val() == "") return false;
         else return true;
     });
+    
+    $.getJSON('/pokemon/rss/get_latest_articles/0/10', function(data) {
+        // Ajouter les articles dans la colonne de droite
+        $.each(data, function(index, elem) {
+            add_article_to_dom(elem.id, elem.titre, elem.contenu, elem.favori, elem.lu, elem.tags, elem.url);
+        });
+    })
 });
 
 /* --------------------------------

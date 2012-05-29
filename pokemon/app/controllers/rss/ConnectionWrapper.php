@@ -332,10 +332,45 @@ class ConnectionWrapper {
 		
 		if ($statement->execute() === FALSE) {
 			return FALSE;
+		}	
+	}
+	
+	public function getLatestArticles($user_id, $begin, $count) {
+	  $selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin,:count;');
+	  
+		$selectArticleLecture->bindParam(':user_id', $user_id);
+		$selectArticleLecture->bindParam(':begin', $begin, PDO::PARAM_INT);
+		$selectArticleLecture->bindParam(':count', $count, PDO::PARAM_INT);
+		if ($selectArticleLecture->execute() === FALSE) {
+			return array();
 		}
 		
+		$selectTag_Article = $this->connection->prepare('SELECT tag_id FROM map_tag_article WHERE article_id = :article_id;');
 		
+		$articles = array();
+		while ($row = $selectArticleLecture->fetch()) {
+			$tags = array();
+			$selectTag_Article->bindParam('article_id', $row['id']);
+			if($selectTag_Article->execute() !== FALSE) {
+				$tags = $selectTag_Article->fetchAll(PDO::FETCH_COLUMN, 0);
+			}
+			
+			$tags = array_map('intval', $tags);
+			
+			$selectTag_Article->closeCursor();
+			
+			array_push($articles, array(
+				'id' => intval($row['id']),
+				'contenu' => $row['contenu'],
+				'titre' => $row['titre'],
+				'url'  => $row['url'],
+				'lu' => filter_var($row['lu'], FILTER_VALIDATE_BOOLEAN),
+				'tags' => $tags,
+				'favori' => filter_var($row['favori'], FILTER_VALIDATE_BOOLEAN)
+				));
+		}
 		
-	}
+		return $articles;
+  }
 }
 ?>

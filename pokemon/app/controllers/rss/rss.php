@@ -165,6 +165,15 @@ class RssController extends BaseController {
 		echo json_encode($articles);
 	}
 	
+	public function get_latest_articles($limits) {
+	  $limits_array  = explode('/', $limits);
+	  $begin = filter_var($limits_array[0], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
+                                                                                        'min_range' => 0)));
+    $count = filter_var($limits_array[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
+                                                                                        'min_range' => 0)));
+    echo json_encode($this->getConnectionWrapper()->getLatestArticles($this->session_get('user_id', null), $begin, $count));
+	}
+	
 	public function getTagged() {
 			// Renvoie les tags pour un utilisateur
 			echo json_encode($this->getConnectionWrapper()->getTaggedArticles($this->session_get("user_id", null)));
