@@ -25,7 +25,8 @@
 }
 
 #flux_container div {
-    margin-bottom: 1.5em
+    margin-bottom: 1.5em;
+    clear: both;
 }
 
 #div_dropdown_move_folder {
