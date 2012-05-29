@@ -210,21 +210,45 @@ class RssController extends BaseController {
 	{
 		$feed= new SimplePie();
 		$feed->set_feed_url($_POST['url']);
+		$feed->strip_htmltags();
 		$feed->init();
 		$feed->enable_cache(false);
 		$feed->handle_content_type();
-		$exist=$this->getConnectionWrapper()->addFlux($feed->get_permalink(),$feed->get_title(),$feed->get_description());
-		$idFlux=$this->getConnectionWrapper()->getFluxId($feed->get_title());
+		
+		$feed_title=$feed->get_title();
+		if($feed_title>50) {
+			$feed_title=$this->shorten($feed->get_title(),50);
+		}
+		
+		$exist=$this->getConnectionWrapper()->addFlux($_POST['url'],$feed_title,$feed->get_description());
+		$idFlux=$this->getConnectionWrapper()->getFluxId($feed_title);
 		
 		if(!$exist) {
 			foreach ($feed->get_items() as $item): 
-				$this->getConnectionWrapper()->addArticle($idFlux,$item->get_title(),$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
+				$item_title=$item->get_title();
+				if($item_title>50) {
+					$item_title=$this->shorten($item_title,50);
+				}
+				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
 			endforeach;	
 		}
 
 		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),self::NON_CLASSE,$idFlux);
 		
 		$this->redirect_to('listing');
+	}
+	
+	public function shorten($string, $length)
+	{
+		$suffix = '&hellip;';
+		$short_desc = trim(str_replace(array("\r","\n", "\t"), ' ', strip_tags($string)));
+
+		$desc = trim(substr($short_desc, 0, $length));
+		$lastchar = substr($desc, -1, 1);
+		if ($lastchar == '.' || $lastchar == '!' || $lastchar == '?') $suffix='';
+		$desc .= $suffix;
+	 
+		return $desc;
 	}
 }
 
