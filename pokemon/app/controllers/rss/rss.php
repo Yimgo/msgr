@@ -107,8 +107,6 @@ class RssController extends BaseController {
 	}
 
 	public function move_flux_folder($route, $params) {
-		// $params["flux_id"] : flux concerné
-		// $params["dossier_id"] : nouveau dossier
 		$this->getConnectionWrapper()->changeFolder($this->session_get("user_id", null),$params['flux_id'], $params['dossier_id']);	
 	}
 
