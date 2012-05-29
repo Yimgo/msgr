@@ -242,10 +242,10 @@ class RssController extends BaseController {
 		$feed->handle_content_type();
 		
 		$feed_title=$feed->get_title();
-		if($feed_title>49) {
-			$feed_title=$this->shorten($feed->get_title(),49);
-		}
 		
+		if(strlen($feed_title)>50) {
+			$feed_title=substr($feed_title,0,47).'...';
+		}
 		$exist=$this->getConnectionWrapper()->addFlux($_POST['url'],$feed_title,$feed->get_description());
 		$idFlux=$this->getConnectionWrapper()->getFluxId($feed_title);
 		$this->NON_CLASSE=$this->getConnectionWrapper()->getFolderId($this->session_get("user_id", null),'Non classé');
@@ -253,8 +253,8 @@ class RssController extends BaseController {
 		if(!$exist) {
 			foreach ($feed->get_items() as $item): 
 				$item_title=$item->get_title();
-				if($item_title>50) {
-					$item_title=$this->shorten($item_title,50);
+				if(strlen($item_title)>50) {
+					$item_title=substr($item_title,0,47).'...';
 				}
 				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
 			endforeach;	
