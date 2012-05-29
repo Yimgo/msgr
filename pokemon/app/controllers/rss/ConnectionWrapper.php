@@ -135,10 +135,12 @@ class ConnectionWrapper {
 		}
 	}
 	
-	public function getArticles($user_id, $flux_id) {
-		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id;');
+	public function getArticles($user_id, $flux_id, $begin, $count) {
+		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin, :count;');
 		$selectArticleLecture->bindParam(':flux_id', $flux_id);
 		$selectArticleLecture->bindParam(':user_id', $user_id);
+		$selectArticleLecture->bindParam(':begin', $begin, PDO::PARAM_INT);
+		$selectArticleLecture->bindParam(':count', $count, PDO::PARAM_INT);
 		if ($selectArticleLecture->execute() === FALSE) {
 			return array();
 		}

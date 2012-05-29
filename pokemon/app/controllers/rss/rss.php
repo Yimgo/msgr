@@ -129,7 +129,7 @@ class RssController extends BaseController {
 		echo json_encode($flux);
 	}
 	
-	public function get_articles($id_flux) {
+	public function get_articles($select) {
 		// Renvoie tous les articles pour un flux donné (TODO: login)
 		/*$lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
 		 * 
@@ -160,13 +160,39 @@ class RssController extends BaseController {
 		 *       "tags" => array(6,7))
 		);*/
 		
-		$articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $id_flux);
+		$params  = explode('/', $select);
+		
+	  if (!isset($params[0]))
+	  	return array();
+	  	
+	  if (!isset($params[1])) {
+	  	$params[1] = "";
+	 		$params[2] = "";
+	 	}
+	 	
+	 	else if (!isset($params[2]))
+	 		$params[2] = "";
+	 		
+	  $begin = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
+                                                                                        'min_range' => 0)));
+    $count = filter_var($params[2], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
+                                                                                        'min_range' => 0)));
+		
+		$articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $params[0], $begin, $count);
 		
 		echo json_encode($articles);
 	}
 	
 	public function get_latest_articles($limits) {
 	  $limits_array  = explode('/', $limits);
+	  if (!isset($limits_array[0])) {
+	  	$limits_array[0] = "";
+	 		$limits_array[1] = "";
+	 	}
+	 	
+	 	else if (!isset($limits_array[1]))
+	 		$limits_array[1] = "";
+	 		
 	  $begin = filter_var($limits_array[0], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
                                                                                         'min_range' => 0)));
     $count = filter_var($limits_array[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
