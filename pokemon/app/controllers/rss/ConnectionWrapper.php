@@ -237,7 +237,9 @@ class ConnectionWrapper {
 		if ($insertFolder->execute() === FALSE) {
 			return False;
 		}
-		
+	}
+	
+	public function getFolderId($user_id,$nom) {
 		$statement = $this->connection->prepare('SELECT id FROM dossier WHERE nom = :nom AND user_id=:user_id;');
 		$statement->bindParam(':user_id', $user_id);
 		$statement->bindParam(':nom', $nom);
@@ -246,7 +248,7 @@ class ConnectionWrapper {
 		}
 		$donnees = $statement->fetch();
 		$statement->closeCursor();
-		return $donnees['id'];
+		return $donnees['id'];	
 	}
 	
 	public function getNbTotalArticles($flux_id) {
@@ -260,10 +262,11 @@ class ConnectionWrapper {
 		return $result;
 	}
 	
-	public function getNbArticlesNotRead($flux_id) {
+	public function getNbArticlesNotRead($flux_id,$user_id) {
 		$statement = $this->connection->prepare('SELECT * FROM article a INNER JOIN lecture l ON a.id = l.article_id
-				WHERE a.flux_id =:flux_id AND l.lu=0;');
+				WHERE a.flux_id =:flux_id AND l.lu=0 AND l.user_id=:user_id;');
 		$statement->bindParam(':flux_id', $flux_id);
+		$statement->bindParam(':user_id', $user_id);
 		if ($statement->execute() === FALSE) {
 			return FALSE;
 		}
@@ -325,7 +328,7 @@ class ConnectionWrapper {
 
 			while ($result = $statement->fetch())
 			{
-				array_push($donnees,array("titre" =>$result['nom'],"nb_nonlus" =>$this->getNbArticlesNotRead($result['flux_id']),"id" =>$result['flux_id']));
+				array_push($donnees,array("titre" =>$result['nom'],"nb_nonlus" =>$this->getNbArticlesNotRead($result['flux_id'],$user_id),"id" =>$result['flux_id']));
 			}
 			
 			$statement->closeCursor();
