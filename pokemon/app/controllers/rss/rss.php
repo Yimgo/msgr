@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors','1');
 
 require_once 'lib/controller.php';
 require_once 'lib/DatabaseConnectionFactory.php';
@@ -209,6 +211,7 @@ class RssController extends BaseController {
 		$feed= new SimplePie();
 		$feed->set_feed_url($_POST['url']);
 		$feed->init();
+		$feed->enable_cache(false);
 		$feed->handle_content_type();
 		$exist=$this->getConnectionWrapper()->addFlux($feed->get_permalink(),$feed->get_title(),$feed->get_description());
 		$idFlux=$this->getConnectionWrapper()->getFluxId($feed->get_title());
