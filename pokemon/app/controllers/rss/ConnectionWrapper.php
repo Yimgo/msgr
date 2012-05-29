@@ -115,7 +115,7 @@ class ConnectionWrapper {
 		}
 	}
 	
-	public function tagArticle($tag_id, $article_id) {
+	public function tagArticle($article_id, $tag_id) {
 		$insertStatement = $this->connection->prepare('INSERT INTO map_tag_article(article_id, tag_id) VALUES (:article_id, :tag_id);');
 		$insertStatement->bindParam(':article_id', $article_id);
 		$insertStatement->bindParam(':tag_id', $tag_id);
@@ -125,10 +125,10 @@ class ConnectionWrapper {
 		}
 	}
 	
-	public function untagArticle($tag_id, $article_id) {
+	public function untagArticle($article_id, $tag_id) {
 		$insertStatement = $this->connection->prepare('DELETE FROM map_tag_article WHERE article_id = :article_id AND tag_id = :tag_id;');
-		$insertStatement->bindParam(':article_id', $article_id);
-		$insertStatement->bindParam(':tag_id', $tag_id);
+		$insertStatement->bindParam(':article_id', $article_id, PDO::PARAM_INT);
+		$insertStatement->bindParam(':tag_id', $tag_id, PDO::PARAM_INT);
 		
 		if($insertStatement->execute() === FALSE) {
 			return FALSE;
