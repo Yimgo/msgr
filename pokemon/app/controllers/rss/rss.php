@@ -10,7 +10,7 @@ require_once 'app/controllers/rss/rssparser.inc.php';
 
 class RssController extends BaseController {
 	private $connectionWrapper;
-	private $NON_CLASSE = 1;
+	private $NON_CLASSE;
 	
 	private function getConnectionWrapper() {
 		if(!isset($this->connectionWrapper)) {
@@ -83,7 +83,7 @@ class RssController extends BaseController {
 		}
 		else {
 			$this->session_set("user_id", $user_id);
-			$this->NON_CLASSE=$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),'Non classé');
+			$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),'Non classé');
 			$this->redirect_to('index'); 
 		}
 	}
@@ -222,6 +222,7 @@ class RssController extends BaseController {
 		
 		$exist=$this->getConnectionWrapper()->addFlux($_POST['url'],$feed_title,$feed->get_description());
 		$idFlux=$this->getConnectionWrapper()->getFluxId($feed_title);
+		$this->NON_CLASSE=$this->getConnectionWrapper()->getFolderId($this->session_get("user_id", null),'Non classé');
 		
 		if(!$exist) {
 			foreach ($feed->get_items() as $item): 
@@ -232,7 +233,7 @@ class RssController extends BaseController {
 				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item->get_description(),$item->get_date('Y-m-j G:i:s'));
 			endforeach;	
 		}
-
+		
 		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),$this->NON_CLASSE,$idFlux);
 		
 		$this->redirect_to('listing');
