@@ -306,8 +306,9 @@ class ConnectionWrapper {
 		
 		for($i=0;$i<sizeof($folder);$i++) 
 		{
-			$statement = $this->connection->prepare('SELECT flux.nom,abonnement.flux_id FROM flux,abonnement WHERE abonnement.dossier_id=:dossier_id AND abonnement.flux_id=flux.id;');
+			$statement = $this->connection->prepare('SELECT flux.nom,abonnement.flux_id FROM flux,abonnement WHERE abonnement.dossier_id=:dossier_id AND abonnement.flux_id=flux.id AND user_id=:user_id;');
 			$statement->bindParam(':dossier_id', $folder[$i]['id']);
+			$statement->bindParam(':user_id', $user_id);
 			if ($statement->execute() === FALSE) {
 				return FALSE;
 			}
