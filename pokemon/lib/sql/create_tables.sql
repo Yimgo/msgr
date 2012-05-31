@@ -66,19 +66,20 @@ CREATE TABLE lecture (
 );
 
 CREATE TABLE commentaire (
-    id INT(10) PRIMARY KEY AUTO_INCREMENT,
     commentaire TEXT NOT NULL,
     date DATETIME NOT NULL,
     user_id INT(10) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    article_id INT(10) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (article_id) REFERENCES article(id)
 );
 
 DELIMITER //
-CREATE TRIGGER fill_lecture_after_new_abonnement AFTER INSERT ON abonnement FOR EACH ROW 
+CREATE TRIGGER fill_lecture_after_new_abonnement AFTER INSERT ON abonnement FOR EACH ROW
 BEGIN
 DECLARE done INT DEFAULT 0;
 DECLARE id_article INT;
-DECLARE article_ids CURSOR FOR SELECT id FROM article WHERE flux_id = NEW.flux_id ORDER BY date DESC LIMIT 10; 
+DECLARE article_ids CURSOR FOR SELECT id FROM article WHERE flux_id = NEW.flux_id ORDER BY date DESC LIMIT 10;
 DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
 
 OPEN article_ids;
@@ -97,11 +98,11 @@ END
 DELIMITER;
 
 DELIMITER //
-CREATE TRIGGER fill_lecture_after_new_article AFTER INSERT ON article FOR EACH ROW 
+CREATE TRIGGER fill_lecture_after_new_article AFTER INSERT ON article FOR EACH ROW
 BEGIN
 DECLARE done INT DEFAULT 0;
 DECLARE id_user INT;
-DECLARE user_ids CURSOR FOR SELECT user_id FROM abonnement WHERE flux_id = NEW.flux_id; 
+DECLARE user_ids CURSOR FOR SELECT user_id FROM abonnement WHERE flux_id = NEW.flux_id;
 DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
 
 OPEN user_ids;
