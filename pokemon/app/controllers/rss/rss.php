@@ -99,7 +99,7 @@ class RssController extends BaseController {
 		}
 	}
 
-
+	
 
 
 	/* listing() displays main view: folders/feeds and associated articles */
@@ -240,6 +240,17 @@ class RssController extends BaseController {
 		$article_id = $params['article_id'];
 		$lu = filter_var($params['lu'], FILTER_VALIDATE_BOOLEAN);
 		$this->getConnectionWrapper()->setLu($user_id, $article_id, $lu);
+	}
+	
+	public function addCommentaire($route, $params) {
+		$params['article_id'] = 1;
+		$params['commentaire'] = "bla bla";
+		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params);
+	}
+	
+	public function getCommentaires($route, $params) {
+		$params['article_id'] = 1;
+		echo json_encode($this->getConnectionWrapper()->getCommentaires($this->session_get("user_id", null), $params));
 	}
 
 	/*

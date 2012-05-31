@@ -244,6 +244,33 @@ class ConnectionWrapper {
 			return False;
 		}
 	}
+	
+	public function addCommentaire($user_id, $params) {
+		$insertStatement = $this->connection->prepare('INSERT INTO commentaire (user_id, article_id, commentaire, date) VALUES (:user_id, :article_id, :commentaire, NOW());');
+		$insertStatement->bindParam(':user_id', $user_id);
+		$insertStatement->bindParam(':article_id', $params['article_id']);
+		$insertStatement->bindParam(':commentaire', $params['commentaire']);
+		if ($insertStatement->execute() === FALSE) {
+			return False;
+		}
+	}
+	
+	public function getCommentaires($user_id, $params) {
+		$statement = $this->connection->prepare('SELECT commentaire,date FROM commentaire WHERE user_id = :user_id AND article_id = :article_id;');
+		$statement->bindParam(':user_id', $user_id);
+		$statement->bindParam(':article_id', $params['article_id']);
+		if ($statement->execute() === FALSE) {
+			return False;
+		}
+		$commentaires = array();
+		while ($row = $statement->fetch()) {
+			$com = array();
+			$com['date'] = $row['date'];
+			$com['commentaire'] = $row['commentaire'];
+			array_push($commentaires, $com);
+		}
+		return $commentaires;
+	}
 
 	public function getFluxId($nom) {
 		$statement = $this->connection->prepare('SELECT id FROM flux WHERE nom = :nom;');
