@@ -64,6 +64,14 @@ CREATE TABLE lecture (
     FOREIGN KEY (article_id) REFERENCES article(id)
 );
 
+CREATE TABLE commentaire (
+    id INT(10) PRIMARY KEY AUTO_INCREMENT,
+    commentaire TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    user_id INT(10) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
 DELIMITER //
 CREATE TRIGGER fill_lecture_after_new_abonnement AFTER INSERT ON abonnement FOR EACH ROW 
 BEGIN
