@@ -41,6 +41,7 @@ CREATE TABLE article (
     flux_id INT(10),
     titre VARCHAR(100) NOT NULL,
     url VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
     contenu TEXT,
     date DATETIME,
     FOREIGN KEY (flux_id) REFERENCES flux(id)
