@@ -142,24 +142,24 @@ class RssController extends BaseController {
 	 *	2: number of articles fetched (optional)
 	 */
 	public function get_articles($params) {
-	  if (!isset($params[0]))
-	  	return array();
-
-	  if (!isset($params[1])) {
-	  	$params[1] = "";
-	 		$params[2] = "";
-	 	}
-
-	 	else if (!isset($params[2]))
-	 		$params[2] = "";
-
-	  $begin = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
-                                                                                        'min_range' => 0)));
-    $count = filter_var($params[2], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
-                                                                                        'min_range' => 0)));
-
+		if (!isset($params[0]))
+			return array();
+		
+		if (!isset($params[1])) {
+			$params[1] = "";
+			$params[2] = "";
+		}
+		
+		else if (!isset($params[2]))
+			$params[2] = "";
+		
+		$begin = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
+											      'min_range' => 0)));
+		$count = filter_var($params[2], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
+											      'min_range' => 0)));
+		
 		$articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $params[0], $begin, $count);
-
+		
 		echo json_encode($articles);
 	}
 
@@ -170,19 +170,19 @@ class RssController extends BaseController {
 	 *	1: number of articles fetched (optional)
 	 */
 	public function get_latest_articles($params) {
-	  if (!isset($params[0])) {
-	  	$params[0] = "";
-	 		$params[1] = "";
-	 	}
-
-	 	else if (!isset($params[1]))
-	 		$params[1] = "";
-
-	  $begin = filter_var($params[0], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
-                                                                                        'min_range' => 0)));
-    $count = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
-                                                                                        'min_range' => 0)));
-    echo json_encode($this->getConnectionWrapper()->getLatestArticles($this->session_get('user_id', null), $begin, $count));
+		if (!isset($params[0])) {
+			$params[0] = "";
+			$params[1] = "";
+		}
+		
+		else if (!isset($params[1]))
+			$params[1] = "";
+		
+		$begin = filter_var($params[0], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
+											      'min_range' => 0)));
+		$count = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
+											      'min_range' => 0)));
+		echo json_encode($this->getConnectionWrapper()->getLatestArticles($this->session_get('user_id', null), $begin, $count));
 	}
 
 	/* 
