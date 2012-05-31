@@ -36,9 +36,7 @@ class RssController extends BaseController {
 	}
 
 	public function article($route) {
-		$params = array(
-			'article_id' => $route[0]
-		);
+		$params = $this->getConnectionWrapper()->getArticleById($this->session_get("user_id", null), $route[0]);
 		$this->render_view('article', $params);
 	}
 

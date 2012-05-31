@@ -11,8 +11,8 @@
             <a class="brand" href="#">RSS</a>
             <div class="nav-collapse">
                 <ul class="nav">
- 	                <li class="active"><a href="listing"><i class="icon-home icon-white"></i> Accueil</a></li>
- 	                <li class=""><a href="folders"><i class="icon-folder-close icon-white"></i> Gérer les dossiers</a></li>
+                    <li class="active"><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
+                    <li class=""><a href="/pokemon/rss/folders"><i class="icon-folder-close icon-white"></i> Gérer les dossiers</a></li>
                 </ul>
             </div>
 
@@ -28,7 +28,7 @@
 <div class="container">
     <!-- Ajouter Abonnement + Recherche -->
     <div class="row">
-        <!-- Ajouter Abonnement --> 
+        <!-- Ajouter Abonnement -->
         <div class="span4">
             <form method="POST" action="/pokemon/rss/parse_single_feed" id="form_add_flux">
                 <div class="input-append">
@@ -54,7 +54,7 @@
     <div class="row">
         <div class="span4">
             <h1>Liste des flux RSS</h1>
-            
+
             <div id="liste_flux_chargement" class="alert alert-info fade in hide">
                 <strong>Chargement</strong> de la liste des flux en cours…
             </div>
@@ -71,7 +71,7 @@
         <div class="span8">
             <h1 id="titre_liste_articles"></h1>
             <div id="div_dropdown_move_folder" class="dropdown" style="display:none"></div>
-        
+
             <div id="liste_articles_chargement" class="alert alert-info fade in hide">
                 <strong>Chargement</strong> des articles en cours…
             </div>
