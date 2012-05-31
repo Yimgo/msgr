@@ -399,6 +399,7 @@ AND article.flux_id IN (
 	SELECT flux_id
 	FROM abonnement
 	WHERE user_id = :user_id)
+AND lecture.lu = 0
 ORDER BY article.date DESC 
 LIMIT :begin,:count;
 EOD
