@@ -302,12 +302,14 @@ function get_liste_flux() {
             // Insérer les données dans le DOM
             $.each(data, function(index, dossier) {
                 // Insérer le dossier dans le tableau
-                add_dossier_to_dom(dossier.titre);
+                if (dossier.liste_flux.length > 0) {
+                    add_dossier_to_dom(dossier.titre);
 
-                // Ajouter chaque flux du dossier dans le tableau
-                $.each(dossier.liste_flux, function(index2, flux) {
-                    add_flux_to_dom(flux.titre, flux.nb_nonlus, flux.id);
-                });
+                    // Ajouter chaque flux du dossier dans le tableau
+                    $.each(dossier.liste_flux, function(index2, flux) {
+                        add_flux_to_dom(flux.titre, flux.nb_nonlus, flux.id);
+                    });
+                }
             });
 
             // "Dossier" final invisible, pour que le javascript s'arrete de boucler
