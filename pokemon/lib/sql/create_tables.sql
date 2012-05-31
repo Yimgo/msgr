@@ -100,16 +100,16 @@ DELIMITER //
 CREATE TRIGGER fill_lecture_after_new_article AFTER INSERT ON article FOR EACH ROW 
 BEGIN
 DECLARE done INT DEFAULT 0;
-DECLARE user_id INT;
+DECLARE id_user INT;
 DECLARE user_ids CURSOR FOR SELECT user_id FROM abonnement WHERE flux_id = NEW.flux_id; 
 DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
 
 OPEN user_ids;
 
 REPEAT
-FETCH user_ids INTO user_id;
+FETCH user_ids INTO id_user;
 IF NOT done THEN
-INSERT INTO lecture(user_id, article_id, lu, favori) VALUES(user_id, new.flux_id, 0, 0);
+INSERT INTO lecture(user_id, article_id, lu, favori) VALUES(id_user, NEW.article_id, 0, 0);
 END IF;
 UNTIL done END REPEAT;
 
