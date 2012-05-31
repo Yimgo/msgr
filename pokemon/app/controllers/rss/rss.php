@@ -17,6 +17,9 @@ class RssController extends BaseController {
 		return $this->connectionWrapper;
 	}
 
+
+	
+
 	/* index() routes vistor to login page if not logged, to listing page otherwise */	
 	public function index($route) {
 		if (is_null($this->session_get("user_id", null))) {
@@ -98,65 +101,10 @@ class RssController extends BaseController {
 
 
 
+
 	/* listing() displays main view: folders/feeds and associated articles */
 	public function listing($route) {
 		$this->render_view('listing', null);
-	}
-
-	/* folders() displays folders management interface, which allows user to add, rename or delete folders */
-	public function folders($route) {
-		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
-		$this->render_view("folders", $folder);
-	}
-
-	/* tags() displays folders management interface, which allows user to add, rename or delete tags */
-	public function tags($route) {
-		$tags=$this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
-		$this->render_view('tags', $tags);
-	}	
-
-	/*
-	 * article() displays article interface, which allows user to manage tags and post comments.
-	 * GET parameter awaited:
-	 * 	0: article id
-	*/
-	public function article($route) {
-		$params = $this->getConnectionWrapper()->getArticleById($this->session_get("user_id", null), $route[0]);
-		$this->render_view('article', $params);
-	}
-
-
-	/*
-	 * add_folder() allows user to add a folder.
-	 * POST parameter awaited:
-	 *	titre
-	 */
-	public function add_folder($route, $params) {
-		$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),$params["titre"]);
-		$this->redirect_to("folders");
-	}
-
-	/*
-	 * delete_folder() allows user to delete a folder.
-	 * WARNING: folder is able to be removed with a GET request; Id should be in a POST parameter.
-	 * TODO: fix this.
-	 * GET parameter awaited:
-	 *	0: folder id
-	 */
-	public function delete_folder($route) {
-		$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
-		$this->redirect_to("folders");
-	}
-
-	/*
-	 * rename_folder() allows user to rename a folder.
-	 * POST parameters awaited:
-	 *	id
-	 *	titre
-	 */
-	public function rename_folder($route, $params) {
-		$this->getConnectionWrapper()->renameFolder($this->session_get("user_id", null), $params['id'], $params['titre']);
-		$this->redirect_to("folders");
 	}
 
 	/* 
@@ -167,39 +115,6 @@ class RssController extends BaseController {
  	 */
 	public function move_flux_folder($route, $params) {
 		$this->getConnectionWrapper()->changeFolder($this->session_get("user_id", null),$params['flux_id'], $params['dossier_id']);
-	}
-
-	/*
-	 * add_tag() allows user to add a tag.
-	 * POST parameter awaited:
-	 *	titre
-	 */
-	public function add_tag($route, $params) {
-		$this->getConnectionWrapper()->addTag($this->session_get("user_id", null),$params["titre"]);
-		$this->redirect_to("tags");
-	}
-
-	/*
-	 * delete_tag() allows user to delete a tag.
-	 * WARNING: tag is able to be removed with a GET request; Id should be in a POST parameter.
-	 * TODO: fix this.
-	 * GET parameter awaited:
-	 *	0: tag id
-	 */
-	public function delete_tag($route) {
-		$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$route[0]);
-		$this->redirect_to("tags");
-	}
-
-	/*
-	 * rename_tag() allows user to rename a tag.
-	 * POST parameters awaited:
-	 *	id
-	 *	titre
-	 */
-	public function rename_tag($route, $params) {
-		$this->getConnectionWrapper()->renameTag($this->session_get("user_id", null), $params['id'], $params['titre']);
-		$this->redirect_to("tags");
 	}
 
 	/* search(): I don't know what is the purpose of this function :/ */
@@ -373,6 +288,103 @@ class RssController extends BaseController {
 
 		$this->redirect_to('listing');
 	}
+
+
+
+
+	/* folders() displays folders management interface, which allows user to add, rename or delete folders */
+	public function folders($route) {
+		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
+		$this->render_view("folders", $folder);
+	}
+
+	/*
+	 * add_folder() allows user to add a folder.
+	 * POST parameter awaited:
+	 *	titre
+	 */
+	public function add_folder($route, $params) {
+		$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),$params["titre"]);
+		$this->redirect_to("folders");
+	}
+
+	/*
+	 * delete_folder() allows user to delete a folder.
+	 * WARNING: folder is able to be removed with a GET request; Id should be in a POST parameter.
+	 * TODO: fix this.
+	 * GET parameter awaited:
+	 *	0: folder id
+	 */
+	public function delete_folder($route) {
+		$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
+		$this->redirect_to("folders");
+	}
+
+	/*
+	 * rename_folder() allows user to rename a folder.
+	 * POST parameters awaited:
+	 *	id
+	 *	titre
+	 */
+	public function rename_folder($route, $params) {
+		$this->getConnectionWrapper()->renameFolder($this->session_get("user_id", null), $params['id'], $params['titre']);
+		$this->redirect_to("folders");
+	}
+
+
+
+
+	/* tags() displays folders management interface, which allows user to add, rename or delete tags */
+	public function tags($route) {
+		$tags=$this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
+		$this->render_view('tags', $tags);
+	}
+
+	/*
+	 * add_tag() allows user to add a tag.
+	 * POST parameter awaited:
+	 *	titre
+	 */
+	public function add_tag($route, $params) {
+		$this->getConnectionWrapper()->addTag($this->session_get("user_id", null),$params["titre"]);
+		$this->redirect_to("tags");
+	}
+
+	/*
+	 * delete_tag() allows user to delete a tag.
+	 * WARNING: tag is able to be removed with a GET request; Id should be in a POST parameter.
+	 * TODO: fix this.
+	 * GET parameter awaited:
+	 *	0: tag id
+	 */
+	public function delete_tag($route) {
+		$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$route[0]);
+		$this->redirect_to("tags");
+	}
+
+	/*
+	 * rename_tag() allows user to rename a tag.
+	 * POST parameters awaited:
+	 *	id
+	 *	titre
+	 */
+	public function rename_tag($route, $params) {
+		$this->getConnectionWrapper()->renameTag($this->session_get("user_id", null), $params['id'], $params['titre']);
+		$this->redirect_to("tags");
+	}
+
+
+
+
+	/*
+	 * article() displays article interface, which allows user to manage tags and post comments.
+	 * GET parameter awaited:
+	 * 	0: article id
+	*/
+	public function article($route) {
+		$params = $this->getConnectionWrapper()->getArticleById($this->session_get("user_id", null), $route[0]);
+		$this->render_view('article', $params);
+	}	
 }
 
 ?>
