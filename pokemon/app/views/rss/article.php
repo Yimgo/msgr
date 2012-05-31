@@ -16,8 +16,9 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
             <a class="brand" href="#">RSS</a>
             <div class="nav-collapse">
                 <ul class="nav">
- 	                <li class=""><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
- 	                <li class=""><a href="/pokemon/rss/folders"><i class="icon-folder-close icon-white"></i> Gérer les dossiers</a></li>
+                    <li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
+                    <li><a href="/pokemon/rss/folders"><i class="icon-folder-close icon-white"></i> Gérer les dossiers</a></li>
+                    <li><a href="/pokemon/rss/tags"><i class="icon-tags icon-white"></i> Gérer les tags</a></li>
                     <li class="divider-vertical"></li>
                     <li class="active"><a href="#"><i class="icon-file icon-white"></i> Article</a></li>
                 </ul>
