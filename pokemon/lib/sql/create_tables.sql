@@ -77,16 +77,16 @@ DELIMITER //
 CREATE TRIGGER fill_lecture_after_new_abonnement AFTER INSERT ON abonnement FOR EACH ROW 
 BEGIN
 DECLARE done INT DEFAULT 0;
-DECLARE article_id INT;
+DECLARE id_article INT;
 DECLARE article_ids CURSOR FOR SELECT id FROM article WHERE flux_id = NEW.flux_id ORDER BY date DESC LIMIT 10; 
 DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1;
 
 OPEN article_ids;
 
 REPEAT
-FETCH article_ids INTO article_id;
+FETCH article_ids INTO id_article;
 IF NOT done THEN
-INSERT INTO lecture(user_id, article_id, lu, favori) VALUES(NEW.user_id, article_id, 0, 0);
+INSERT INTO lecture(user_id, article_id, lu, favori) VALUES(NEW.user_id, id_article, 0, 0);
 END IF;
 UNTIL done END REPEAT;
 
@@ -109,7 +109,7 @@ OPEN user_ids;
 REPEAT
 FETCH user_ids INTO id_user;
 IF NOT done THEN
-INSERT INTO lecture(user_id, article_id, lu, favori) VALUES(id_user, NEW.article_id, 0, 0);
+INSERT INTO lecture(user_id, article_id, lu, favori) VALUES(id_user, NEW.id, 0, 0);
 END IF;
 UNTIL done END REPEAT;
 
