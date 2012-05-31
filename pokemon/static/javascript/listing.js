@@ -46,7 +46,7 @@ $(document).ready(function() {
         });
     });
 
-    // Gestion de la recherche : 
+    // Gestion de la recherche :
     //   - on ajoute manuellement les tags comme input caché à la validation
     $("#form-search").submit(function() {
         var tags_id = [];
@@ -67,7 +67,7 @@ $(document).ready(function() {
         if ($("#form_add_flux_URL").val() == "") return false;
         else return true;
     });
-    
+
     $.getJSON('/pokemon/rss/get_latest_articles/0/10', function(data) {
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
@@ -91,7 +91,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
                         var all_tags = eval(raw_tags);
                         var used_tags = [];
                         var showed_tags = [];
-                        
+
                         $('li:visible', new_dropdown_tags).each(function() {
                             if ($(this).data('id') != undefined) {
                                 used_tags.push($(this).text());
@@ -120,7 +120,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
     toto = $('<div>')
             .data('id', id)
             .append($('<p>')
-                .append($('<a>', {html:titre, href:url}))
+                .append($('<a>', {html:titre, href:'/pokemon/rss/article/' + id}))
                 .append($('<div>', {'class': 'article_properties btn-group'})
                     .append($('<button>', {'class':'btn dropdown-toggle', 'data-toggle':'dropdown'})
                         .append($('<i>', {'class': 'icon-tags'}))
@@ -190,7 +190,7 @@ function click_flux() {
     // Affichage de la barre de chargement
     $("#liste_articles_chargement").show();
     $("#liste_articles_erreur").hide();
-    
+
     // --- Recuperation des articles ---
     $("#flux_container").html("");
     $.getJSON('/pokemon/rss/get_articles/' + $(this).data('id'), function(data) {
@@ -273,7 +273,7 @@ function creer_bouton_liste_dossiers(data) {
                 .click(changer_flux_de_dossier)
         )
         .appendTo($(html_li_dossiers));
-    }); 
+    });
 
     // Création du bouton "dropdown", auquel on ajoute la liste des dossiers
     $('#div_dropdown_move_folder')
@@ -303,7 +303,7 @@ function get_liste_flux() {
             $.each(data, function(index, dossier) {
                 // Insérer le dossier dans le tableau
                 add_dossier_to_dom(dossier.titre);
-               
+
                 // Ajouter chaque flux du dossier dans le tableau
                 $.each(dossier.liste_flux, function(index2, flux) {
                     add_flux_to_dom(flux.titre, flux.nb_nonlus, flux.id);
