@@ -13,7 +13,7 @@
                 <ul class="nav">
                     <li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
                     <li class="active"><a href="/pokemon/rss/folders"><i class="icon-folder-open icon-white"></i> Gérer les dossiers</a></li>
-                    <li class="active"><a href="/pokemon/rss/tags"><i class="icon- icon-white"></i> Gérer les tags</a></li>
+                    <li class="active"><a href="/pokemon/rss/tags"><i class="icon-tags icon-white"></i> Gérer les tags</a></li>
                 </ul>
             </div>
 
