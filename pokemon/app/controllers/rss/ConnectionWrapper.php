@@ -86,15 +86,6 @@ class ConnectionWrapper {
 	}
 
 
-	public function setTags($article_id, $tag_id) {
-		$insertStatement = $this->connection->prepare('INSERT INTO map_tag_article(article_id, tag_id) VALUES(:article_id, :tag_id);');
-		$insertStatement->bindParam(':article_id', $article_id);
-		$insertStatement->bindParam(':tag_id', $tag_id);
-		if($insertStatement->execute() === FALSE) {
-			return FALSE;
-		}
-	}
-
 	public function setFavori($user_id, $article_id, $favori) {
 		$insertStatement = $this->connection->prepare('UPDATE lecture SET favori=:favori WHERE user_id=:user_id AND article_id=:article_id');
 		$insertStatement->bindParam(':favori', $favori);
@@ -131,6 +122,35 @@ class ConnectionWrapper {
 		$insertStatement->bindParam(':tag_id', $tag_id, PDO::PARAM_INT);
 
 		if($insertStatement->execute() === FALSE) {
+			return FALSE;
+		}
+	}
+
+	public function addTag($user_id, $nom) {
+		$insertStatement = $this->connection->prepare('INSERT INTO tag(nom, user_id) VALUES (:nom, :user_id);');
+		$insertStatement->bindParam(':nom', $nom);
+		$insertStatement->bindParam(':user_id', $user_id);
+		if ($insertStatement->execute() === FALSE) {
+			return False;
+		}
+	}
+
+	public function deleteTag($user_id, $id) {
+		$statement = $this->connection->prepare('DELETE FROM tag WHERE user_id = :user_id AND id = :id;');
+		$statement->bindParam(':id', $id);
+		$statement->bindParam(':user_id', $user_id);
+		if ($statement->execute() === FALSE) {
+			return FALSE;
+		}
+	}
+
+	public function renameTag($user_id, $tag_id, $nom) {
+		$statement = $this->connection->prepare('UPDATE tag SET nom=:nom WHERE user_id = :user_id AND id = :tag_id;');
+		$statement->bindParam(':nom', $nom);
+		$statement->bindParam(':user_id', $user_id);
+		$statement->bindParam(':tag_id', $tag_id);
+
+		if ($statement->execute() === FALSE) {
 			return FALSE;
 		}
 	}

@@ -13,7 +13,7 @@
                 <ul class="nav">
                     <li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
                     <li class="active"><a href="/pokemon/rss/folders"><i class="icon-folder-open icon-white"></i> Gérer les dossiers</a></li>
-                    <li class="active"><a href="/pokemon/rss/tags"><i class="icon- icon-white"></i> Gérer les tags</a></li>
+                    <li class="active"><a href="/pokemon/rss/tags"><i class="icon-tags icon-white"></i> Gérer les tags</a></li>
                 </ul>
             </div>
 
@@ -35,38 +35,38 @@
     		<table class="table table-bordered table-striped span6">
     			<thead>
     				<tr>
-    					<th class="span5" style="text-align: center;">Titre du flux</th>
+    					<th class="span5" style="text-align: center;">Titre du dossier</th>
     					<th class="span5" style="text-align: center;">Actions associées</th>
     				</tr>
     			</thead>
 
     			<tbody>
     				<!-- Liste des dossiers existants -->
-	    			<?php foreach ($params as $folder) { ?>
+	    			<?php foreach ($params as $tag) { ?>
 	    			<tr>
 	    				<td>
-                            <span><?php echo $folder["titre"] ?></span>
-                            <form method="POST" action="rename_folder" class="form-inline" style="display:none" id="form-<?php echo $folder['id'] ; ?>">
-                                <input type="hidden" name="id" value="<?php echo $folder["id"] ; ?>" />
-                                <input type="text" id="titre" name="titre" value="<?php echo $folder["titre"]; ?>"/>
+                            <span><?php echo $tag["titre"] ?></span>
+                            <form method="POST" action="rename_tag" class="form-inline" style="display:none" id="form-<?php echo $tag['id'] ; ?>">
+                                <input type="hidden" name="id" value="<?php echo $tag['id'] ; ?>" />
+                                <input type="text" id="titre" name="titre" value="<?php echo $tag['titre']; ?>"/>
                                 <button type="submit" class="btn"><i class="icon-check"></i> OK</button>
                             </form>
                         </td>
 	    				<td>
-	    					<a class="btn renommer" href="#" id="renommer-<?php echo $folder["id"];?>"><i class="icon-pencil"></i> Renommer</a>
-	    					<a class="btn" href="delete_folder/<?php echo $folder["id"]; ?>"><i class="icon-minus-sign"></i> Supprimer</a>
+	    					<a class="btn renommer" href="#" id="renommer-<?php echo $tag["id"];?>"><i class="icon-pencil"></i> Renommer</a>
+	    					<a class="btn" href="delete_tag/<?php echo $tag["id"]; ?>"><i class="icon-minus-sign"></i> Supprimer</a>
                         </td>
 	    			</tr>
 	    			<?php } ?>
 
 	    			<!-- Ajout d'un dossier -->
 	    			<tr>
-	    				<form method="POST" action="add_folder" class="form-inline">
+	    				<form method="POST" action="add_tag" class="form-inline">
 	    					<td>
-	    						<input type="text" placeholder="Nom du nouveau dossier" id="titre" name="titre" />
+	    						<input type="text" placeholder="Nom du nouveau tag" id="titre" name="titre" />
 	    					</td>
 	    					<td>
-	    						<button type="submit" class="btn"><i class="icon-plus-sign"></i> Ajouter un dossier</button>
+	    						<button type="submit" class="btn"><i class="icon-plus-sign"></i> Ajouter un tag</button>
 	    					</td>
 	    				</form>
 	    			</tr>
@@ -78,4 +78,4 @@
 </div>
 <?php render_partial("footer", null); ?>
 <!-- JS à la fin, après les includes de jQuery -->
-<script src="/pokemon/static/javascript/folders.js"></script>
+<script src="/pokemon/static/javascript/tags.js"></script>
