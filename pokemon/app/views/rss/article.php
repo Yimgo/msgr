@@ -1,5 +1,10 @@
 <?php render_partial("header", null); ?>
 
+<script type="text/javascript">
+var article_id = <?php echo $params["id"];?> ;
+var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
+</script>
+
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -35,18 +40,21 @@
                     <strong>Erreur</strong> : l'article n'existe pas !
                 </div>
             <?php } else { ?>
+                <header class="jumbotron subhead">
                 <h1><a href="<?php echo $params['url']; ?>"><?php echo $params['titre']; ?></a></h1>
-
+                  <p class="lead pull-left"><em><?php echo $params['flux_nom']; ?></em></p>
+                  <p class="lead pull-right"><?php echo $params['date'];?></p>
+                </header>
             <?php } ?>
         </div>
 
         <div class="span4">
             <div id="actions" class="span2 offset1 btn-group">
-                <button class="btn">
-                    <i class="<?php echo ($params['lu']) ? 'icon-eye-open' : 'icon-eye-close' ; ?>"></i>
+                <button class="btn" id="bouton_lu">
+                    <i class="icon-eye-open"></i>
                 </button>
-                <button class="btn">
-                    <i class="<?php echo ($params['favori']) ? 'icon-start' : 'icon-star-empty' ; ?>"></i>
+                <button class="btn" id="bouton_favori">
+                    <i class="<?php echo ($params['favori']) ? 'icon-star' : 'icon-star-empty' ; ?>"></i>
                 </button>
             </div>
         </div>
@@ -54,9 +62,7 @@
 
     <div class="row">
         <hr />
-        <!-- $params[id] = id du flux
-                'lu' => filter_var($row['lu'], FILTER_VALIDATE_BOOLEAN),
-                'favori' => filter_var($row['favori'], FILTER_VALIDATE_BOOLEAN),
+        <!--
                 'date' => $row['date'],
                 'tags' => array()
         -->
