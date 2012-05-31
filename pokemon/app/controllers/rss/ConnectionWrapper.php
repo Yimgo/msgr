@@ -173,7 +173,7 @@ class ConnectionWrapper {
 	}
 
 	public function getArticles($user_id, $flux_id, $begin, $count) {
-		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article., article.description description.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin, :count;');
+		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.description description, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin, :count;');
 		$selectArticleLecture->bindParam(':flux_id', $flux_id);
 		$selectArticleLecture->bindParam(':user_id', $user_id);
 		$selectArticleLecture->bindParam(':begin', $begin, PDO::PARAM_INT);
@@ -390,7 +390,7 @@ class ConnectionWrapper {
 	}
 
 	public function getLatestArticles($user_id, $begin, $count) {
-	  $selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin,:count;');
+	  $selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.description description, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin,:count;');
 
 		$selectArticleLecture->bindParam(':user_id', $user_id);
 		$selectArticleLecture->bindParam(':begin', $begin, PDO::PARAM_INT);
@@ -416,6 +416,7 @@ class ConnectionWrapper {
 			array_push($articles, array(
 				'id' => intval($row['id']),
 				'contenu' => $row['contenu'],
+				'description' => $row['description'],
 				'titre' => $row['titre'],
 				'url'  => $row['url'],
 				'lu' => filter_var($row['lu'], FILTER_VALIDATE_BOOLEAN),
