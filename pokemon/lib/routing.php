@@ -16,9 +16,9 @@ function route_for_request_path($path)
 		return	array(
 				"controller"=>$array[0],
 				"action"=>$array[1],
-				"id"=>$array[2]
+				"id"=>explode("/", $array[2])
 			);
-	}		 
+	}
 }
 
 function route_to($route)
