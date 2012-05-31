@@ -255,9 +255,8 @@ class ConnectionWrapper {
 		}
 	}
 	
-	public function getCommentaires($user_id, $params) {
-		$statement = $this->connection->prepare('SELECT commentaire,date FROM commentaire WHERE user_id = :user_id AND article_id = :article_id;');
-		$statement->bindParam(':user_id', $user_id);
+	public function getCommentaires($params) {
+		$statement = $this->connection->prepare('SELECT commentaire,date,user_id FROM commentaire WHERE article_id = :article_id;');
 		$statement->bindParam(':article_id', $params['article_id']);
 		if ($statement->execute() === FALSE) {
 			return False;
@@ -265,6 +264,13 @@ class ConnectionWrapper {
 		$commentaires = array();
 		while ($row = $statement->fetch()) {
 			$com = array();
+			$getLogin = $this->connection->prepare('SELECT login FROM user WHERE id = :user_id;');
+			$getLogin->bindParam(':user_id', $row['user_id']);
+			if ($getLogin->execute() === FALSE) {
+				return False;
+			}
+			$data = $getLogin->fetch();
+			$com['username'] = $data['login'];
 			$com['date'] = $row['date'];
 			$com['commentaire'] = $row['commentaire'];
 			array_push($commentaires, $com);

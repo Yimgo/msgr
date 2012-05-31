@@ -244,13 +244,13 @@ class RssController extends BaseController {
 	
 	public function addCommentaire($route, $params) {
 		$params['article_id'] = 1;
-		$params['commentaire'] = "bla bla";
+		$params['commentaire'] = "test 1234";
 		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params);
 	}
 	
 	public function getCommentaires($route, $params) {
 		$params['article_id'] = 1;
-		echo json_encode($this->getConnectionWrapper()->getCommentaires($this->session_get("user_id", null), $params));
+		echo json_encode($this->getConnectionWrapper()->getCommentaires($params));
 	}
 
 	/*
