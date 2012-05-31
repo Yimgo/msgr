@@ -390,7 +390,19 @@ class ConnectionWrapper {
 	}
 
 	public function getLatestArticles($user_id, $begin, $count) {
-	  $selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.description description, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin,:count;');
+	  $selectArticleLecture = $this->connection->prepare(<<<EOD
+SELECT article.id id, article.description description, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date 
+FROM article 
+INNER JOIN lecture ON article.id = lecture.article_id 
+WHERE lecture.user_id = :user_id 
+AND article.flux_id IN (
+	SELECT flux_id
+	FROM abonnement
+	WHERE user_id = :user_id)
+ORDER BY article.date DESC 
+LIMIT :begin,:count;
+EOD
+);
 
 		$selectArticleLecture->bindParam(':user_id', $user_id);
 		$selectArticleLecture->bindParam(':begin', $begin, PDO::PARAM_INT);

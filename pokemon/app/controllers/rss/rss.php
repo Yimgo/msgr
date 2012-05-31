@@ -218,6 +218,8 @@ class RssController extends BaseController {
 		$idFlux=$this->getConnectionWrapper()->getFluxId($feed_title);
 		$this->NON_CLASSE=$this->getConnectionWrapper()->getFolderId($this->session_get("user_id", null),'Non classé');
 
+		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),$this->NON_CLASSE,$idFlux);
+
 		if(!$exist) {
 			foreach ($feed->get_items() as $item):
 				$item_title=strip_tags($item->get_title());
@@ -235,8 +237,6 @@ class RssController extends BaseController {
 				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item_desc,$item_content,$item->get_date('Y-m-j G:i:s'));
 			endforeach;
 		}
-
-		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null),$this->NON_CLASSE,$idFlux);
 
 		$this->redirect_to('listing');
 	}
