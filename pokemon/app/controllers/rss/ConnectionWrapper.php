@@ -136,7 +136,7 @@ class ConnectionWrapper {
 	}
 
 	public function getArticleById($user_id, $article_id) {
-		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article, lecture WHERE article.id = lecture.article_id AND article.id = :article_id AND lecture.user_id = :user_id');
+		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date, flux.nom flux_nom FROM article, lecture, flux WHERE flux.id = article.flux_id AND article.id = lecture.article_id AND article.id = :article_id AND lecture.user_id = :user_id');
 		$selectArticleLecture->bindParam(':article_id', $article_id);
 		$selectArticleLecture->bindParam(':user_id', $user_id);
 		if ($selectArticleLecture->execute() === FALSE) {
@@ -148,6 +148,7 @@ class ConnectionWrapper {
 
 			$result = array(
 				'id' => intval($row['id']),
+				'flux_nom' => $row['flux_nom'],
 				'contenu' => $row['contenu'],
 				'titre' => $row['titre'],
 				'url'  => $row['url'],
@@ -172,7 +173,7 @@ class ConnectionWrapper {
 	}
 
 	public function getArticles($user_id, $flux_id, $begin, $count) {
-		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin, :count;');
+		$selectArticleLecture = $this->connection->prepare('SELECT article.id id, article., article.description description.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date FROM article INNER JOIN lecture ON article.id = lecture.article_id WHERE article.flux_id = :flux_id AND lecture.user_id = :user_id ORDER BY article.date DESC LIMIT :begin, :count;');
 		$selectArticleLecture->bindParam(':flux_id', $flux_id);
 		$selectArticleLecture->bindParam(':user_id', $user_id);
 		$selectArticleLecture->bindParam(':begin', $begin, PDO::PARAM_INT);
@@ -197,7 +198,7 @@ class ConnectionWrapper {
 
 			array_push($articles, array(
 				'id' => intval($row['id']),
-				'contenu' => $row['contenu'],
+				'description' => $row['description'],
 				'titre' => $row['titre'],
 				'url'  => $row['url'],
 				'lu' => filter_var($row['lu'], FILTER_VALIDATE_BOOLEAN),
@@ -210,11 +211,12 @@ class ConnectionWrapper {
 		return $articles;
 	}
 
-	public function addArticle($flux_id,$titre,$url,$contenu,$date) {
-		$insertArticle = $this->connection->prepare('INSERT INTO article(flux_id, titre, url, contenu,date) VALUES (:flux_id,:titre,:url,:contenu,:date);');
+	public function addArticle($flux_id,$titre,$url,$description, $contenu,$date) {
+		$insertArticle = $this->connection->prepare('INSERT INTO article(flux_id, titre, url, description, contenu,date) VALUES (:flux_id,:titre,:url,:description, :contenu,:date);');
 		$insertArticle->bindParam(':flux_id', $flux_id);
 		$insertArticle->bindParam(':titre', $titre);
 		$insertArticle->bindParam(':url', $url);
+		$insertArticle->bindParam(':description', $description);
 		$insertArticle->bindParam(':contenu', $contenu);
 		$insertArticle->bindParam(':date', $date);
 

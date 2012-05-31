@@ -132,36 +132,6 @@ class RssController extends BaseController {
 	}
 
 	public function get_articles($params) {
-		// Renvoie tous les articles pour un flux donné (TODO: login)
-		/*$lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
-		 *
-		 *   $articles = array(
-		 *       array("titre" => "Test 1",
-		 *       "id" => 0,
-		 *       "contenu" => $lorem,
-		 *       "favori" => true,
-		 *       "lu" => true,
-		 *       "tags" => array(1,2)),
-		 *       array("titre" => "Test numero bis",
-		 *       "id" => 1,
-		 *       "contenu" => $lorem,
-		 *       "favori" => false,
-		 *       "lu" => false,
-		 *       "tags" => array()),
-		 *       array("titre" => "Un troisieme article",
-		 *       "id" => 2,
-		 *       "contenu" => $lorem,
-		 *       "favori" => true,
-		 *       "lu" => true,
-		 *       "tags" => array(4)),
-		 *       array("titre" => "Last one",
-		 *       "id" => 10,
-		 *       "contenu" => $lorem . $lorem . $lorem . $lorem,
-		 *       "favori" => false,
-		 *       "lu" => true,
-		 *       "tags" => array(6,7))
-		);*/
-
 	  if (!isset($params[0]))
 	  	return array();
 
@@ -258,7 +228,11 @@ class RssController extends BaseController {
 				if(strlen($item_desc)==0) {
 					$item_desc='Aucune description disponible: '.$item->get_permalink();
 				}
-				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item_desc,$item->get_date('Y-m-j G:i:s'));
+				$item_content=strip_tags($item->get_content());
+				if(strlen($item_content)==0) {
+					$item_content='Aucun contenu supplémentaire disponible: '.$item->get_permalink();
+				}
+				$this->getConnectionWrapper()->addArticle($idFlux,$item_title,$item->get_permalink(),$item_desc,$item_content,$item->get_date('Y-m-j G:i:s'));
 			endforeach;
 		}
 
