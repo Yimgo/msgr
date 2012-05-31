@@ -35,7 +35,7 @@
     		<table class="table table-bordered table-striped span6">
     			<thead>
     				<tr>
-    					<th class="span5" style="text-align: center;">Titre du flux</th>
+    					<th class="span5" style="text-align: center;">Titre du dossier</th>
     					<th class="span5" style="text-align: center;">Actions associées</th>
     				</tr>
     			</thead>
