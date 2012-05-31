@@ -17,6 +17,7 @@ class RssController extends BaseController {
 		return $this->connectionWrapper;
 	}
 
+	/* index() routes vistor to login page if not logged, to listing page otherwise */	
 	public function index($route) {
 		if (is_null($this->session_get("user_id", null))) {
 			$is_connected = false;
@@ -29,17 +30,14 @@ class RssController extends BaseController {
 			$this->redirect_to('listing');
 		else
 			$this->redirect_to('login');
-	}
+	}	
 
-	public function listing($route) {
-		$this->render_view('listing', null);
-	}
-
-	public function article($route) {
-		$params = $this->getConnectionWrapper()->getArticleById($this->session_get("user_id", null), $route[0]);
-		$this->render_view('article', $params);
-	}
-
+	/* 
+	 * login() displays login interface if user is not logged.
+	 * POST parameters awaited:
+	 *	user_login
+	 *	user_password	 *
+	 */
 	public function login($route, $params) {
 		if (isset($params["user_login"])) {
 			if (($user_id = $this->getConnectionWrapper()->signIn($params["user_login"], $params["user_password"])) === FALSE) {
@@ -55,11 +53,19 @@ class RssController extends BaseController {
 		}
 	}
 
+	/* logout() allows user to disconnect; session is cleared then and user is redirected to login page */
 	public function logout($route) {
 		$this->session_unset_var('user_id');
 		$this->redirect_to('index');
 	}
 
+	/* 
+	 * signup() allows user to register and redirect to listing page
+	 * POST parameters awaited:
+	 *	user_login
+	 *	user_password
+	 *	user_email
+	 */
 	public function signup($route, $params) {
 		$user_login = $params['user_login'];
 		$user_password = $params['user_password'];
@@ -90,67 +96,136 @@ class RssController extends BaseController {
 		}
 	}
 
+
+
+	/* listing() displays main view: folders/feeds and associated articles */
+	public function listing($route) {
+		$this->render_view('listing', null);
+	}
+
+	/* folders() displays folders management interface, which allows user to add, rename or delete folders */
 	public function folders($route) {
 		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
 		$this->render_view("folders", $folder);
 	}
 
-	public function add_folder($route, $params) {
-		$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),$params["titre"]);
-		$this->redirect_to("folders");
-	}
-
-	public function delete_folder($route) {
-		$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
-		$this->redirect_to("folders");
-	}
-
-	public function rename_folder($route, $params) {
-		$this->getConnectionWrapper()->renameFolder($this->session_get("user_id", null), $params['id'], $params['titre']);
-		$this->redirect_to("folders");
-	}
-
-	public function move_flux_folder($route, $params) {
-		$this->getConnectionWrapper()->changeFolder($this->session_get("user_id", null),$params['flux_id'], $params['dossier_id']);
-	}
-
+	/* tags() displays folders management interface, which allows user to add, rename or delete tags */
 	public function tags($route) {
 		$tags=$this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
 		$this->render_view('tags', $tags);
 	}	
 
+	/*
+	 * article() displays article interface, which allows user to manage tags and post comments.
+	 * GET parameter awaited:
+	 * 	0: article id
+	*/
+	public function article($route) {
+		$params = $this->getConnectionWrapper()->getArticleById($this->session_get("user_id", null), $route[0]);
+		$this->render_view('article', $params);
+	}
+
+
+	/*
+	 * add_folder() allows user to add a folder.
+	 * POST parameter awaited:
+	 *	titre
+	 */
+	public function add_folder($route, $params) {
+		$this->getConnectionWrapper()->addFolder($this->session_get("user_id", null),$params["titre"]);
+		$this->redirect_to("folders");
+	}
+
+	/*
+	 * delete_folder() allows user to delete a folder.
+	 * WARNING: folder is able to be removed with a GET request; Id should be in a POST parameter.
+	 * TODO: fix this.
+	 * GET parameter awaited:
+	 *	0: folder id
+	 */
+	public function delete_folder($route) {
+		$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
+		$this->redirect_to("folders");
+	}
+
+	/*
+	 * rename_folder() allows user to rename a folder.
+	 * POST parameters awaited:
+	 *	id
+	 *	titre
+	 */
+	public function rename_folder($route, $params) {
+		$this->getConnectionWrapper()->renameFolder($this->session_get("user_id", null), $params['id'], $params['titre']);
+		$this->redirect_to("folders");
+	}
+
+	/* 
+	 * move_flux_folder() allows user to move a feed to a specified folder.
+	 * POST parameters awaited:
+	 	flux_id
+	 	dossier_id
+ 	 */
+	public function move_flux_folder($route, $params) {
+		$this->getConnectionWrapper()->changeFolder($this->session_get("user_id", null),$params['flux_id'], $params['dossier_id']);
+	}
+
+	/*
+	 * add_tag() allows user to add a tag.
+	 * POST parameter awaited:
+	 *	titre
+	 */
 	public function add_tag($route, $params) {
 		$this->getConnectionWrapper()->addTag($this->session_get("user_id", null),$params["titre"]);
 		$this->redirect_to("tags");
 	}
 
+	/*
+	 * delete_tag() allows user to delete a tag.
+	 * WARNING: tag is able to be removed with a GET request; Id should be in a POST parameter.
+	 * TODO: fix this.
+	 * GET parameter awaited:
+	 *	0: tag id
+	 */
 	public function delete_tag($route) {
 		$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$route[0]);
 		$this->redirect_to("tags");
 	}
 
+	/*
+	 * rename_tag() allows user to rename a tag.
+	 * POST parameters awaited:
+	 *	id
+	 *	titre
+	 */
 	public function rename_tag($route, $params) {
 		$this->getConnectionWrapper()->renameTag($this->session_get("user_id", null), $params['id'], $params['titre']);
 		$this->redirect_to("tags");
 	}
 
+	/* search(): I don't know what is the purpose of this function :/ */
 	public function search($route) {
 		$search = $_GET["search"];
 		$tags_id = explode(',', $_GET["tags_id"]);
 	}
 
+	/* get_tags() displays user's tags, JSON */
 	public function get_tags() {
-			// Renvoie les tags pour un utilisateur
 			echo json_encode($this->getConnectionWrapper()->getTags($this->session_get("user_id", null)));
 	}
 
+	/* get_flux_dossier() displays feeds, associated with their folder, current user, JSON */
 	public function get_flux_dossiers() {
-		// Renvoie tous les flux et l'organisation en dossier (TODO: login)
 		$flux = $this->getConnectionWrapper()->getFluxByFolders($this->session_get("user_id", null));
-		// pour tester le rendu en cas d'erreur cote client
 		echo json_encode($flux);
 	}
 
+	/*
+	 * get_articles() displays articles for a specified feed and current user.
+	 * GET parameters awaited:
+	 * 	0: feed id
+	 *	1: offset of fetched articles (optional)
+	 *	2: number of articles fetched (optional)
+	 */
 	public function get_articles($params) {
 	  if (!isset($params[0]))
 	  	return array();
@@ -173,6 +248,12 @@ class RssController extends BaseController {
 		echo json_encode($articles);
 	}
 
+	/*
+	 * get_latest_articles() latest unread articles for current user.
+	 * GET parameters awaited:
+	 *	0: offset of fetched articles (optional)
+	 *	1: number of articles fetched (optional)
+	 */
 	public function get_latest_articles($params) {
 	  if (!isset($params[0])) {
 	  	$params[0] = "";
@@ -189,12 +270,25 @@ class RssController extends BaseController {
     echo json_encode($this->getConnectionWrapper()->getLatestArticles($this->session_get('user_id', null), $begin, $count));
 	}
 
+	/* 
+	 * getTagged(): I don't know what is the purpose of this function.
+	 * This function certainly won't work because:
+	 *	- user id is given to getTaggedArticles which is awaiting tag id
+	 *	- getTaggedArticles() returns all articles for specified tag id, not only current user ones
+	 * The behaviour of this function is unknown.
+	 * WARNING: please fix this function or remove it if not used.
+	 */
 	public function getTagged() {
-			// Renvoie les tags pour un utilisateur
 			echo json_encode($this->getConnectionWrapper()->getTaggedArticles($this->session_get("user_id", null)));
 	}
 
-
+	/*
+	 * set_tag() allows current user to tag or untag the specified article with the specified tag.
+	 * POST parameters awaited:
+	 *	article_id
+	 * 	tag_id
+	 * 	tag [true/false => tag/untag]
+	 */
 	public function set_tag($route, $params) {
 		if (isset($params['article_id']) && isset($params['tag_id'])&&isset($params['tag'])) {
 		  $article_id = $params['article_id'];
@@ -204,9 +298,15 @@ class RssController extends BaseController {
 				$this->getConnectionWrapper()->tagArticle($article_id, $tag_id);
 			else
 				$this->getConnectionWrapper()->untagArticle($article_id, $tag_id);
-    }
+    	}
 	}
 
+	/*
+	 * set_favori() allows current user to set specified article as starred.
+	 * POST parameters awaited:
+	 *	article_id
+	 *	favori [true/false => star/unstar]
+	 */
 	public function set_favori($route, $params) {
 		$user_id = $this->session_get('user_id', null);
 		$article_id = $params['article_id'];
@@ -214,6 +314,12 @@ class RssController extends BaseController {
 		$this->getConnectionWrapper()->setFavori($user_id, $article_id, $favori);
 	}
 
+	/*
+	 * set_lu() allows current user to set specified article as read.
+	 * POST parameters awaited:
+	 *	article_id
+	 *	lu [true/false => read/unread]
+	 */
 	public function set_lu($route, $params) {
 		$user_id = $this->session_get('user_id', null);
 		$article_id = $params['article_id'];
@@ -221,6 +327,13 @@ class RssController extends BaseController {
 		$this->getConnectionWrapper()->setLu($user_id, $article_id, $lu);
 	}
 
+	/*
+	 * parse_single_feed() allows user to add a new feed.
+	 * The new feed is added to 'Non classé' folder by default.
+	 * A new suscribtion is also added.
+	 * POST parameter awaited:
+	 *	url: feed's hyperlink
+	 */
 	public function parse_single_feed($flux)
 	{
 		$feed= new SimplePie();
