@@ -114,6 +114,26 @@ class RssController extends BaseController {
 		$this->getConnectionWrapper()->changeFolder($this->session_get("user_id", null),$params['flux_id'], $params['dossier_id']);
 	}
 
+	public function tags($route) {
+		$tags=$this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
+		$this->render_view('tags', $tags);
+	}	
+
+	public function add_tag($route, $params) {
+		$this->getConnectionWrapper()->addTag($this->session_get("user_id", null),$params["titre"]);
+		$this->redirect_to("tags");
+	}
+
+	public function delete_tag($route) {
+		$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$route[0]);
+		$this->redirect_to("tags");
+	}
+
+	public function rename_tag($route, $params) {
+		$this->getConnectionWrapper()->renameTag($this->session_get("user_id", null), $params['id'], $params['titre']);
+		$this->redirect_to("tags");
+	}
+
 	public function search($route) {
 		$search = $_GET["search"];
 		$tags_id = explode(',', $_GET["tags_id"]);
