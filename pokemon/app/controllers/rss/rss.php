@@ -220,11 +220,11 @@ class RssController extends BaseController {
 
 		if(!$exist) {
 			foreach ($feed->get_items() as $item):
-				$item_title=$item->get_title();
+				$item_title=strip_tags($item->get_title());
 				if(strlen($item_title)>50) {
 					$item_title=substr($item_title,0,47).'...';
 				}
-				$item_desc=strip_tags($item->get_description());
+				$item_desc=$item->get_description();
 				if(strlen($item_desc)==0) {
 					$item_desc='Aucune description disponible: '.$item->get_permalink();
 				}
