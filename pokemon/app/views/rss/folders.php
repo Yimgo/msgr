@@ -11,8 +11,8 @@
             <a class="brand" href="#">RSS</a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li><a href="listing"><i class="icon-home icon-white"></i> Accueil</a></li>
-                    <li class="active"><a href="folders"><i class="icon-folder-open icon-white"></i> Gérer les dossiers</a></li>
+                    <li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
+                    <li class="active"><a href="/pokemon/rss/folders"><i class="icon-folder-open icon-white"></i> Gérer les dossiers</a></li>
                 </ul>
             </div>
 
@@ -28,7 +28,7 @@
 <div class="container">
     <!-- Ajouter Abonnement + Recherche -->
     <div class="row">
-    
+
     	<div class="offset1 span10">
 
     		<table class="table table-bordered table-striped span6">

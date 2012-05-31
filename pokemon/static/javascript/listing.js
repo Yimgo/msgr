@@ -198,7 +198,6 @@ function click_flux() {
         $.each(data, function(index, elem) {
             add_article_to_dom(elem.id, elem.titre, elem.contenu, elem.favori, elem.lu, elem.tags, elem.url);
         });
-        click_list_articles();
     })
     .success(function() {
         $("#liste_articles_chargement").hide();
@@ -210,17 +209,6 @@ function click_flux() {
         $("#liste_flux tr").removeClass("ligne_flux_selectionne");
         $('#div_dropdown_move_folder').hide();
     });
-}
-
-// Pour chaque article, permettre de le cacher/le déplier en cliquant dessus
-function click_list_articles() {
-    $("#flux_container div p span")
-        .unbind('click')
-        .click(function() {
-            $(this).parent().siblings().each(function() {
-                $(this).toggle();
-            });
-        });
 }
 
 // Met en favori/non favori un article
