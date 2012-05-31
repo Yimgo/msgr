@@ -220,7 +220,7 @@ class RssController extends BaseController {
 
 		if(!$exist) {
 			foreach ($feed->get_items() as $item):
-				$item_title=strip_tags($item->get_title());
+				$item_title=$item->get_title();
 				if(strlen($item_title)>50) {
 					$item_title=substr($item_title,0,47).'...';
 				}
@@ -228,7 +228,7 @@ class RssController extends BaseController {
 				if(strlen($item_desc)==0) {
 					$item_desc='Aucune description disponible: '.$item->get_permalink();
 				}
-				$item_content=strip_tags($item->get_content());
+				$item_content=$item->get_content();
 				if(strlen($item_content)==0) {
 					$item_content='Aucun contenu supplémentaire disponible: '.$item->get_permalink();
 				}
