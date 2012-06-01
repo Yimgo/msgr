@@ -63,22 +63,33 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
 
     <div class="row">
         <hr />
-        <!--
-                'date' => $row['date'],
-                'tags' => array()
-        -->
         <div class="span8">
             <?php echo $params['contenu']; ?>
         </div>
 
         <div class="span4">
-            <div>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <h3>Tags concernant cet article</h3>
+            <ul id="liste-tags-actifs" class="unstyled well">
+            <?php foreach ($params["tags"] as $tag) { ?>
+                <li id="tag_<?php echo $tag['id'] ;?>">
+                    <i class="icon-tag"></i>
+                    <a href="#"><?php echo $tag['nom']; ?></a>
+                </i>
+            <?php } ?>
+            </ul>
+
+            <hr />
+            <div style="overflow-y: scroll; height: 20em;">
+                <h3>Vos autres tags</h3>
+                <ul id="liste-tags-non-actifs" class="unstyled well">
+                <?php foreach ($params["all_tags"] as $tag) {
+                    if (! in_array($tag, $params["tags"])) { ?>
+                    <li id="tag_<?php echo $tag['id'] ;?>">
+                        <i class="icon-tag icon-white"></i>
+                        <a href="#"><?php echo $tag['nom']; ?></a>
+                    </i>
+                <?php }} ?>
+                </ul>
             </div>
         </div>
     </div>
@@ -89,7 +100,7 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
 
         <!-- A répéter pour chaque commentaire -->
         <div class="row">
-            <div class="span9">
+            <div class="span8">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                 tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -98,7 +109,7 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
                 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </div>
 
-            <div class="span3">
+            <div class="span4">
                 profil
             </div>
         </div>

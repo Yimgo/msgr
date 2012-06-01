@@ -18,9 +18,9 @@ class RssController extends BaseController {
 	}
 
 
-	
 
-	/* index() routes vistor to login page if not logged, to listing page otherwise */	
+
+	/* index() routes vistor to login page if not logged, to listing page otherwise */
 	public function index($route) {
 		if (is_null($this->session_get("user_id", null))) {
 			$is_connected = false;
@@ -33,9 +33,9 @@ class RssController extends BaseController {
 			$this->redirect_to('listing');
 		else
 			$this->redirect_to('login');
-	}	
+	}
 
-	/* 
+	/*
 	 * login() displays login interface if user is not logged.
 	 * POST parameters awaited:
 	 *	user_login
@@ -62,7 +62,7 @@ class RssController extends BaseController {
 		$this->redirect_to('index');
 	}
 
-	/* 
+	/*
 	 * signup() allows user to register and redirect to listing page
 	 * POST parameters awaited:
 	 *	user_login
@@ -99,7 +99,7 @@ class RssController extends BaseController {
 		}
 	}
 
-	
+
 
 
 	/* listing() displays main view: folders/feeds and associated articles */
@@ -107,7 +107,7 @@ class RssController extends BaseController {
 		$this->render_view('listing', null);
 	}
 
-	/* 
+	/*
 	 * move_flux_folder() allows user to move a feed to a specified folder.
 	 * POST parameters awaited:
 	 	flux_id
@@ -144,22 +144,22 @@ class RssController extends BaseController {
 	public function get_articles($params) {
 		if (!isset($params[0]))
 			return array();
-		
+
 		if (!isset($params[1])) {
 			$params[1] = "";
 			$params[2] = "";
 		}
-		
+
 		else if (!isset($params[2]))
 			$params[2] = "";
-		
+
 		$begin = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
 											      'min_range' => 0)));
 		$count = filter_var($params[2], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
 											      'min_range' => 0)));
-		
+
 		$articles = $this->getConnectionWrapper()->getArticles($this->session_get('user_id', null), $params[0], $begin, $count);
-		
+
 		echo json_encode($articles);
 	}
 
@@ -174,10 +174,10 @@ class RssController extends BaseController {
 			$params[0] = "";
 			$params[1] = "";
 		}
-		
+
 		else if (!isset($params[1]))
 			$params[1] = "";
-		
+
 		$begin = filter_var($params[0], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
 											      'min_range' => 0)));
 		$count = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
@@ -185,7 +185,7 @@ class RssController extends BaseController {
 		echo json_encode($this->getConnectionWrapper()->getLatestArticles($this->session_get('user_id', null), $begin, $count));
 	}
 
-	/* 
+	/*
 	 * getTagged(): I don't know what is the purpose of this function.
 	 * This function certainly won't work because:
 	 *	- user id is given to getTaggedArticles which is awaiting tag id
@@ -241,13 +241,13 @@ class RssController extends BaseController {
 		$lu = filter_var($params['lu'], FILTER_VALIDATE_BOOLEAN);
 		$this->getConnectionWrapper()->setLu($user_id, $article_id, $lu);
 	}
-	
+
 	public function addCommentaire($route, $params) {
 		$params['article_id'] = 1;
 		$params['commentaire'] = "test 1234";
 		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params);
 	}
-	
+
 	public function getCommentaires($route, $params) {
 		$params['article_id'] = 1;
 		echo json_encode($this->getConnectionWrapper()->getCommentaires($params));
@@ -357,7 +357,7 @@ class RssController extends BaseController {
 	 *	titre
 	 */
 	public function add_tag($route, $params) {
-		$this->getConnectionWrapper()->addTag($this->session_get("user_id", null),$params["titre"]);
+		$this->getConnectionWrapper()->addTag($this->session_get("user_id", null),$params["nom"]);
 		$this->redirect_to("tags");
 	}
 
@@ -377,14 +377,12 @@ class RssController extends BaseController {
 	 * rename_tag() allows user to rename a tag.
 	 * POST parameters awaited:
 	 *	id
-	 *	titre
+	 *	nom
 	 */
 	public function rename_tag($route, $params) {
-		$this->getConnectionWrapper()->renameTag($this->session_get("user_id", null), $params['id'], $params['titre']);
+		$this->getConnectionWrapper()->renameTag($this->session_get("user_id", null), $params['id'], $params['nom']);
 		$this->redirect_to("tags");
 	}
-
-
 
 
 	/*
@@ -394,8 +392,9 @@ class RssController extends BaseController {
 	*/
 	public function article($route) {
 		$params = $this->getConnectionWrapper()->getArticleById($this->session_get("user_id", null), $route[0]);
+		$params["all_tags"] = $this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
 		$this->render_view('article', $params);
-	}	
+	}
 }
 
 ?>

@@ -30,16 +30,16 @@ $(document).ready(function() {
                 });
 
                 $(all_tags).each(function(index) {
-                    if ($.inArray(all_tags[index].titre + ' ', used_tags) == -1)
+                    if ($.inArray(all_tags[index].nom + ' ', used_tags) == -1)
                         showed_tags.push(all_tags[index]);
                 });
 
                 return showed_tags;
             },
-            property: "titre", // champ de 'data' qui sera utilisé pour les comparaisons
+            property: "nom", // champ de 'data' qui sera utilisé pour les comparaisons
             onselect: function(obj) {
                 // Ajouter le tag
-                add_tag_to_dom(obj.titre, obj.id);
+                add_tag_to_dom(obj.nom, obj.id);
                 // Réinitialiser la barre de recherche
                 $("#search").val("");
             }
@@ -99,13 +99,13 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
                         });
 
                         $(all_tags).each(function(index) {
-                            if ($.inArray(' ' + all_tags[index].titre, used_tags) == -1)
+                            if ($.inArray(' ' + all_tags[index].nom, used_tags) == -1)
                                 showed_tags.push(all_tags[index]);
                         });
 
                         return showed_tags;
                     },
-            property: "titre",
+            property: "nom",
             onselect: function(obj) {
                 $('li', new_dropdown_tags).each(function(index, li) {
                     if ($(li).data('id') == obj.id) {
@@ -359,12 +359,12 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
 
 
 // Ajouter le tag au DOM
-function add_tag_to_dom(titre, id) {
+function add_tag_to_dom(nom, id) {
     // DOM
     $('<a>', {
         class: 'btn btn-primary hide',
         href: '#',
-        html: titre + ' '
+        html: nom + ' '
     })
     .append($('<i>', {
         class: 'icon-remove icon-white'}))
@@ -384,7 +384,7 @@ function make_dropdown_tags(tags) {
         dropdown_tags.append(
             $('<li>', {'style':'display:none'})
                 .data('id',elem.id)
-                .append($('<a>', {'html': ' ' +elem.titre, 'href':'/pokemon/rss/tag/' + elem.id})
+                .append($('<a>', {'html': ' ' +elem.nom, 'href':'/pokemon/rss/tag/' + elem.id})
                     .prepend($('<i>', {'class' : 'icon-tag'}))
                     .append($('<i>', {'class' : 'icon-minus-sign pull-right'}))
                 )
