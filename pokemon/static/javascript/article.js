@@ -47,9 +47,13 @@ function tag() {
     $(this).click(untag);
 
     // Déplacer l'élément vers la liste des tags actifs
-    var element = $(this).parent().detach();
-    $('i', element).removeClass("icon-white");
-    $("#liste-tags-actifs").append(element);
+    var element = $(this).parent();
+    element.hide(function() {
+        $(this).detach();
+        $('i', element).removeClass("icon-white");
+        $("#liste-tags-actifs").append($(this));
+        $(this).show('slow');
+    });
 }
 
 function untag() {
@@ -63,7 +67,11 @@ function untag() {
     $(this).click(tag);
 
     // Déplacer l'élément vers la liste des tags non actifs
-    var element = $(this).parent().detach();
-    $('i', element).addClass("icon-white");
-    $("#liste-tags-non-actifs").append(element);
+    var element = $(this).parent();
+    element.hide(function() {
+        $(this).detach();
+        $('i', element).addClass("icon-white");
+        $("#liste-tags-non-actifs").append($(this));
+        $(this).show('slow');
+    });
 }
