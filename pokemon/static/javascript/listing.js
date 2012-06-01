@@ -71,7 +71,7 @@ $(document).ready(function() {
     $.getJSON('/pokemon/rss/get_latest_articles/0/10', function(data) {
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
-            add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url);
+            add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url, elem.date);
         });
     })
 });
@@ -81,7 +81,7 @@ $(document).ready(function() {
    -------------------------------- */
 
 // Ajouter un article à la liste des articles
-function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
+function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url, date) {
     var new_dropdown_tags = $(fresh_dropdown_tags).clone(true, true);
 
     $('input', new_dropdown_tags)
@@ -121,6 +121,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
             .data('id', id)
             .append($('<p>')
                 .append($('<a>', {html:titre, href:'/pokemon/rss/article/' + id}))
+                    .append($('<em>', {html:' (' + getArticleDateStr(date) + ')'}))
                 .append($('<div>', {'class': 'article_properties btn-group'})
                     .append($('<button>', {'class':'btn dropdown-toggle', 'data-toggle':'dropdown'})
                         .append($('<i>', {'class': 'icon-tags'}))
@@ -205,7 +206,7 @@ function click_flux() {
         $('#flux_container').empty();
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
-            add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url);
+            add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url, elem.date);
         });
     })
     .success(function() {
@@ -409,4 +410,69 @@ function make_dropdown_tags(tags) {
     );
 
     return dropdown_tags;
+}
+
+function getArticleDateStr(date) {
+    var str = "Il y a très longtemps, dans un pays lointain...";
+    var articleDate = new Date(date.substr(0,4), date.substr(5,2) - 1, date.substr(8,2), date.substr(11,2), date.substr(14,2), date.substr(17,2));
+    var todayDate = new Date();
+    var minutes = Math.floor((todayDate.getTime()-articleDate.getTime())/1000/60);
+
+    if (minutes == 0) {
+        str = "À l'instant";
+    }
+
+    else if (minutes == 1) {
+        str = "Il y a une minute"
+    }
+
+    else if (minutes < 60) {
+        str = "Il y a " + minutes + " minutes";
+    }
+    else {
+        var hours = Math.floor(minutes / 60);
+        if (hours == 1) {
+            str = "Il y a une heure";
+        }
+        else if(hours < 24) {
+            str = "Il y a " + hours + "heures";
+        }
+        else {
+            var days = Math.floor(hours / 24);
+            if (days == 1) {
+                str = "Hier";
+            }
+            else if (days < 7) {
+                str = "Il y a " + days + " jours"; 
+            }
+            else {
+                var weeks = Math.floor(days / 7);
+                if (weeks == 1) {
+                    str = "La semaine dernière";
+                }
+                else if (weeks < 4) {
+                    str = "Il y a " + weeks + " semaines";
+                }
+                else {
+                    var months = Math.floor(weeks / 4);
+                    if (months == 1) {
+                        str = "Le mois dernier";
+                    }
+                    else if (months < 12) {
+                        str = "Il y a " + months + " mois";
+                    }
+                    else {
+                        var years = Math.floor(months / 12);
+                        if (years == 1) {
+                            str = "L'année dernière";
+                        }
+                        else {
+                            str = "Il y a " + years + "ans";
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return str;
 }
