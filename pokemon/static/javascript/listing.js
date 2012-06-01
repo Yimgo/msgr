@@ -142,6 +142,15 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url) {
                             else
                                 $(this).children().removeClass('icon-chevron-up').addClass('icon-chevron-down');
                             $(this).parent().parent().siblings().toggle();
+
+                            // Horrible fix (marquer comme lu quand on clique)
+                            var icone = $('i', $(this).prev().prev());
+                            if (icone.hasClass('icon-eye-close')) {
+                                var article_id = $(this).parent().parent().parent().data('id');
+                                console.log(article_id);
+                                $.post('/pokemon/rss/set_lu', {'article_id' : article_id, 'lu': 'true'});
+                                icone.removeClass('icon-eye-close').addClass('icon-eye-open');
+                            }
                         })
                     )
                 )
