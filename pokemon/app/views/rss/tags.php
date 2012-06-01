@@ -35,7 +35,7 @@
     		<table class="table table-bordered table-striped span6">
     			<thead>
     				<tr>
-    					<th class="span5" style="text-align: center;">Titre du tag</th>
+    					<th class="span5" style="text-align: center;">Nom du tag</th>
     					<th class="span5" style="text-align: center;">Actions associées</th>
     				</tr>
     			</thead>
@@ -45,10 +45,10 @@
 	    			<?php foreach ($params as $tag) { ?>
 	    			<tr>
 	    				<td>
-                            <span><?php echo $tag["titre"] ?></span>
+                            <span><?php echo $tag["nom"] ?></span>
                             <form method="POST" action="rename_tag" class="form-inline" style="display:none" id="form-<?php echo $tag['id'] ; ?>">
                                 <input type="hidden" name="id" value="<?php echo $tag['id'] ; ?>" />
-                                <input type="text" id="titre" name="titre" value="<?php echo $tag['titre']; ?>"/>
+                                <input type="text" id="nom" name="nom" value="<?php echo $tag['nom']; ?>"/>
                                 <button type="submit" class="btn"><i class="icon-check"></i> OK</button>
                             </form>
                         </td>
@@ -63,7 +63,7 @@
 	    			<tr>
 	    				<form method="POST" action="add_tag" class="form-inline">
 	    					<td>
-	    						<input type="text" placeholder="Nom du nouveau tag" id="titre" name="titre" />
+	    						<input type="text" placeholder="Nom du nouveau tag" id="nom" name="nom" />
 	    					</td>
 	    					<td>
 	    						<button type="submit" class="btn"><i class="icon-plus-sign"></i> Ajouter un tag</button>

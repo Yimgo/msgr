@@ -48,7 +48,7 @@ class ConnectionWrapper {
 
 		$tags = array();
 		while ($row = $statement->fetch()) {
-			array_push($tags, array("titre" => $row["nom"], "id" => $row["id"]));
+			array_push($tags, array("nom" => $row["nom"], "id" => $row["id"]));
 		}
 		return $tags;
 	}
@@ -244,7 +244,7 @@ class ConnectionWrapper {
 			return False;
 		}
 	}
-	
+
 	public function addCommentaire($user_id, $params) {
 		$insertStatement = $this->connection->prepare('INSERT INTO commentaire (user_id, article_id, commentaire, date) VALUES (:user_id, :article_id, :commentaire, NOW());');
 		$insertStatement->bindParam(':user_id', $user_id);
@@ -254,7 +254,7 @@ class ConnectionWrapper {
 			return False;
 		}
 	}
-	
+
 	public function getCommentaires($params) {
 		$statement = $this->connection->prepare('SELECT commentaire,date,user_id FROM commentaire WHERE article_id = :article_id;');
 		$statement->bindParam(':article_id', $params['article_id']);
@@ -444,16 +444,16 @@ class ConnectionWrapper {
 
 	public function getLatestArticles($user_id, $begin, $count) {
 	  $selectArticleLecture = $this->connection->prepare(<<<EOD
-SELECT article.id id, article.description description, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date 
-FROM article 
-INNER JOIN lecture ON article.id = lecture.article_id 
-WHERE lecture.user_id = :user_id 
+SELECT article.id id, article.description description, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date
+FROM article
+INNER JOIN lecture ON article.id = lecture.article_id
+WHERE lecture.user_id = :user_id
 AND article.flux_id IN (
 	SELECT flux_id
 	FROM abonnement
 	WHERE user_id = :user_id)
 AND lecture.lu = 0
-ORDER BY article.date DESC 
+ORDER BY article.date DESC
 LIMIT :begin,:count;
 EOD
 );
