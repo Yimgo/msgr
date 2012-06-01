@@ -192,8 +192,8 @@ function click_flux() {
     $("#liste_articles_erreur").hide();
 
     // --- Recuperation des articles ---
-    $("#flux_container").html("");
     $.getJSON('/pokemon/rss/get_articles/' + $(this).data('id'), function(data) {
+        $('#flux_container').empty();
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
             add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url);
