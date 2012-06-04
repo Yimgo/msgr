@@ -84,8 +84,10 @@
             <div id="flux_container">
             </div>
 
-            <a class="btn" id="pagin-left"><i class="icon-arrow-left"></i> </a>
-            <a class="btn" id="pagin-right"><i class="icon-arrow-right"></i> </a>
+            <div style="margin-bottom: 1em;">
+                <a class="btn" id="pagin-left" style="display:none"><i class="icon-arrow-left"></i> </a>
+                <a class="btn" id="pagin-right"><i class="icon-arrow-right"></i> </a>
+            </div>
        </div>
     </div>
 </div>

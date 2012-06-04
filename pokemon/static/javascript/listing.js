@@ -2,7 +2,8 @@
    INITIALISATION DU DOCUMENT
    -------------------------- */
 
-var page_courante = 0;
+var page_courante = undefined;
+var flux_courant = undefined;
 
 $(document).ready(function() {
     // Récupérér initialement la liste des flux + dossiers pour l'afficher
@@ -77,13 +78,14 @@ $(document).ready(function() {
         });
     });
 
-		$("#pagin-left").click(function () {
-			if (page_courante > 0)
-					page_courante--;
-		});
-		$("#pagin-right").click(function () {
-					page_courante++;
-		});
+	$("#pagin-left").click(function () {
+		page_courante--;
+        get_liste_article(flux_courant);
+    });
+	$("#pagin-right").click(function () {
+       page_courante++;
+       get_liste_article(flux_courant);
+    });
 });
 
 /* --------------------------------
@@ -170,7 +172,7 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url, dat
             		})
             		.append($('<em>', {html:getArticleDateStr(date)}))
                 .append($('<div>', {'html': contenu, 'style':'margin-top:1em'}))
-						);
+			);
 
     // Actuellement, tous les tags sont affichés dans une liste, tous masqués
     // On affiche uniquement les tags marqués pour cet article
@@ -200,6 +202,12 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url, dat
 // - Récupère les articles correspondants et les insère
 function click_flux() {
 
+    flux_courant = $(this).data('id');
+    page_courante = 0;
+
+    $('#pagin-left').hide();
+    $('#pagin-right').show();
+
     // Mettre le titre du flux dans la colonne de droite
     $('#titre_liste_articles').html($(this).data('titre'));
     $('#titre_liste_articles').data('id', $(this).data('id'));
@@ -208,18 +216,33 @@ function click_flux() {
     $("#liste_flux tr").removeClass("ligne_flux_selectionne");
     $(this).addClass("ligne_flux_selectionne");
 
+    // --- Recuperation des articles ---
+    get_liste_article($(this).data('id'));
+}
+
+function get_liste_article(flux_id) {
     // Affichage de la barre de chargement
     $("#liste_articles_chargement").show();
     $("#liste_articles_erreur").hide();
 
-    // --- Recuperation des articles ---
     $('#flux_container').empty();
-    $.getJSON('/pokemon/rss/get_articles/' + $(this).data('id'), function(data) {
+    $.getJSON('/pokemon/rss/get_articles/' + flux_id + '/' + page_courante*10 + '/10', function(data) {
         $('#flux_container').empty();
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
             add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url, elem.date);
         });
+
+        // Pagination : on a demandé 10 éléments, si le tableau recu ne fait
+        // pas 10 éléments en taille, alors c'est qu'on est à la dernière page
+        if (data.length < 10)
+            $('#pagin-right').hide();
+        else
+            $('#pagin-right').show();
+        if (page_courante > 0)
+            $('#pagin-left').show();
+        else
+            $('#pagin-left').hide();
     })
     .success(function() {
         $("#liste_articles_chargement").hide();
@@ -230,7 +253,7 @@ function click_flux() {
         $("#liste_articles_erreur").show();
         $("#liste_flux tr").removeClass("ligne_flux_selectionne");
         $('#div_dropdown_move_folder').hide();
-    });
+        });
 }
 
 // Met en favori/non favori un article
