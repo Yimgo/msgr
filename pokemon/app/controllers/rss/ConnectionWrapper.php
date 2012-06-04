@@ -268,7 +268,8 @@ class ConnectionWrapper {
 			$getLogin = $this->connection->prepare('SELECT login FROM user WHERE id = :user_id;');
 			$getLogin->bindParam(':user_id', $row['user_id']);
 			if ($getLogin->execute() !== FALSE) {
-				$com['username'] = $getLogin->fetch()['login'];
+				$user = $getLogin->fetch();
+				$com['username'] = $user['login'];
 			}
 			else {
 				$com['username'] = 'Unknown';
