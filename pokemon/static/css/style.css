@@ -17,7 +17,7 @@
     margin-top: 2em;
 }
 
-#flux_container > div > p:first-child {
+#flux_container > div > p > a {
     font-weight: bold;
     border-bottom: 1px solid #DDD;
 }

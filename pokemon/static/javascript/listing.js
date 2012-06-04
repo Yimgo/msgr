@@ -202,6 +202,7 @@ function click_flux() {
     $("#liste_articles_erreur").hide();
 
     // --- Recuperation des articles ---
+    $('#flux_container').empty();
     $.getJSON('/pokemon/rss/get_articles/' + $(this).data('id'), function(data) {
         $('#flux_container').empty();
         // Ajouter les articles dans la colonne de droite
@@ -443,7 +444,7 @@ function getArticleDateStr(date) {
                 str = "Hier";
             }
             else if (days < 7) {
-                str = "Il y a " + days + " jours"; 
+                str = "Il y a " + days + " jours";
             }
             else {
                 var weeks = Math.floor(days / 7);
