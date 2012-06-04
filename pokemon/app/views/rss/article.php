@@ -100,6 +100,13 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
     <div class="span8">
     <h2 id="comments">Liste des commentaires</h2>
 <?php
+    if (empty($params['comments'])) {
+ ?>
+        <div class="alert alert-info <?php echo $div_error_suppress; ?>">
+                Soyez le premier à commenter !
+        </div>
+ <?php       
+    }
     foreach($params['comments'] as $comment) {
 ?>
      <blockquote>
