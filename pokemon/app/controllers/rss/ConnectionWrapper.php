@@ -497,6 +497,59 @@ EOD
 
 		return $articles;
 	}
+
+	public function getFavoriteArticles($user_id, $begin, $count) {
+		$selectArticleLecture = $this->connection->prepare(<<<EOD
+SELECT article.id id, article.description description, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date
+FROM article
+INNER JOIN lecture ON article.id = lecture.article_id
+WHERE lecture.user_id = :user_id
+AND article.flux_id IN (
+	SELECT flux_id
+	FROM abonnement
+	WHERE user_id = :user_id)
+AND lecture.favori = 1
+ORDER BY article.date DESC
+LIMIT :begin,:count;
+EOD
+);
+
+		$selectArticleLecture->bindParam(':user_id', $user_id);
+		$selectArticleLecture->bindParam(':begin', $begin, PDO::PARAM_INT);
+		$selectArticleLecture->bindParam(':count', $count, PDO::PARAM_INT);
+		if ($selectArticleLecture->execute() === FALSE) {
+			return array();
+		}
+
+		$selectTag_Article = $this->connection->prepare('SELECT tag_id FROM map_tag_article WHERE article_id = :article_id;');
+
+		$articles = array();
+		while ($row = $selectArticleLecture->fetch()) {
+			$tags = array();
+			$selectTag_Article->bindParam('article_id', $row['id']);
+			if($selectTag_Article->execute() !== FALSE) {
+				$tags = $selectTag_Article->fetchAll(PDO::FETCH_COLUMN, 0);
+			}
+
+			$tags = array_map('intval', $tags);
+
+			$selectTag_Article->closeCursor();
+
+			array_push($articles, array(
+				'id' => intval($row['id']),
+				'contenu' => $row['contenu'],
+				'description' => $row['description'],
+				'titre' => $row['titre'],
+				'url'  => $row['url'],
+				'lu' => filter_var($row['lu'], FILTER_VALIDATE_BOOLEAN),
+				'tags' => $tags,
+				'favori' => filter_var($row['favori'], FILTER_VALIDATE_BOOLEAN),
+				'date' => $row['date']
+				));
+		}
+
+		return $articles;
+	}
 	
 	public function getSearchedArticles($user_id, $tags, $search) {
 		$searchRequest = <<<EOD

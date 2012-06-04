@@ -180,7 +180,7 @@ class RssController extends BaseController {
 	}
 
 	/*
-	 * get_latest_articles() latest unread articles for current user.
+	 * get_latest_articles() returns latest unread articles for current user.
 	 * GET parameters awaited:
 	 *	0: offset of fetched articles (optional)
 	 *	1: number of articles fetched (optional)
@@ -199,6 +199,28 @@ class RssController extends BaseController {
 		$count = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
 											      'min_range' => 0)));
 		echo json_encode($this->getConnectionWrapper()->getLatestArticles($this->session_get('user_id', null), $begin, $count));
+	}
+
+	/*
+	 * get_favorite_articles() returns favorite articles for current user.
+	 * GET parameters awaited:
+	 *	0: offset of fetched articles (optional)
+	 *	1: number of articles fetched (optional)
+	 */
+	public function get_favorite_articles($params) {
+		if (!isset($params[0])) {
+			$params[0] = "";
+			$params[1] = "";
+		}
+
+		else if (!isset($params[1]))
+			$params[1] = "";
+
+		$begin = filter_var($params[0], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
+											      'min_range' => 0)));
+		$count = filter_var($params[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
+											      'min_range' => 0)));
+		echo json_encode($this->getConnectionWrapper()->getFavoriteArticles($this->session_get('user_id', null), $begin, $count));
 	}
 
 	/*
