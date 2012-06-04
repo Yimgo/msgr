@@ -65,12 +65,14 @@ $(document).ready(function() {
             tags_id.push($(this).data('id'));
         });
 
-        $('#form-search').append(
-            $("<input>")
-                .attr("type", "hidden")
-                .attr("name", "tags_id")
-                .val(tags_id)
-        );
+        if (tags_id.length > 0) {
+            $('#form-search').append(
+                $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "tags_id")
+                    .val(tags_id)
+            );
+        }
      });
 
     // Empecher d'ajouter un flux quand l'URL est vide
