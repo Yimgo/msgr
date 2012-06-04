@@ -249,7 +249,7 @@ class RssController extends BaseController {
 	 *	commentaire: content
 	 */
 	public function add_commentaire($route, $params) {
-		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params['article_id'], htmlspecialchars($params['commentaire']);
+		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params['article_id'], htmlspecialchars($params['commentaire']));
 		$this->redirect_to('article/'.$params['article_id'].'#comments');
 	}
 
