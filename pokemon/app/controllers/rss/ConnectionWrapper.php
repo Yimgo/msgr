@@ -275,7 +275,7 @@ class ConnectionWrapper {
 				$com['username'] = 'Unknown';
 			}
 			$com['date'] = $row['date'];
-			$com['commentaire'] = $row['commentaire'];
+			$com['commentaire'] = nl2br($row['commentaire']);
 			array_push($commentaires, $com);
 		}
 		return $commentaires;
