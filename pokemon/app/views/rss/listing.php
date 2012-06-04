@@ -56,6 +56,12 @@
         <div class="span4">
             <h1>Liste des flux RSS</h1>
 
+            <table class="table" id="liste_articles_non_lus_command">
+                <tr>
+                    <td><i class="icon-eye-close pull-left"></i> <b>Liste des articles non lus</b></td>
+                </tr>
+            </table>
+
             <div id="liste_flux_chargement" class="alert alert-info fade in hide">
                 <strong>Chargement</strong> de la liste des flux en cours…
             </div>
@@ -70,7 +76,7 @@
         </div>
 
         <div class="span8">
-            <h1 id="titre_liste_articles"></h1>
+            <h1 id="titre_liste_articles">Liste des articles non lus</h1>
             <div id="div_dropdown_move_folder" class="dropdown" style="display:none"></div>
 
             <div id="liste_articles_chargement" class="alert alert-info fade in hide">
