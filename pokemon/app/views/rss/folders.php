@@ -66,9 +66,12 @@ if ($params["State"]==="ok"){
 							<button type="submit" class="btn"><i class="icon-check"></i> OK</button>
 						</form>
 					</td>
-					<td>
-						<a class="btn renommer" href="#" id="renommer-<?php echo $folder["id"];?>"><i class="icon-pencil"></i> Renommer</a>
-						<a class="btn" href="delete_folder/<?php echo $folder["id"]; ?>"><i class="icon-minus-sign"></i> Supprimer</a>
+					<td>						
+                        <form method="POST" action="delete_folder" class="form-inline">
+                            <a class="btn renommer" href="#" id="renommer-<?php echo $folder["id"];?>"><i class="icon-pencil"></i> Renommer</a>
+                            <input type="hidden" name="id" value="<?php echo $folder["id"] ; ?>" />
+                            <button type="submit" class="btn"><i class="icon-minus-sign"></i> Supprimer</button>
+                        </form>
 					</td>
 				</tr>
 				<?php } ?>

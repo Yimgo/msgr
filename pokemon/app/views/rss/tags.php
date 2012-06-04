@@ -67,8 +67,11 @@ if ($params["State"]==="ok"){
 							</form>
 						</td>
 						<td>
-							<a class="btn renommer" href="#" id="renommer-<?php echo $tag["id"];?>"><i class="icon-pencil"></i> Renommer</a>
-							<a class="btn" href="delete_tag/<?php echo $tag["id"]; ?>"><i class="icon-minus-sign"></i> Supprimer</a>
+							<form method="POST" action="delete_tag" class="form-inline">
+	                            <a class="btn renommer" href="#" id="renommer-<?php echo $tag["id"];?>"><i class="icon-pencil"></i> Renommer</a>
+	                            <input type="hidden" name="id" value="<?php echo $tag["id"] ; ?>" />
+	                            <button type="submit" class="btn"><i class="icon-minus-sign"></i> Supprimer</button>
+                        	</form>
 						</td>
 					</tr>
 					<?php } ?>
