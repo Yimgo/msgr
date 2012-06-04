@@ -81,6 +81,10 @@
                 <strong>Erreur</strong> lors du chargement des articles !
             </div>
 
+            <div id="liste_flux_fin" class="alert alert-error fade in hide">
+                <strong>Erreur</strong> : plus aucun article à charger !
+            </div>
+
             <div id="flux_container">
             </div>
 
