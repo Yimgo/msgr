@@ -121,7 +121,6 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url, dat
             .data('id', id)
             .append($('<p>')
                 .append($('<a>', {html:titre, href:'/pokemon/rss/article/' + id}))
-                    .append($('<em>', {html:' (' + getArticleDateStr(date) + ')'}))
                 .append($('<div>', {'class': 'article_properties btn-group'})
                     .append($('<button>', {'class':'btn dropdown-toggle', 'data-toggle':'dropdown'})
                         .append($('<i>', {'class': 'icon-tags'}))
@@ -157,9 +156,11 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url, dat
                 )
             )
             .append($('<div>', {
-                'html': contenu,
                 'style': 'display: none'
-            }));
+            		})
+            		.append($('<em>', {html:getArticleDateStr(date)}))
+                .append($('<div>', {'html': contenu, 'style':'margin-top:1em'}))
+						);
 
     // Actuellement, tous les tags sont affichés dans une liste, tous masqués
     // On affiche uniquement les tags marqués pour cet article
