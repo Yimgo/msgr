@@ -202,18 +202,6 @@ class RssController extends BaseController {
 	}
 
 	/*
-	 * getTagged(): I don't know what is the purpose of this function.
-	 * This function certainly won't work because:
-	 *	- user id is given to getTaggedArticles which is awaiting tag id
-	 *	- getTaggedArticles() returns all articles for specified tag id, not only current user ones
-	 * The behaviour of this function is unknown.
-	 * WARNING: please fix this function or remove it if not used.
-	 */
-	public function getTagged() {
-			echo json_encode($this->getConnectionWrapper()->getTaggedArticles($this->session_get("user_id", null)));
-	}
-
-	/*
 	 * set_tag() allows current user to tag or untag the specified article with the specified tag.
 	 * POST parameters awaited:
 	 *	article_id
@@ -351,13 +339,16 @@ class RssController extends BaseController {
 
 	/*
 	 * delete_folder() allows user to delete a folder.
-	 * WARNING: folder is able to be removed with a GET request; Id should be in a POST parameter.
-	 * TODO: fix this.
-	 * GET parameter awaited:
-	 *	0: folder id
+	 * POST parameter awaited:
+	 *	id: folder id
 	 */
-	public function delete_folder($route) {
-		if ($this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]) === FALSE) {
+	public function delete_folder($route, $params) {
+		if(!isset($params['id'])) {
+			$params['id'] = "";
+		}
+		$folder_id = $params['id'];
+
+		if ($this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id) === FALSE) {
 			$this->session_set("folder_suppress_error", TRUE);
 		}
 		$this->redirect_to("folders");
@@ -400,13 +391,16 @@ class RssController extends BaseController {
 
 	/*
 	 * delete_tag() allows user to delete a tag.
-	 * WARNING: tag is able to be removed with a GET request; Id should be in a POST parameter.
-	 * TODO: fix this.
-	 * GET parameter awaited:
-	 *	0: tag id
+	 * POST parameter awaited:
+	 *	id: tag id
 	 */
-	public function delete_tag($route) {
-		if ($this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$route[0]) === FALSE) {
+	public function delete_tag($route, $params) {
+		if(!isset($params['id'])) {
+			$params['id'] = "";
+		}
+		$tag_id = $params['id'];
+
+		if ($this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null), $tag_id) === FALSE) {
 			$this->session_set("tag_suppress_error", TRUE);
 		}
 		$this->redirect_to("tags");
