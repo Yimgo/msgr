@@ -224,10 +224,20 @@ function get_liste_article(flux_id) {
     // Affichage de la barre de chargement
     $("#liste_articles_chargement").show();
     $("#liste_articles_erreur").hide();
+    $("#liste_flux_fin").hide();
 
     $('#flux_container').empty();
     $.getJSON('/pokemon/rss/get_articles/' + flux_id + '/' + page_courante*10 + '/10', function(data) {
         $('#flux_container').empty();
+
+        // Aucun article à charger
+        if (data.length == 0) {
+            console.log('toto');
+            $("#liste_flux_fin").show();
+            $('#pagin-left').show();
+            $('#pagin-right').hide();
+            return;
+        }
         // Ajouter les articles dans la colonne de droite
         $.each(data, function(index, elem) {
             add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url, elem.date);
