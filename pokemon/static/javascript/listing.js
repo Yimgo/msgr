@@ -19,12 +19,7 @@ $(document).ready(function() {
         fresh_dropdown_tags = make_dropdown_tags(eval(raw_tags));
 
         // Récupérer les 10 derniers articles
-        $.getJSON('/pokemon/rss/get_latest_articles/0/10', function(data) {
-            // Ajouter les articles dans la colonne de droite
-            $.each(data, function(index, elem) {
-                add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url, elem.date);
-            });
-        });
+        get_liste_article(flux_courant);
 
         // AUTOCOMPLETION
         $("#search").attr('data-source', data); // Données utilisées pour l'auto-complétion
@@ -88,6 +83,13 @@ $(document).ready(function() {
 	$("#pagin-right").click(function () {
        page_courante++;
        get_liste_article(flux_courant);
+    });
+
+    //
+    $('#liste_articles_non_lus_command td').click(function () {
+        flux_courant = undefined;
+        $('#titre_liste_articles').html("Liste des articles non lus");
+        get_liste_article(flux_courant);
     });
 });
 

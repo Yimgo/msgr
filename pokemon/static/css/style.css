@@ -1,7 +1,11 @@
 /* Faire comme si la ligne entière d'une table était clickable
    (pour traitement par javascript ensuite) */
-#liste_flux tr, #flux_container div p {
+#liste_flux tr, #flux_container div p, #liste_articles_non_lus_command {
     cursor: pointer;
+}
+#liste_articles_non_lus_command td {
+    background-color: #eee;
+    text-align: center;
 }
 
 .ligne_flux_selectionne {
