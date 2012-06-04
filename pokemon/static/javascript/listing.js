@@ -214,14 +214,14 @@ function click_flux() {
 
     // Mettre le titre du flux dans la colonne de droite
     $('#titre_liste_articles').html($(this).data('titre'));
-    $('#titre_liste_articles').data('id', $(this).data('id'));
+    $('#titre_liste_articles').data('id', flux_courant);
 
     // Coloriage de la ligne courante
     $("#liste_flux tr").removeClass("ligne_flux_selectionne");
     $(this).addClass("ligne_flux_selectionne");
 
     // --- Recuperation des articles ---
-    get_liste_article($(this).data('id'));
+    get_liste_article(flux_courant);
 }
 
 function get_liste_article(flux_id) {
@@ -229,6 +229,7 @@ function get_liste_article(flux_id) {
     $("#liste_articles_chargement").show();
     $("#liste_articles_erreur").hide();
     $("#liste_flux_fin").hide();
+    $("#div_dropdown_move_folder").hide();
 
     $('#flux_container').empty();
 
@@ -267,14 +268,15 @@ function get_liste_article(flux_id) {
     })
     .success(function() {
         $("#liste_articles_chargement").hide();
-        $('#div_dropdown_move_folder').show();
+        if (flux_courant != undefined)
+            $('#div_dropdown_move_folder').show();
     })
     .error(function() {
         $("#liste_articles_chargement").hide();
         $("#liste_articles_erreur").show();
         $("#liste_flux tr").removeClass("ligne_flux_selectionne");
         $('#div_dropdown_move_folder').hide();
-        });
+    });
 }
 
 // Met en favori/non favori un article
