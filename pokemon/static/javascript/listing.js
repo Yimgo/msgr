@@ -2,7 +2,7 @@
    INITIALISATION DU DOCUMENT
    -------------------------- */
 
-var page_courante = undefined;
+var page_courante = 0;
 var flux_courant = undefined;
 
 $(document).ready(function() {
@@ -159,7 +159,6 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url, dat
                             var icone = $('i', $(this).prev().prev());
                             if (icone.hasClass('icon-eye-close')) {
                                 var article_id = $(this).parent().parent().parent().data('id');
-                                console.log(article_id);
                                 $.post('/pokemon/rss/set_lu', {'article_id' : article_id, 'lu': 'true'});
                                 icone.removeClass('icon-eye-close').addClass('icon-eye-open');
                             }
@@ -227,7 +226,14 @@ function get_liste_article(flux_id) {
     $("#liste_flux_fin").hide();
 
     $('#flux_container').empty();
-    $.getJSON('/pokemon/rss/get_articles/' + flux_id + '/' + page_courante*10 + '/10', function(data) {
+
+    var url;
+    if (flux_courant == undefined)
+        url = '/pokemon/rss/get_latest_articles/' + page_courante*10 + '/10';
+    else
+        url = '/pokemon/rss/get_articles/' + flux_id + '/' + page_courante*10 + '/10';
+
+    $.getJSON(url, function(data) {
         $('#flux_container').empty();
 
         // Aucun article à charger
