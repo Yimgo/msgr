@@ -450,7 +450,7 @@ function make_dropdown_tags(tags) {
         dropdown_tags.append(
             $('<li>', {'style':'display:none'})
                 .data('id',elem.id)
-                .append($('<a>', {'html': ' ' +elem.nom, 'href':'/pokemon/rss/tag/' + elem.id})
+                .append($('<a>', {'html': ' ' +elem.nom})
                     .prepend($('<i>', {'class' : 'icon-tag'}))
                     .append($('<i>', {'class' : 'icon-minus-sign pull-right'}))
                 )
