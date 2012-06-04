@@ -117,15 +117,31 @@ class RssController extends BaseController {
 		$this->getConnectionWrapper()->changeFolder($this->session_get("user_id", null),$params['flux_id'], $params['dossier_id']);
 	}
 
-	/* search(): I don't know what is the purpose of this function :/ */
-	public function search($route) {
+	/* search() searches the articles containing the GET parameters search and tagged with the tag ids on the GET
+	 * parameter tags_id.
+	 * GET parameters awaited:
+	 * 	0: search
+	 * 	1: tags_id (optional)
+	 */
+	public function search() {
+		if (!isset($_GET["search"])) {
+			return array();
+		}
 		$search = $_GET["search"];
-		$tags_id = explode(',', $_GET["tags_id"]);
+		
+		if (!isset($_GET["tags_id"])) {
+			$tags_id = array();
+		} else {
+			$tags_id = explode(',', $_GET["tags_id"]);
+		}
+		$articles = $this->getConnectionWrapper()->getSearchedArticles($this->session_get('user_id', null), $tags_id, $search);
+
+		echo json_encode($articles);
 	}
 
 	/* get_tags() displays user's tags, JSON */
 	public function get_tags() {
-			echo json_encode($this->getConnectionWrapper()->getTags($this->session_get("user_id", null)));
+		echo json_encode($this->getConnectionWrapper()->getTags($this->session_get("user_id", null)));
 	}
 
 	/* get_flux_dossier() displays feeds, associated with their folder, current user, JSON */

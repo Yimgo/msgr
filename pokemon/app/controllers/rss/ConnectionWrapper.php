@@ -511,11 +511,11 @@ AND article_lecture.flux_id IN (
 	SELECT flux_id
 	FROM abonnement
 	WHERE user_id = :user_id)
-AND (titre LIKE "%:search%" OR description LIKE "%:search%" OR contenu LIKE "%:search%")
+AND (titre LIKE :search OR description LIKE :search OR contenu LIKE :search)
 EOD;
 
 		if ($tags != array()) {
-			$searchRequest = $searchRequest.'\nAND (';
+			$searchRequest = $searchRequest.' AND (';
 			$cpt = 0;
 			foreach ($tags as $tagId) {
 				if ($cpt++ != 0) $searchRequest .= 'OR ';
@@ -523,10 +523,11 @@ EOD;
 			}
 			$searchRequest = $searchRequest.')';
 		}
-		$searchRequest = $searchRequest.'\nORDER BY date DESC;';
+		$searchRequest = $searchRequest.' ORDER BY date DESC;';
 		$selectSearchArticle = $this->connection->prepare($searchRequest);
 
 		$selectSearchArticle->bindParam(':user_id', $user_id);
+		$search = '%'.$search.'%';
 		$selectSearchArticle->bindParam(':search', $search);
 		if ($selectSearchArticle->execute() === FALSE) {
 			return array();
