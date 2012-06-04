@@ -446,7 +446,7 @@ class ConnectionWrapper {
 	}
 
 	public function getLatestArticles($user_id, $begin, $count) {
-	  $selectArticleLecture = $this->connection->prepare(<<<EOD
+		$selectArticleLecture = $this->connection->prepare(<<<EOD
 SELECT article.id id, article.description description, article.contenu contenu, article.titre titre, article.url url, lecture.lu lu, lecture.favori favori, article.date date
 FROM article
 INNER JOIN lecture ON article.id = lecture.article_id
@@ -496,6 +496,70 @@ EOD
 		}
 
 		return $articles;
-  }
+	}
+	
+	public function getSearchedArticles($user_id, $tags, $search) {
+		$searchRequest = <<<EOD
+SELECT DISTINCT article_lecture.id id, article_lecture.description description, article_lecture.contenu contenu, article_lecture.titre titre, article_lecture.url url, article_lecture.lu lu, article_lecture.favori favori, article_lecture.date date
+FROM (
+	SELECT *
+	FROM article, lecture
+	WHERE article.id = lecture.article_id ) AS article_lecture
+LEFT JOIN map_tag_article ON article_lecture.id = map_tag_article.article_id
+WHERE article_lecture.user_id = :user_id
+AND article_lecture.flux_id IN (
+	SELECT flux_id
+	FROM abonnement
+	WHERE user_id = :user_id)
+AND (titre LIKE "%:search%" OR description LIKE "%:search%" OR contenu LIKE "%:search%")
+EOD;
+
+		if ($tags != array()) {
+			$searchRequest = $searchRequest.'\nAND (';
+			$cpt = 0;
+			foreach ($tags as $tagId) {
+				if ($cpt++ != 0) $searchRequest .= 'OR ';
+				$searchRequest = $searchRequest.'map_tag_article.tag_id = "'.$tagId.'" ';
+			}
+			$searchRequest = $searchRequest.')';
+		}
+		$searchRequest = $searchRequest.'\nORDER BY date DESC;';
+		$selectSearchArticle = $this->connection->prepare($searchRequest);
+
+		$selectSearchArticle->bindParam(':user_id', $user_id);
+		$selectSearchArticle->bindParam(':search', $search);
+		if ($selectSearchArticle->execute() === FALSE) {
+			return array();
+		}
+
+		$selectTag_Article = $this->connection->prepare('SELECT tag_id FROM map_tag_article WHERE article_id = :article_id;');
+
+		$articles = array();
+		while ($row = $selectSearchArticle->fetch()) {
+			$tags = array();
+			$selectTag_Article->bindParam('article_id', $row['id']);
+			if($selectTag_Article->execute() !== FALSE) {
+				$tags = $selectTag_Article->fetchAll(PDO::FETCH_COLUMN, 0);
+			}
+
+			$tags = array_map('intval', $tags);
+
+			$selectTag_Article->closeCursor();
+
+			array_push($articles, array(
+				'id' => intval($row['id']),
+				'contenu' => $row['contenu'],
+				'description' => $row['description'],
+				'titre' => $row['titre'],
+				'url'  => $row['url'],
+				'lu' => filter_var($row['lu'], FILTER_VALIDATE_BOOLEAN),
+				'tags' => $tags,
+				'favori' => filter_var($row['favori'], FILTER_VALIDATE_BOOLEAN),
+				'date' => $row['date']
+				));
+		}
+
+		return $articles;
+	}
 }
 ?>
