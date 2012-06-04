@@ -2,6 +2,8 @@
    INITIALISATION DU DOCUMENT
    -------------------------- */
 
+var page_courante = 0;
+
 $(document).ready(function() {
     // Récupérér initialement la liste des flux + dossiers pour l'afficher
     get_liste_flux();
@@ -73,7 +75,15 @@ $(document).ready(function() {
         $.each(data, function(index, elem) {
             add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url, elem.date);
         });
-    })
+    });
+
+		$("#pagin-left").click(function () {
+			if (page_courante > 0)
+					page_courante--;
+		});
+		$("#pagin-right").click(function () {
+					page_courante++;
+		});
 });
 
 /* --------------------------------
