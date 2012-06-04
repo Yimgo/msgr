@@ -304,9 +304,14 @@ class RssController extends BaseController {
 
 
 	/* folders() displays folders management interface, which allows user to add, rename or delete folders */
-	public function folders($route) {
+	public function folders($route, $params) {
 		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
-		$this->render_view("folders", $folder);
+		if ($this->session_get("folder_suppress_error", null) === null) {
+			$this->render_view("folders", array("Folders" => $folder, "State" => "ok"));
+		} else {
+			$this->session_unset_var('folder_suppress_error');
+			$this->render_view("folders", array("Folders" => $folder, "State" => "error"));
+		}
 	}
 
 	/*
@@ -327,8 +332,10 @@ class RssController extends BaseController {
 	 *	0: folder id
 	 */
 	public function delete_folder($route) {
-		$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]);
-		$this->redirect_to("folders");
+		if ($this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$route[0]) === FALSE) {
+			$this->session_set("folder_suppress_error", TRUE);
+			$this->redirect_to("folders");
+		}
 	}
 
 	/*
