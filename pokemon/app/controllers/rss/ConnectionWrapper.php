@@ -245,32 +245,34 @@ class ConnectionWrapper {
 		}
 	}
 
-	public function addCommentaire($user_id, $params) {
+	public function addCommentaire($user_id, $article_id, $commentaire) {
 		$insertStatement = $this->connection->prepare('INSERT INTO commentaire (user_id, article_id, commentaire, date) VALUES (:user_id, :article_id, :commentaire, NOW());');
 		$insertStatement->bindParam(':user_id', $user_id);
-		$insertStatement->bindParam(':article_id', $params['article_id']);
-		$insertStatement->bindParam(':commentaire', $params['commentaire']);
-		if ($insertStatement->execute() === FALSE) {
-			return False;
-		}
+		$insertStatement->bindParam(':article_id', $article_id);
+		$insertStatement->bindParam(':commentaire', $commentaire);
+
+		return $insertStatement->execute();
 	}
 
-	public function getCommentaires($params) {
-		$statement = $this->connection->prepare('SELECT commentaire,date,user_id FROM commentaire WHERE article_id = :article_id;');
-		$statement->bindParam(':article_id', $params['article_id']);
+	public function getCommentaires($article_id) {
+		$statement = $this->connection->prepare('SELECT commentaire, date, user_id FROM commentaire WHERE article_id = :article_id ORDER BY date ASC;');
+		$statement->bindParam(':article_id', $article_id);
+
 		if ($statement->execute() === FALSE) {
-			return False;
+			return array();
 		}
+
 		$commentaires = array();
 		while ($row = $statement->fetch()) {
 			$com = array();
 			$getLogin = $this->connection->prepare('SELECT login FROM user WHERE id = :user_id;');
 			$getLogin->bindParam(':user_id', $row['user_id']);
-			if ($getLogin->execute() === FALSE) {
-				return False;
+			if ($getLogin->execute() !== FALSE) {
+				$com['username'] = $getLogin->fetch()['login'];
 			}
-			$data = $getLogin->fetch();
-			$com['username'] = $data['login'];
+			else {
+				$com['username'] = 'Unknown';
+			}
 			$com['date'] = $row['date'];
 			$com['commentaire'] = $row['commentaire'];
 			array_push($commentaires, $com);

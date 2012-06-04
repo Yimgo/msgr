@@ -96,23 +96,31 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
 
     <div class="row" id="commentaires">
         <hr />
-        <h2>Liste des commentaires</h2>
 
-        <!-- A répéter pour chaque commentaire -->
-        <div class="row">
-            <div class="span8">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </div>
+    <div class="span8">
+    <h2 id="comments">Liste des commentaires</h2>
+<?php
+    foreach($params['comments'] as $comment) {
+?>
+     <blockquote>
+            <p><?php echo $comment['commentaire'];?></p>
+            <small><strong><?php echo $comment['username']; ?></strong> - <?php echo $comment['date']; ?></small>
+    </blockquote>
 
-            <div class="span4">
-                profil
-            </div>
-        </div>
+<?php
+    }
+?>
+    </div>
+    <div class="span4">
+            <form class="well" method="POST" action="../add_commentaire">
+            <fieldset>
+                <legend>Participer à la discussion</legend>
+                <input type="hidden" name="article_id" value="<?php echo $params['id'] ; ?>" />
+                <textarea rows="3" name="commentaire" id="textarea" class="input-xlarge"></textarea>
+                <button class="btn btn-primary" type="submit">Ajouter</button>
+            </fieldset>
+          </form>
+    </div>  
 </div>
 
 <?php render_partial("footer", null); ?>

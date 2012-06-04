@@ -242,15 +242,24 @@ class RssController extends BaseController {
 		$this->getConnectionWrapper()->setLu($user_id, $article_id, $lu);
 	}
 
-	public function addCommentaire($route, $params) {
-		$params['article_id'] = 1;
-		$params['commentaire'] = "test 1234";
-		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params);
+	/*
+	 * add_commentaire() allows user to add a comment related to a specified feed.
+	 * POST parameters awaited:
+	 *	article_id
+	 *	commentaire: content
+	 */
+	public function add_commentaire($route, $params) {
+		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params['article_id'], $params['commentaire']);
+		$this->redirect_to('article/'.$params['article_id'].'#comments');
 	}
 
-	public function getCommentaires($route, $params) {
-		$params['article_id'] = 1;
-		echo json_encode($this->getConnectionWrapper()->getCommentaires($params));
+	/*
+	 * get_commentaires() returns all comments related to a specified feed.
+	 * GET parameters awaited:
+	 *	0: article id
+	 */
+	public function get_commentaires($route) {
+		echo json_encode($this->getConnectionWrapper()->getCommentaires($route[0]));
 	}
 
 	/*
@@ -407,6 +416,7 @@ class RssController extends BaseController {
 	public function article($route) {
 		$params = $this->getConnectionWrapper()->getArticleById($this->session_get("user_id", null), $route[0]);
 		$params["all_tags"] = $this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
+		$params['comments'] = $this->getConnectionWrapper()->getCommentaires($route[0]);
 		$this->render_view('article', $params);
 	}
 }
