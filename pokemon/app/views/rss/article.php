@@ -79,7 +79,7 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
             </ul>
 
             <hr />
-            <div style="overflow-y: scroll; height: 20em;">
+            <div style="overflow-y: auto; height: 20em;">
                 <h3>Vos autres tags</h3>
                 <ul id="liste-tags-non-actifs" class="unstyled well">
                 <?php foreach ($params["all_tags"] as $tag) {
