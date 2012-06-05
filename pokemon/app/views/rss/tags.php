@@ -24,6 +24,8 @@ if ($params["State"]==="ok"){
 				<li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
 				<li><a href="/pokemon/rss/folders"><i class="icon-folder-open icon-white"></i> Gérer les dossiers</a></li>
 				<li class="active"><a href="/pokemon/rss/tags"><i class="icon-tags icon-white"></i> Gérer les tags</a></li>
+                <li class="divider-vertical"></li>
+                <li class=""><a href="/pokemon/rss/report"><i class="icon-book icon-white"></i> Compte-rendu</a></li>
 				</ul>
 			</div>
 
