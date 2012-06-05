@@ -24,6 +24,8 @@ if ($params["State"]==="ok"){
 			<li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
 			<li class="active"><a href="/pokemon/rss/folders"><i class="icon-folder-open icon-white"></i> Gérer les dossiers</a></li>
 			<li><a href="/pokemon/rss/tags"><i class="icon-tags icon-white"></i> Gérer les tags</a></li>
+            <li class="divider-vertical"></li>
+            <li class=""><a href="/pokemon/rss/report"><i class="icon-book icon-white"></i> Compte-rendu</a></li>
 			</ul>
 		</div>
 
@@ -66,7 +68,7 @@ if ($params["State"]==="ok"){
 							<button type="submit" class="btn"><i class="icon-check"></i> OK</button>
 						</form>
 					</td>
-					<td>						
+					<td>
                         <form method="POST" action="delete_folder" class="form-inline">
                             <a class="btn renommer" href="#" id="renommer-<?php echo $folder["id"];?>"><i class="icon-pencil"></i> Renommer</a>
                             <input type="hidden" name="id" value="<?php echo $folder["id"] ; ?>" />

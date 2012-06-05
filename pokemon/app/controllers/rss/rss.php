@@ -128,7 +128,7 @@ class RssController extends BaseController {
 			return array();
 		}
 		$search = $_GET["search"];
-		
+
 		if (!isset($_GET["tags_id"])) {
 			$tags_id = array();
 		} else {
@@ -450,6 +450,13 @@ class RssController extends BaseController {
 		$params["all_tags"] = $this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
 		$params['comments'] = $this->getConnectionWrapper()->getCommentaires($route[0]);
 		$this->render_view('article', $params);
+	}
+
+	/*
+	 * Displays the final report about this project.
+	 */
+	public function report($route) {
+		$this->render_view('report', null);
 	}
 }
 
