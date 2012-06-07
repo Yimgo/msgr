@@ -339,8 +339,8 @@ class RssController extends BaseController {
 		$this->redirect_to("listing");
 	}
 
-	/* 
-	 * folders() displays folders management interface, which allows user to add, rename or delete folders 
+	/*
+	 * folders() displays folders management interface, which allows user to add, rename or delete folders
 	 * POST parameter awaited:
 	 * 	delete_confirmed (optional)
 	 */
@@ -385,7 +385,8 @@ class RssController extends BaseController {
 			$this->session_unset_var('delete_folder_anyway');
 			$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id);
 		} else {
-			if ($this->getConnectionWrapper()->folderIsEmpty($folder_id)["FolderEmpty"] === FALSE) {
+			$folderIsEmpty = $this->getConnectionWrapper()->folderIsEmpty($folder_id);
+			if ($folderIsEmpty["FolderEmpty"] === FALSE) {
 				$this->session_set("folder_not_empty", TRUE);
 			} else {
 				$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id);
