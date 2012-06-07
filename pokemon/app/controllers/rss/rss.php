@@ -117,10 +117,13 @@ class RssController extends BaseController {
 	/* search() searches the articles containing the GET parameters search and tagged with the tag ids on the GET
 	 * parameter tags_id.
 	 * GET parameters awaited:
-	 * 	0: search
-	 * 	1: tags_id (optional)
+	 * 	search
+	 * 	tags_id (optional)
+	 * ROUTE awaited:
+	 *	0: offset
+	 *	1: count
 	 */
-	public function search() {
+	public function search($route) {
 		if (!isset($_GET["search"])) {
 			return array();
 		}
@@ -131,7 +134,21 @@ class RssController extends BaseController {
 		} else {
 			$tags_id = explode(',', $_GET["tags_id"]);
 		}
-		$articles = $this->getConnectionWrapper()->getSearchedArticles($this->session_get('user_id', null), $tags_id, $search);
+		
+		if (!isset($route[0])) {
+			$route[0] = "";
+			$route[1] = "";
+		}
+
+		else if (!isset($route[1]))
+			$route[1] = "";
+
+		$begin = filter_var($route[0], FILTER_VALIDATE_INT, array('options' => array('default' => 0,
+											      'min_range' => 0)));
+		$count = filter_var($route[1], FILTER_VALIDATE_INT, array('options' => array('default' => 10,
+											      'min_range' => 0)));
+		
+		$articles = $this->getConnectionWrapper()->getSearchedArticles($this->session_get('user_id', null), $tags_id, $search, $begin, $count);
 
 		echo json_encode($articles);
 	}

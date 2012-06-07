@@ -645,7 +645,7 @@ EOD
 		return $articles;
 	}
 
-	public function getSearchedArticles($user_id, $tags, $search) {
+	public function getSearchedArticles($user_id, $tags, $search, $begin, $count) {
 		$searchRequest = <<<EOD
 SELECT DISTINCT article_lecture.id id, article_lecture.description description, article_lecture.contenu contenu, article_lecture.titre titre, article_lecture.url url, article_lecture.lu lu, article_lecture.favori favori, article_lecture.date date
 FROM (
@@ -670,12 +670,14 @@ EOD;
 			}
 			$searchRequest = $searchRequest.')';
 		}
-		$searchRequest = $searchRequest.' ORDER BY date DESC;';
+		$searchRequest = $searchRequest.' ORDER BY date DESC LIMIT :begin,:count;';
 		$selectSearchArticle = $this->connection->prepare($searchRequest);
 
 		$selectSearchArticle->bindParam(':user_id', $user_id);
 		$search = '%'.$search.'%';
 		$selectSearchArticle->bindParam(':search', $search);
+		$selectSearchArticle->bindParam(':begin', $begin, PDO::PARAM_INT);
+		$selectSearchArticle->bindParam(':count', $count, PDO::PARAM_INT);
 		if ($selectSearchArticle->execute() === FALSE) {
 			return array();
 		}
