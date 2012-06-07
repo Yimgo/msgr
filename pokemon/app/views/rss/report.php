@@ -61,10 +61,30 @@
 
 			<h1>Gestion de projet</h1>
 			<p>
-				Nous avons utilisé SVN pour synchroniser notre code et travailler à plusieurs.
+				Nous avons dès le début du projet décidé d'utiliser des outils de travail collaboratif afin de pouvoir travailler le plus efficacement possible sur notre projet. Pour cela, nous avons crée un projet google code project qui nous permet d'avoir plusieurs outils de gestion de projet informatique et de travail collaboratif : une partie wiki pour mettre de la documentation, un serveur svn pour héberger le code du projet, et une partie bugtracker permettant de déclarer des bugs et de les assigner à une personne du groupe en fonction de la nature du bug. En effet, chacun des membres de notre équipe s'est spécialisé dans un aspect ou une fonctionnalité de notre site web. Ainsi, la répartition du travail s'est fait comme suit :
+				<ul>
+					<li>Guillaume Burel : développement de la partie connection à la base de données (utilisation de PDO et développement d'un Wrapper SQL permettant d'éxécuter des requêtes SQL) ainsi que la création de la base SQL.</li>
+					<li>Paul Mougel : développement de la partie interface graphique du site web (vues en PHP, HTML et Javascript).</li>
+					<li>Idris Daikh : développement et implémentation d'un parser de flux RSS. L'implémentation s'étant faite à l'aide d'une librairie qu'il a fallu débuguer et integrer au code de notre site Web.</li>
+					<li>Antoine Allard et Ouassim Karrakchou : réalisation des fonctions du controlleur et celles du Wrapper exécutant les requêtes SQL, ainsi que test et déclaration de bugs.</li>
+				</ul>
+				La spécialisation de chacun des membres du projet dans un aspect du développement nous a permis de rapidement commencer le développement car chacun était conscient de la tache qu'il avait à accomplir.
 			</p>
 			<p>
-				De plus, nous avons beaucoup utilisé le système de gestion de tickets disponible sur Google Code. Nous y avons noté les différents points à implémenter, les bugs rencontrés et les idées d'améliorations.
+				Les heures de Projet WEB à l'emploi du temps nous ont servis à faire des réunions où l'on discutait de l'avancement du projet,  l'on vérifiait les tâches qu'il restait à accomplir et l'on décidait de leur priorité.
+			</p>
+			<p>
+				Celà nous a permis d'avoir à la fin des 20 heures de projet un site Web mature et fonctionnel.
+			</p>
+			<p>
+				La répartition temporelle des tâches s'est faite comme suit :
+				<ul>
+					<li>Séance 1 : choix du framework, et définition d'une méthode d'installation facile du site Web dans un serveur Web. Définition de la structure de la base de données et des différentes tables. Développement d'un système de connexion.</li>
+					<li>Séance 2 : développement de la charte graphique et de l'interface générale du site Web, début du développement du Wrapper SQL, début développement du controlleur et de la vue Listing.</li>
+					<li>Séance 3 : intégration du parser RSS, développement d'un système de tags.</li>
+					<li>Séance 4 : développement d'un système de dossiers.</li>
+					<li>Séance 5 : tests et corrections</li>
+				</ul>
 			</p>
 		</div>
 	</div>
