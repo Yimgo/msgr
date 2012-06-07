@@ -24,13 +24,13 @@ if ($params["State"]==="ok"){
 			<li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
 			<li class="active"><a href="/pokemon/rss/folders"><i class="icon-folder-open icon-white"></i> Gérer les dossiers</a></li>
 			<li><a href="/pokemon/rss/tags"><i class="icon-tags icon-white"></i> Gérer les tags</a></li>
-			<li class="divider-vertical"></li>
-			<li class=""><a href="/pokemon/rss/report"><i class="icon-book icon-white"></i> Compte-rendu</a></li>
-			<li class=""><a href="/pokemon/rss/developers"><i class="icon-book icon-white"></i> Développeurs</a></li>
 			</ul>
 		</div>
 
 		<ul class="nav pull-right">
+		<li class="divider-vertical"></li>
+        <li class=""><a href="/pokemon/rss/report"><i class="icon-book icon-white"></i> Compte-rendu</a></li>
+		<li class=""><a href="/pokemon/rss/developers"><i class="icon-book icon-white"></i> Développeurs</a></li>
 		<li class="divider-vertical"></li>
 		<li><a href="/pokemon/rss/logout"><i class="icon-user icon-white"></i> Déconnexion</a></li>
 		</ul>
