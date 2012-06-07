@@ -25,7 +25,7 @@ CREATE TABLE abonnement (
     flux_id INT(10),
     PRIMARY KEY (flux_id, user_id),
     FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (dossier_id) REFERENCES dossier(id) ON DELETE CASCADE,
+    FOREIGN KEY (dossier_id) REFERENCES dossier(id),
     FOREIGN KEY (flux_id) REFERENCES flux(id)
 );
 
@@ -75,6 +75,9 @@ CREATE TABLE commentaire (
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (article_id) REFERENCES article(id)
 );
+
+-- cf http://bugs.mysql.com/bug.php?id=11472
+CREATE DEFINER =  `monsignor`@`localhost` TRIGGER `clean_abonnement_after_deleting_dossier` AFTER DELETE ON  `dossier` FOR EACH ROW DELETE FROM abonnement WHERE user_id = OLD.user_id AND OLD.id = dossier_id;
 
 CREATE DEFINER =  `monsignor`@`localhost` TRIGGER `clean_lecture_after_deleting_abonnement` AFTER DELETE ON  `abonnement` FOR EACH ROW DELETE FROM lecture WHERE lecture.user_id = OLD.user_id AND lecture.article_id IN (
 SELECT id
