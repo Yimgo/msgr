@@ -279,6 +279,28 @@
 					<dd><em>titre</em>: nouveau nom du tag</dd>
 				</dl>
 			</p>
+			<h3>MAJ flux</h3>
+			<p>
+				<dl class="dl-horizontal">
+					<dt>Ordre</dt>
+					<dd>update_flux</dd>
+					<dt>Description<dt>
+					<dd>Mise à jour de tous les flux afin d'insérer les nouveau articles en base</dd>
+					<dt>Paramètre</dt>
+					<dd>Aucun</dd>
+				</dl>
+			</p>
+			<h3>Suppression abonnement</h3>
+			<p>
+				<dl class="dl-horizontal">
+					<dt>Ordre</dt>
+					<dd>delete_abonnement</dd>
+					<dt>Description<dt>
+					<dd>Suppression d'un abonnement</dd>
+					<dt>Paramètre POST</dt>
+					<dd><em>flux_id</em></dd>
+				</dl>
+			</p>
 		</div>
 	</div>
 </div>

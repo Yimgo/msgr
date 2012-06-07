@@ -321,6 +321,23 @@ class RssController extends BaseController {
 	public function update_flux($route) {
 		$this->getConnectionWrapper()->updateFlux();
 	}
+	
+	/*
+	 * delete_abonnement() allows user to delete a subscription.
+	 * POST parameter awaited:
+	 *	flux_id
+	 */
+	public function delete_abonnement($route, $params) {
+		if(!isset($params['flux_id'])) {
+			$params['flux_id'] = "";
+		}
+		$flux_id = $params['id'];
+
+		if ($this->getConnectionWrapper()->deleteAbonnement($this->session_get("user_id", null), $flux_id) === FALSE) {
+			$this->session_set("abonnement_suppress_error", TRUE);
+		}
+		$this->redirect_to("listing");
+	}
 
 
 
