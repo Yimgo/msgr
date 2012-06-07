@@ -345,7 +345,7 @@ class RssController extends BaseController {
 	 * 	delete_confirmed (optional)
 	 */
 	public function folders($route, $params) {
-		$folders=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
+		$folders=$this->getConnectionWrapper()->getFoldersToManage($this->session_get("user_id", null));
 
 		if(isset($params['delete_confirmed'])) {
 			$this->session_set("delete_folder_anyway",$params['delete_confirmed']);
@@ -408,8 +408,12 @@ class RssController extends BaseController {
 
 
 
-	/* tags() displays folders management interface, which allows user to add, rename or delete tags */
-	public function tags($route) {
+	/* 
+	 * tags() displays folders management interface, which allows user to add, rename or delete tags
+	 *  POST parameter awaited:
+	 * 	delete_confirmed (optional)
+	 */
+	public function tags($route, $params) {
 		$tags=$this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
 
 		if(isset($params['delete_confirmed'])) {
@@ -443,7 +447,7 @@ class RssController extends BaseController {
 	public function delete_tag($route, $params) {
 		if (($tag_id=$this->session_get("delete_tag_anyway", null)) !== null) {
 			$this->session_unset_var('delete_tag_anyway');
-			$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$folder_id);
+			$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$tag_id);
 		} else {
 			if(!isset($params['id'])) {
 				$params['id'] = "";
