@@ -17,9 +17,6 @@ class RssController extends BaseController {
 		return $this->connectionWrapper;
 	}
 
-
-
-
 	/* index() routes vistor to login page if not logged, to listing page otherwise */
 	public function index($route) {
 		if (is_null($this->session_get("user_id", null))) {
@@ -340,7 +337,9 @@ class RssController extends BaseController {
 		$this->redirect_to('listing');
 	}
 
-
+	public function updateFlux($route) {
+		$this->getConnectionWrapper()->updateFlux();
+	}
 
 
 	/* folders() displays folders management interface, which allows user to add, rename or delete folders */

@@ -315,6 +315,45 @@ class ConnectionWrapper {
 		$statement->closeCursor();
 		return $exist;
 	}
+	
+	public function updateFlux() {
+		$statement = $this->connection->prepare('SELECT url, id FROM flux;');
+		if ($statement->execute() === FALSE) {
+			return array();
+		}
+		while ($row = $statement->fetch()) {
+			print_r("Updating ".$row['url']."...<br />");
+			$feed= new SimplePie();
+			$feed->set_feed_url($row['url']);
+			$feed->init();
+			if (! $feed->error()) {
+				$feed->enable_cache(false);
+				$feed->handle_content_type();
+				$feed_title=strip_tags($feed->get_title());
+				if (strlen($feed_title)>50) {
+					$feed_title=substr($feed_title,0,47).'...';
+				}
+				$idFlux = $row['id'];
+				print_r("idFlux = ".$idFlux."<br />");
+				foreach ($feed->get_items() as $item):
+					$item_title = strip_tags($item->get_title());
+					if (strlen($item_title) > 50) {
+						$item_title = substr($item_title, 0, 47) . '...';
+					}
+					$item_desc = $item->get_description();
+					if (strlen($item_desc) == 0) {
+						$item_desc = 'Aucune description disponible: ' . $item->get_permalink();
+					}
+					$item_content = $item->get_content();
+					if (strlen($item_content) == 0) {
+						$item_content = 'Aucun contenu supplémentaire disponible: ' . $item->get_permalink();
+					}
+					$this->addArticle($idFlux, $item_title, $item->get_permalink(), $item_desc, $item_content, $item->get_date('Y-m-j G:i:s'));
+				endforeach;
+			}
+		}
+		printf("END OF UDATE");
+	}
 
 	public function addAbonnement($user_id,$dossier_id,$flux_id) {
 		$insertAbonnement = $this->connection->prepare('INSERT INTO abonnement(user_id, dossier_id, flux_id) VALUES (:user_id, :dossier_id, :flux_id);');
