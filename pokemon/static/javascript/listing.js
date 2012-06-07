@@ -61,6 +61,8 @@ $(document).ready(function() {
             tags_id.push($(this).data('id'));
         });
 
+        $('#titre_liste_articles').html("Liste des articles correspondants à votre recherche");
+
         // Reset the list of hidden inputs
         $('#form-search input:hidden').remove();
 
