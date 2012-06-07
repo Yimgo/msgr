@@ -449,7 +449,7 @@ class ConnectionWrapper {
 
 	public function getFolders($user_id) {
 		$donnees=array();
-		$statement = $this->connection->prepare('SELECT * FROM dossier WHERE user_id = :user_id;');
+		$statement = $this->connection->prepare('SELECT * FROM dossier WHERE user_id = :user_id AND nom != "Non classé";');
 		$statement->bindParam(':user_id', $user_id);
 		if ($statement->execute() === FALSE) {
 			return FALSE;
