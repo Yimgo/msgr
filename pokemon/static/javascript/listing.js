@@ -468,8 +468,9 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
         .append($('<td>')
                 .append($('<i>', {'class': 'icon-minus-sign'}))
                 .click(function() {
-                        $.post('/pokemon/rss/delete_abonnement', {'flux_id' : id});
-                        get_liste_flux();
+                        $.post('/pokemon/rss/delete_abonnement', {'flux_id' : id}, function() {
+                            location.reload();
+                        });
                         return false;
                     })
             )
