@@ -1,5 +1,5 @@
-<?php 
-	render_partial('header', null); 
+<?php
+	render_partial('header', null);
 	render_partial('menu', array('active' => 'folders'));
 ?>
 
@@ -10,7 +10,7 @@ if ($params["State"]==="ok"){
 	$div_confirm_suppress="hide";
 } else {
 	$div_confirm_suppress="";
-	$explode_state=explode($params["State"],2);
+	$explode_state=explode('/', $params["State"], 2);
 	$id_folder_to_suppress=$explode_state[1];
 }
 ?>
