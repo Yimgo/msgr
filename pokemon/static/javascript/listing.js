@@ -500,7 +500,7 @@ function update_unread_badge(badge_elem, unread_count) {
         badge_elem.addClass('badge-success');
     }
 
-    else if (unread_count < 50 ){
+    else if (unread_count <= 50 ){
         badge_elem.removeClass('badge-success');
         badge_elem.removeClass('badge-important');
         badge_elem.addClass('badge-warning');
