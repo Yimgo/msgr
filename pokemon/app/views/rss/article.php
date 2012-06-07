@@ -23,6 +23,7 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
                     <li class="active"><a href="#"><i class="icon-file icon-white"></i> Article</a></li>
                     <li class="divider-vertical"></li>
                     <li class=""><a href="/pokemon/rss/report"><i class="icon-book icon-white"></i> Compte-rendu</a></li>
+                    <li class=""><a href="/pokemon/rss/developers"><i class="icon-book icon-white"></i> Développeurs</a></li>
                 </ul>
             </div>
 
@@ -107,7 +108,7 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
         <div class="alert alert-info <?php echo $div_error_suppress; ?>">
                 Soyez le premier à commenter !
         </div>
- <?php       
+ <?php
     }
     foreach($params['comments'] as $comment) {
 ?>
