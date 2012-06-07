@@ -1,5 +1,5 @@
-<?php 
-	render_partial('header', null); 
+<?php
+	render_partial('header', null);
 	render_partial('menu', array('active' => 'listing'));
 ?>
 

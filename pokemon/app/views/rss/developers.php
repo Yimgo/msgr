@@ -1,5 +1,5 @@
-<?php 
-	render_partial('header', null); 
+<?php
+	render_partial('header', null);
 	render_partial('menu', array('active' => 'developers'));
 ?>
 
@@ -140,7 +140,7 @@
 					<dd><em>article_id</em></dd>
 					<dd><em>tag</em>: [true/false =&gt; tag/untag]</dd>
 				</dl>
-			</p>			
+			</p>
 			<h3>Star article</h3>
 			<p>
 				<dl class="dl-horizontal">
@@ -244,7 +244,7 @@
 					<dd><em>id</em>: id du dossier à renommer</dd>
 					<dd><em>titre</em>: nouveau nom du dossier</dd>
 				</dl>
-			</p>			
+			</p>
 			<h3>Ajout tag</h3>
 			<p>
 				<dl class="dl-horizontal">
@@ -299,6 +299,18 @@
 					<dd>Suppression d'un abonnement</dd>
 					<dt>Paramètre POST</dt>
 					<dd><em>flux_id</em></dd>
+				</dl>
+			</p>
+
+			<h3>Export OPML</h3>
+			<p>
+				<dl class="dl-horizontal">
+					<dt>Ordre</dt>
+					<dd>opml</dd>
+					<dt>Description<dt>
+					<dd>Export au format OPML des abonnements de l'utilisateur courant. L'organisation en dossiers est conservée.</dd>
+					<dt>Paramètre</dt>
+					<dd>Aucun</dd>
 				</dl>
 			</p>
 		</div>
