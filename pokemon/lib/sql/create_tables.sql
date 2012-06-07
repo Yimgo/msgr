@@ -77,7 +77,7 @@ CREATE TABLE commentaire (
 );
 
 -- cf http://bugs.mysql.com/bug.php?id=11472
-CREATE DEFINER =  `monsignor`@`localhost` TRIGGER `clean_abonnement_after_deleting_dossier` AFTER DELETE ON  `dossier` FOR EACH ROW DELETE FROM abonnement WHERE user_id = OLD.user_id AND OLD.id = dossier_id;
+CREATE DEFINER =  `monsignor`@`localhost` TRIGGER `clean_abonnement_after_deleting_dossier` BEGIN DELETE ON  `dossier` FOR EACH ROW DELETE FROM abonnement WHERE user_id = OLD.user_id AND OLD.id = dossier_id;
 
 CREATE DEFINER =  `monsignor`@`localhost` TRIGGER `clean_lecture_after_deleting_abonnement` AFTER DELETE ON  `abonnement` FOR EACH ROW DELETE FROM lecture WHERE lecture.user_id = OLD.user_id AND lecture.article_id IN (
 SELECT id
