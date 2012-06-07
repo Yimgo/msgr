@@ -144,6 +144,20 @@ class ConnectionWrapper {
 		}
 	}
 
+	public function tagIsNotUsed($tag_id) {
+		$statement = $this->connection->prepare('SELECT * FROM map_tag_article WHERE tag_id = :tag_id;');
+		$statement->bindParam(':tag_id', $tag_id);
+		if ($statement->execute() === FALSE) {
+			return False;
+		}
+		if ($statement->fetch() === FALSE) {
+			$result = array("TagNotUsed" => TRUE);
+		} else {
+			$result = array("TagNotUsed" => FALSE);
+		}
+		return $result;
+	}
+
 	public function renameTag($user_id, $tag_id, $nom) {
 		$statement = $this->connection->prepare('UPDATE tag SET nom=:nom WHERE user_id = :user_id AND id = :tag_id;');
 		$statement->bindParam(':nom', $nom);
