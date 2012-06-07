@@ -44,7 +44,8 @@ CREATE TABLE article (
     description TEXT NOT NULL,
     contenu TEXT,
     date DATETIME,
-    FOREIGN KEY (flux_id) REFERENCES flux(id)
+    FOREIGN KEY (flux_id) REFERENCES flux(id),
+    UNIQUE (url, date)
 );
 
 CREATE TABLE map_tag_article (
