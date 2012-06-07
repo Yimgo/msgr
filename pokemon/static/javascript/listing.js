@@ -336,14 +336,23 @@ function article_lu_nonlu() {
 
     if ($(this).children().hasClass('icon-eye-open')) {
         total_unread_count++;
-        update_unread_badge();
+        update_unread_badge($('#total_unread_count'), total_unread_count);
         $.post('/pokemon/rss/set_lu', {'article_id' : id, 'lu': 'false'});
         $(this).children().removeClass('icon-eye-open').addClass('icon-eye-close');
+
+        var feed_unread_count = Number($("#liste_flux tr.ligne_flux_selectionne span.badge").html());
+        $("#liste_flux tr.ligne_flux_selectionne span.badge").html(feed_unread_count + 1);
+        update_unread_badge($("#liste_flux tr.ligne_flux_selectionne span.badge"), feed_unread_count + 1);
     } else {
         total_unread_count--;
-        update_unread_badge();
+        update_unread_badge($('#total_unread_count'), total_unread_count);
+
         $.post('/pokemon/rss/set_lu', {'article_id' : id, 'lu' : 'true'});
         $(this).children().removeClass('icon-eye-close').addClass('icon-eye-open');
+
+        var feed_unread_count = Number($("#liste_flux tr.ligne_flux_selectionne span.badge").html());
+        $("#liste_flux tr.ligne_flux_selectionne span.badge").html(feed_unread_count - 1);
+        update_unread_badge($("#liste_flux tr.ligne_flux_selectionne span.badge"), feed_unread_count - 1);
     }
 }
 
@@ -450,7 +459,7 @@ function add_dossier_to_dom(nom) {
 // Ajouter un flux au tableau contenant la liste des dossiers + flux
 function add_flux_to_dom(titre, nb_nonlus, id) {
     total_unread_count += nb_nonlus;
-    update_unread_badge();
+    update_unread_badge($('#total_unread_count'), total_unread_count);
 
     if (nb_nonlus == 0) type_badge = "";
     else if (nb_nonlus > 0 && nb_nonlus < 10) type_badge = "badge-success";
@@ -478,25 +487,25 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
     ;
 }
 
-function update_unread_badge() {
-    $('#total_unread_count').html(total_unread_count);
+function update_unread_badge(badge_elem, unread_count) {
+    badge_elem.html(unread_count);
 
-    if (total_unread_count < 10) {
-        $('#total_unread_count').removeClass('badge-warning');
-        $('#total_unread_count').removeClass('badge-important');
-        $('#total_unread_count').addClass('badge-success');
+    if (unread_count < 10) {
+        badge_elem.removeClass('badge-warning');
+        badge_elem.removeClass('badge-important');
+        badge_elem.addClass('badge-success');
     }
 
-    else if (total_unread_count < 50 ){
-        $('#total_unread_count').removeClass('badge-success');
-        $('#total_unread_count').removeClass('badge-important');
-        $('#total_unread_count').addClass('badge-warning');
+    else if (unread_count < 50 ){
+        badge_elem.removeClass('badge-success');
+        badge_elem.removeClass('badge-important');
+        badge_elem.addClass('badge-warning');
     }
 
     else {
-        $('#total_unread_count').removeClass('badge-success');
-        $('#total_unread_count').removeClass('badge-warning');
-        $('#total_unread_count').addClass('badge-important');
+        badge_elem.removeClass('badge-success');
+        badge_elem.removeClass('badge-warning');
+        badge_elem.addClass('badge-important');
     }
 }
 
