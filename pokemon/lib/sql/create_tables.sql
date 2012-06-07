@@ -76,6 +76,12 @@ CREATE TABLE commentaire (
     FOREIGN KEY (article_id) REFERENCES article(id)
 );
 
+CREATE DEFINER =  `monsignor`@`localhost` TRIGGER `clean_lecture_after_deleting_abonnement` AFTER DELETE ON  `abonnement` FOR EACH ROW DELETE FROM lecture WHERE lecture.user_id = OLD.user_id AND lecture.article_id IN (
+SELECT id
+FROM article
+WHERE flux_id = OLD.flux_id
+);
+
 DELIMITER //
 CREATE TRIGGER fill_lecture_after_new_abonnement AFTER INSERT ON abonnement FOR EACH ROW
 BEGIN
