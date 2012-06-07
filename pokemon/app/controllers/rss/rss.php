@@ -300,36 +300,41 @@ class RssController extends BaseController {
 		$feed= new SimplePie();
 		$feed->set_feed_url($_POST['url']);
 		$feed->init();
-		$feed->enable_cache(false);
-		$feed->handle_content_type();
 
-		$feed_title=strip_tags($feed->get_title());
+		if (! $feed->error()) {
 
-		if (strlen($feed_title)>50) {
-			$feed_title=substr($feed_title,0,47).'...';
-		}
-		$exist = $this->getConnectionWrapper()->addFlux($_POST['url'], $feed_title, $feed->get_description());
-		$idFlux = $this->getConnectionWrapper()->getFluxId($feed_title);
-		$this->NON_CLASSE = $this->getConnectionWrapper()->getFolderId($this->session_get("user_id", null), 'Non classé');
+			$feed->enable_cache(false);
+			$feed->handle_content_type();
 
-		$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null), $this->NON_CLASSE, $idFlux);
 
-		if (!$exist) {
-			foreach ($feed->get_items() as $item):
-				$item_title = strip_tags($item->get_title());
-				if (strlen($item_title) > 50) {
-					$item_title = substr($item_title, 0, 47) . '...';
-				}
-				$item_desc = $item->get_description();
-				if (strlen($item_desc) == 0) {
-					$item_desc = 'Aucune description disponible: ' . $item->get_permalink();
-				}
-				$item_content = $item->get_content();
-				if (strlen($item_content) == 0) {
-					$item_content = 'Aucun contenu supplémentaire disponible: ' . $item->get_permalink();
-				}
-				$this->getConnectionWrapper()->addArticle($idFlux, $item_title, $item->get_permalink(), $item_desc, $item_content, $item->get_date('Y-m-j G:i:s'));
-			endforeach;
+			$feed_title=strip_tags($feed->get_title());
+
+			if (strlen($feed_title)>50) {
+				$feed_title=substr($feed_title,0,47).'...';
+			}
+			$exist = $this->getConnectionWrapper()->addFlux($_POST['url'], $feed_title, $feed->get_description());
+			$idFlux = $this->getConnectionWrapper()->getFluxId($feed_title);
+			$this->NON_CLASSE = $this->getConnectionWrapper()->getFolderId($this->session_get("user_id", null), 'Non classé');
+
+			$this->getConnectionWrapper()->addAbonnement($this->session_get("user_id", null), $this->NON_CLASSE, $idFlux);
+
+			if (!$exist) {
+				foreach ($feed->get_items() as $item):
+					$item_title = strip_tags($item->get_title());
+					if (strlen($item_title) > 50) {
+						$item_title = substr($item_title, 0, 47) . '...';
+					}
+					$item_desc = $item->get_description();
+					if (strlen($item_desc) == 0) {
+						$item_desc = 'Aucune description disponible: ' . $item->get_permalink();
+					}
+					$item_content = $item->get_content();
+					if (strlen($item_content) == 0) {
+						$item_content = 'Aucun contenu supplémentaire disponible: ' . $item->get_permalink();
+					}
+					$this->getConnectionWrapper()->addArticle($idFlux, $item_title, $item->get_permalink(), $item_desc, $item_content, $item->get_date('Y-m-j G:i:s'));
+				endforeach;
+			}
 		}
 
 		$this->redirect_to('listing');
