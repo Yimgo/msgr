@@ -7,9 +7,11 @@
 $tags=$params["Tags"];
 
 if ($params["State"]==="ok"){
-	$div_error_suppress="hide";
+	$div_confirm_suppress="hide";
 } else {
-	$div_error_suppress="";
+	$div_confirm_suppress="";
+	$explode_state=explode('/', $params["State"], 2);
+	$id_tag_to_suppress=$explode_state[1];
 }
 ?>
 
@@ -19,8 +21,14 @@ if ($params["State"]==="ok"){
 
 		<div class="offset1 span10">
 
-			<div class="alert alert-error <?php echo $div_error_suppress; ?>">
-				<strong>Erreur</strong> lors de la suppression : le tag est utilisé pour tagger des articles !
+			<div class="alert alert-error <?php echo $div_confirm_suppress; ?>">
+				<strong>Erreur</strong> lors de la suppression : le tag est utilisé pour tagger des articles!
+				Voulez-vous le supprimer quand même? (Attention, ces articles ne seront plus taggés avec ce tag).
+				<form method="POST" action="tags">
+					<input type="hidden" name="delete_confirmed" value="<?php echo $id_tag_to_suppress ; ?>" />
+					<button type="submit" class="btn">Oui</button>
+				</form>
+				<a class="btn" href="tags">Non</a>
 			</div>
 
 			<table class="table table-bordered table-striped span6">

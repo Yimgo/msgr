@@ -345,7 +345,7 @@ class RssController extends BaseController {
 	 * 	delete_confirmed (optional)
 	 */
 	public function folders($route, $params) {
-		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
+		$folders=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
 
 		if(isset($params['delete_confirmed'])) {
 			$this->session_set("delete_folder_anyway",$params['delete_confirmed']);
@@ -354,9 +354,9 @@ class RssController extends BaseController {
 
 		if (($folder_id=$this->session_get("folder_not_empty", null)) !== null) {
 			$this->session_unset_var('folder_not_empty');
-			$this->render_view("folders", array("Folders" => $folder, "State" => "confirm_delete/".$folder_id));
+			$this->render_view("folders", array("Folders" => $folders, "State" => "confirm_delete/".$folder_id));
 		} else {
-			$this->render_view("folders", array("Folders" => $folder, "State" => "ok"));
+			$this->render_view("folders", array("Folders" => $folders, "State" => "ok"));
 		}
 	}
 
@@ -411,11 +411,17 @@ class RssController extends BaseController {
 	/* tags() displays folders management interface, which allows user to add, rename or delete tags */
 	public function tags($route) {
 		$tags=$this->getConnectionWrapper()->getTags($this->session_get("user_id", null));
-		if ($this->session_get("tag_suppress_error", null) === null) {
-			$this->render_view("tags", array("Tags" => $tags, "State" => "ok"));
+
+		if(isset($params['delete_confirmed'])) {
+			$this->session_set("delete_tag_anyway",$params['delete_confirmed']);
+			$this->redirect_to("delete_tag");
+		}
+
+		if (($tag_id=$this->session_get("tag_used", null)) !== null) {
+			$this->session_unset_var('tag_used');
+			$this->render_view("tags", array("Tags" => $tags, "State" => "confirm_delete/".$tag_id));
 		} else {
-			$this->session_unset_var('tag_suppress_error');
-			$this->render_view("tags", array("Tags" => $tags, "State" => "error"));
+			$this->render_view("tags", array("Tags" => $tags, "State" => "ok"));
 		}
 	}
 
@@ -435,13 +441,20 @@ class RssController extends BaseController {
 	 *	id: tag id
 	 */
 	public function delete_tag($route, $params) {
-		if(!isset($params['id'])) {
-			$params['id'] = "";
-		}
-		$tag_id = $params['id'];
-
-		if ($this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null), $tag_id) === FALSE) {
-			$this->session_set("tag_suppress_error", TRUE);
+		if (($tag_id=$this->session_get("delete_tag_anyway", null)) !== null) {
+			$this->session_unset_var('delete_tag_anyway');
+			$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$folder_id);
+		} else {
+			if(!isset($params['id'])) {
+				$params['id'] = "";
+			}
+			$tag_id = $params['id'];
+			$tagNotUsed = $this->getConnectionWrapper()->tagIsNotUsed($tag_id);
+			if ($tagNotUsed["TagNotUsed"] === FALSE) {
+				$this->session_set("tag_used", $tag_id);
+			} else {
+				$this->getConnectionWrapper()->deleteTag($this->session_get("user_id", null),$tag_id);
+			}
 		}
 		$this->redirect_to("tags");
 	}
