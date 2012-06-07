@@ -200,6 +200,12 @@ function add_article_to_dom(id, titre, contenu, favori, lu, liste_tags, url, dat
                                 var article_id = $(this).parent().parent().parent().data('id');
                                 $.post('/pokemon/rss/set_lu', {'article_id' : article_id, 'lu': 'true'});
                                 icone.removeClass('icon-eye-close').addClass('icon-eye-open');
+
+                                total_unread_count--;
+                                update_unread_badge($('#total_unread_count'), total_unread_count);
+                                var feed_unread_count = Number($("#liste_flux tr.ligne_flux_selectionne span.badge").html());
+                                $("#liste_flux tr.ligne_flux_selectionne span.badge").html(feed_unread_count - 1);
+                                update_unread_badge($("#liste_flux tr.ligne_flux_selectionne span.badge"), feed_unread_count - 1);
                             }
                         })
                     )
