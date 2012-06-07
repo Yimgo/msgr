@@ -316,12 +316,12 @@ class RssController extends BaseController {
 
 		$this->redirect_to('listing');
 	}
-	
+
 	/* update_flux() allows user to update all feeds to insert new articles in database. */
 	public function update_flux($route) {
 		$this->getConnectionWrapper()->updateFlux();
 	}
-	
+
 	/*
 	 * delete_abonnement() allows user to delete a subscription.
 	 * POST parameter awaited:
@@ -457,7 +457,7 @@ class RssController extends BaseController {
 		$params['comments'] = $this->getConnectionWrapper()->getCommentaires($route[0]);
 		$this->render_view('article', $params);
 	}
-	
+
 	/*
 	 * add_commentaire() allows user to add a comment related to a specified feed.
 	 * POST parameters awaited:
@@ -487,9 +487,9 @@ class RssController extends BaseController {
 	public function report($route) {
 		$this->render_view('report', null);
 	}
-	
-	
-	
+
+
+
 
 	/*
 	 * Displays the report about the developers API.
@@ -502,6 +502,7 @@ class RssController extends BaseController {
 	 * Exports to OPML the user's feeds list
 	 */
 	public function opml($route) {
+		header('Content-Disposition: attachment; filename="export.opml"');
 		echo $this->getConnectionWrapper()->opml_export($this->session_get("user_id", null));
 	}
 }
