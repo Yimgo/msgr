@@ -57,7 +57,7 @@ else if ($params['type'] == 'signup') {
                     <li class="<?php echo $values['tab_active_login'] ; ?>"><a href="#tab_login" data-toggle="tab">Se connecter</a></li>
                     <li class="<?php echo $values['tab_active_signup'] ; ?>"><a href="#tab_inscription" data-toggle="tab">S'inscrire</a></li>
                 </ul>
-                
+
                 <div class="tab-content">
                     <div class="tab-pane <?php echo $values['tab_active_login'] ; ?>" id="tab_login">
 
@@ -75,7 +75,7 @@ else if ($params['type'] == 'signup') {
                                         <input type="text" placeholder="Nom d'utilisateur..." name="user_login" id="user_login" />
                                     </div>
                                 </div>
-                                
+
                                 <div class="control-group <?php echo $values['input_login']; ?>" >
                                     <label class="control-label" for="user_password">Mot de passe :</label>
                                     <div class="controls">
@@ -105,7 +105,7 @@ else if ($params['type'] == 'signup') {
                                         <input type="text" placeholder="Nom d'utilisateur..." name="user_login" id="user_login" />
                                     </div>
                                 </div>
-                                
+
                                 <div class="control-group <?php echo $values['input_user_password']; ?>" >
                                     <label class="control-label" for="user_password">Mot de passe :</label>
                                     <div class="controls">
@@ -132,4 +132,5 @@ else if ($params['type'] == 'signup') {
     </div>
 </div>
 
+<?php render_partial("includes_js", null); ?>
 <?php render_partial("footer", null); ?>

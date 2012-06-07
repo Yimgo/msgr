@@ -61,4 +61,5 @@
 	</div>
 </div>
 
+<?php render_partial("includes_js", null); ?>
 <?php render_partial("footer", null); ?>

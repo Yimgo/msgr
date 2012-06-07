@@ -97,6 +97,7 @@ if ($params["State"]==="ok"){
 
 	</div>
 </div>
-<?php render_partial("footer", null); ?>
-<!-- JS à la fin, après les includes de jQuery -->
+
+<?php render_partial("includes_js", null); ?>
 <script src="/pokemon/static/javascript/tags.js"></script>
+<?php render_partial("footer", null); ?>

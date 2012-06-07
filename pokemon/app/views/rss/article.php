@@ -133,5 +133,6 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
     </div>
 </div>
 
-<?php render_partial("footer", null); ?>
+<?php render_partial("includes_js", null); ?>
 <script src="/pokemon/static/javascript/article.js"></script>
+<?php render_partial("footer", null); ?>
