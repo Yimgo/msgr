@@ -23,12 +23,19 @@ if ($params["State"]==="ok"){
 
 			<div class="alert alert-error <?php echo $div_confirm_suppress; ?>">
 				<strong>Erreur</strong> lors de la suppression : le tag est utilisé pour tagger des articles!
+				<br>
 				Voulez-vous le supprimer quand même? (Attention, ces articles ne seront plus taggés avec ce tag).
-				<form method="POST" action="tags">
-					<input type="hidden" name="delete_confirmed" value="<?php echo $id_tag_to_suppress ; ?>" />
-					<button type="submit" class="btn">Oui</button>
-				</form>
-				<a class="btn" href="tags">Non</a>
+				<table>
+					<il>
+						<form method="POST" action="tags">
+							<input type="hidden" name="delete_confirmed" value="<?php echo $id_tag_to_suppress ; ?>" />
+							<button type="submit" class="btn">Oui</button>
+						</form>
+					</il>
+					<il>
+						<a class="btn" href="tags">Non</a>
+					</il>
+				</table>
 			</div>
 
 			<table class="table table-bordered table-striped span6">

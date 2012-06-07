@@ -23,12 +23,19 @@ if ($params["State"]==="ok"){
 
 		<div class="alert alert-error <?php echo $div_confirm_suppress; ?>">
 			<strong>Erreur</strong> lors de la suppression : le dossier n'est pas vide !
+			<br>
 			Voulez-vous le supprimer quand même? (Attention, vous serez désabonné de tous les flux contenus dans ce dossier).
-			<form method="POST" action="folders">
-				<input type="hidden" name="delete_confirmed" value="<?php echo $id_folder_to_suppress ; ?>" />
-				<button type="submit" class="btn">Oui</button>
-			</form>
-			<a class="btn" href="folders">Non</a>
+			<table>
+				<il>
+					<form method="POST" action="folders">
+						<input type="hidden" name="delete_confirmed" value="<?php echo $id_folder_to_suppress ; ?>" />
+						<button type="submit" class="btn">Oui</button>
+					</form>
+				</il>
+				<il>
+					<a class="btn" href="folders">Non</a>
+				</il>
+			</table>
 		</div>
 
 		<table class="table table-bordered table-striped span6">
