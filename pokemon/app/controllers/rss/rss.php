@@ -458,6 +458,13 @@ class RssController extends BaseController {
 	public function report($route) {
 		$this->render_view('report', null);
 	}
+
+	/*
+	 * Displays the report about the developers API.
+	 */
+	public function developers($route) {
+		$this->render_view('developers', null);
+	}
 }
 
 ?>
