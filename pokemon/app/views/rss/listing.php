@@ -59,9 +59,12 @@
         <div class="span4">
             <h1>Liste des flux RSS</h1>
 
-            <table class="table" id="liste_articles_non_lus_command">
+            <table class="table">
                 <tr>
-                    <td><i class="icon-eye-close pull-left"></i> <b>Liste des articles non lus</b></td>
+                    <td id="liste_articles_non_lus_command"><i class="icon-eye-close pull-left"></i> <b>Liste des articles non lus</b></td>
+                </tr>
+                <tr>
+                    <td id="liste_articles_favoris_command"><i class="icon-star pull-left"></i> <b>Liste des articles favoris</b></td>
                 </tr>
             </table>
 
