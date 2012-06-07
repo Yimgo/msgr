@@ -14,6 +14,10 @@
 
 			<h1>Description</h1>
 			<p>
+				<em>Yet another RSS aggregator. Better than others.</em><br/>
+				Monsignor, pl. monsignori, is the form of address for those members of the clergy of the Catholic Church holding certain ecclesiastical honorific titles.
+			</p>
+			<p>
 				Ce site est un aggrégateur de flux RSS, permettant aux utilisateurs de commenter les nouvelles.
 			</p>
 			<p>
@@ -23,7 +27,11 @@
 			</p>
 
 			<h1>Description technique</h1>
-
+			<p>
+				Notre application est développée sur le framework Pokemon basé sur une architecture de modèle vue-contrôleur (MVC). <br />
+				L'accès à la base de donnée est géré par PDO, toutes les demandes de connexion et les requêtes en base de l'application sont traitées par un wrapper. <br />
+				Parseur php... <br />
+			</p>
 			<h1>Gestion de projet</h1>
 			<p>
 				Nous avons utilisé SVN pour synchroniser notre code et travailler à plusieurs.
