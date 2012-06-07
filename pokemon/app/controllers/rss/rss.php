@@ -331,11 +331,9 @@ class RssController extends BaseController {
 		if(!isset($params['flux_id'])) {
 			$params['flux_id'] = "";
 		}
-		$flux_id = $params['id'];
+		$flux_id = $params['flux_id'];
 
-		if ($this->getConnectionWrapper()->deleteAbonnement($this->session_get("user_id", null), $flux_id) === FALSE) {
-			$this->session_set("abonnement_suppress_error", TRUE);
-		}
+		$this->getConnectionWrapper()->deleteAbonnement($this->session_get("user_id", null), $flux_id);
 		$this->redirect_to("listing");
 	}
 

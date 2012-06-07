@@ -256,6 +256,8 @@ function click_flux() {
 
     // --- Recuperation des articles ---
     get_liste_article(flux_courant);
+
+    return true;
 }
 
 function get_liste_article(flux_id) {
@@ -357,6 +359,7 @@ function click_dossier() {
 
 // Déplacer un flux de dossier
 function changer_flux_de_dossier() {
+    total_unread_count = 0;
     var dossier_id = $(this).data('id');
     var flux_id =  $('#titre_liste_articles').data('id');
     $.post('/pokemon/rss/move_flux_folder',{'flux_id' : flux_id, 'dossier_id': dossier_id})
@@ -443,27 +446,27 @@ function add_dossier_to_dom(nom) {
 // Ajouter un flux au tableau contenant la liste des dossiers + flux
 function add_flux_to_dom(titre, nb_nonlus, id) {
     total_unread_count += nb_nonlus;
-    
+
     $('#total_unread_count').html(total_unread_count);
-    
+
     if (total_unread_count < 10) {
     	$('#total_unread_count').removeClass('badge-warning');
     	$('#total_unread_count').removeClass('badge-important');
     	$('#total_unread_count').addClass('badge-success');
     }
-    
+
     else if (total_unread_count < 50 ){
     	$('#total_unread_count').removeClass('badge-success');
     	$('#total_unread_count').removeClass('badge-important');
     	$('#total_unread_count').addClass('badge-warning');
    	}
-   	
+
    	else {
    		$('#total_unread_count').removeClass('badge-success');
     	$('#total_unread_count').removeClass('badge-warning');
     	$('#total_unread_count').addClass('badge-important');
    	}
-    
+
     if (nb_nonlus == 0) type_badge = "";
     else if (nb_nonlus > 0 && nb_nonlus < 10) type_badge = "badge-success";
     else if (nb_nonlus >= 10 && nb_nonlus <= 50) type_badge = "badge-warning";
@@ -478,8 +481,13 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
                 .append($('<span>', {'class': 'badge ' + type_badge, 'html':nb_nonlus}))
                )
         .append($('<td>')
-                .append($('<i>', {'class': 'icon-circle-arrow-right'}))
-               )
+                .append($('<i>', {'class': 'icon-minus-sign'}))
+                .click(function() {
+                        $.post('/pokemon/rss/delete_abonnement', {'flux_id' : id});
+                        get_liste_flux();
+                        return false;
+                    })
+            )
         .appendTo('#liste_flux')
     ;
 }
