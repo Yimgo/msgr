@@ -4,6 +4,7 @@
 
 var page_courante = 0;
 var flux_courant = undefined;
+var type_courant = 0; // 1: favori ; 0: non lus
 
 $(document).ready(function() {
     // Récupérér initialement la liste des flux + dossiers pour l'afficher
@@ -98,10 +99,19 @@ $(document).ready(function() {
        get_liste_article(flux_courant);
     });
 
-    //
-    $('#liste_articles_non_lus_command td').click(function () {
+    $('#liste_articles_non_lus_command').click(function () {
         flux_courant = undefined;
+        type_courant = 0;
         $('#titre_liste_articles').html("Liste des articles non lus");
+        $("#liste_flux tr").removeClass("ligne_flux_selectionne");
+        get_liste_article(flux_courant);
+    });
+
+    $('#liste_articles_favoris_command').click(function () {
+        flux_courant = undefined;
+        type_courant = 1;
+        $('#titre_liste_articles').html("Liste des articles favoris");
+        $("#liste_flux tr").removeClass("ligne_flux_selectionne");
         get_liste_article(flux_courant);
     });
 });
@@ -255,8 +265,10 @@ function get_liste_article(flux_id) {
     $('#flux_container').empty();
 
     var url;
-    if (flux_courant == undefined)
+    if (flux_courant == undefined && type_courant == 0)
         url = '/pokemon/rss/get_latest_articles/' + page_courante*10 + '/10';
+    else if (flux_courant == undefined && type_courant == 1)
+        url = '/pokemon/rss/get_favorite_articles/' + page_courante*10 + '/10';
     else
         url = '/pokemon/rss/get_articles/' + flux_id + '/' + page_courante*10 + '/10';
 
@@ -265,7 +277,6 @@ function get_liste_article(flux_id) {
 
         // Aucun article à charger
         if (data.length == 0) {
-            console.log('toto');
             $("#liste_flux_fin").show();
             $('#pagin-left').show();
             $('#pagin-right').hide();
