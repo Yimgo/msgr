@@ -86,7 +86,7 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
 ?>
      <blockquote>
             <p><?php echo $comment['commentaire'];?></p>
-            <small><strong><?php echo $comment['username']; ?></strong> - <?php echo $comment['date']; ?></small>
+            <small><strong><?php echo '<a href="mailto:' . $comment['user_email'] . '">' . $comment['username'] . '</a>'; ?></strong> - <?php echo $comment['date']; ?></small>
     </blockquote>
 
 <?php

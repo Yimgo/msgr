@@ -269,7 +269,7 @@ class ConnectionWrapper {
 	}
 
 	public function getCommentaires($article_id) {
-		$statement = $this->connection->prepare('SELECT commentaire, date, user_id FROM commentaire WHERE article_id = :article_id ORDER BY date ASC;');
+		$statement = $this->connection->prepare('SELECT commentaire, date, user_id, email FROM commentaire INNER JOIN user ON commentaire.user_id = user.id WHERE article_id = :article_id ORDER BY date ASC;');
 		$statement->bindParam(':article_id', $article_id);
 
 		if ($statement->execute() === FALSE) {
@@ -290,6 +290,7 @@ class ConnectionWrapper {
 			}
 			$com['date'] = $row['date'];
 			$com['commentaire'] = nl2br($row['commentaire']);
+			$com['user_email'] = $row['email'];
 			array_push($commentaires, $com);
 		}
 		return $commentaires;
