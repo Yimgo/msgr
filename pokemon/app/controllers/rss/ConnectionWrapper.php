@@ -668,10 +668,10 @@ EOD;
 	 * Returns a OPML export as as string of all the users feeds
 	 */
 	public function opml_export($user_id) {
-		$opml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
-		$opml .= '<opml version="1.0">' . PHP_EOL;
-		$opml .= '<head>Export de Monsignor</head>' . PHP_EOL;
-		$opml .= '<body>' . PHP_EOL;
+		$opml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" . PHP_EOL;
+		$opml .= "<opml version=\"1.0\">" . PHP_EOL;
+		$opml .= "\t<head>Export de Monsignor</head>" . PHP_EOL;
+		$opml .= "\t<body>\n";
 
 		$request = <<<EOD
 SELECT dossier.nom dossier_nom, dossier.id dossier_id, flux.url flux_url, flux.nom flux_nom
@@ -693,21 +693,22 @@ EOD;
 			if ($first_folder) {
 				$first_folder = false;
 				$last_folder_id = $row["dossier_id"];
-				$opml .= '<outline title="' . $row["dossier_nom"] .'" text="' . $row["dossier_nom"] .'">';
+				$opml .= "\t\t" . '<outline title="' . $row["dossier_nom"] .'" text="' . $row["dossier_nom"] .'">' . PHP_EOL;
 			}
 
 			if ($last_folder_id != $row["dossier_id"]) {
-				$opml .= '</outline>';
+				$opml .= "\t\t" . '</outline>' . PHP_EOL;
 				$last_folder_id = $row["dossier_id"];
-				$opml .= '<outline title="' . $row["dossier_nom"] .'" text="' . $row["dossier_nom"] .'">';
+				$opml .= "\t\t" . '<outline title="' . $row["dossier_nom"] .'" text="' . $row["dossier_nom"] .'">' . PHP_EOL;
 			}
-			$opml .= '<outline title="' . $row["flux_nom"] . '" text="' . $row["flux_nom"] . '" ';
-			$opml .= 'type="rss" xmlUrl="' . $row["flux_url"] . '" htmlUrl="' . $row["flux_url"] . '" />'  . PHP_EOL;
+
+			$opml .= "\t\t\t". '<outline title="' . $row["flux_nom"] . '" text="' . $row["flux_nom"] . '" ';
+			$opml .= 'type="rss" xmlUrl="' . $row["flux_url"] . '" htmlUrl="' . $row["flux_url"] . '" />' . PHP_EOL;
 		}
 
-		$opml .= '</outline>';
-		$opml .= '</body>' . PHP_EOL;
-		$opml .= '</opml>' . PHP_EOL;
+		$opml .= "\t\t</outline>" . PHP_EOL;
+		$opml .= "\t</body>" . PHP_EOL;
+		$opml .= "</opml>";
 
 		return $opml;
 	}
