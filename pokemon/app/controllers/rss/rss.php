@@ -348,13 +348,13 @@ class RssController extends BaseController {
 		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
 
 		if(isset($params['delete_confirmed'])) {
-			$this->session_set("delete_folder_anyway",TRUE);
+			$this->session_set("delete_folder_anyway",$params['delete_confirmed']);
 			$this->redirect_to("delete_folder");
 		}
 
-		if ($this->session_get("folder_not_empty", null) !== null) {
+		if (($folder_id=$this->session_get("folder_not_empty", null)) !== null) {
 			$this->session_unset_var('folder_not_empty');
-			$this->render_view("folders", array("Folders" => $folder, "State" => "confirm_delete"));
+			$this->render_view("folders", array("Folders" => $folder, "State" => "confirm_delete/".$folder_id));
 		} else {
 			$this->render_view("folders", array("Folders" => $folder, "State" => "ok"));
 		}
@@ -376,18 +376,17 @@ class RssController extends BaseController {
 	 *	id: folder id
 	 */
 	public function delete_folder($route, $params) {
-		if(!isset($params['id'])) {
-			$params['id'] = "";
-		}
-		$folder_id = $params['id'];
-
-		if ($this->session_get("delete_folder_anyway", null) !== null) {
+		if (($folder_id=$this->session_get("delete_folder_anyway", null)) !== null) {
 			$this->session_unset_var('delete_folder_anyway');
 			$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id);
 		} else {
+			if(!isset($params['id'])) {
+				$params['id'] = "";
+			}
+			$folder_id = $params['id'];
 			$folderIsEmpty = $this->getConnectionWrapper()->folderIsEmpty($folder_id);
 			if ($folderIsEmpty["FolderEmpty"] === FALSE) {
-				$this->session_set("folder_not_empty", TRUE);
+				$this->session_set("folder_not_empty", $folder_id);
 			} else {
 				$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id);
 			}
