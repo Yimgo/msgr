@@ -336,8 +336,9 @@ class RssController extends BaseController {
 
 		$this->redirect_to('listing');
 	}
-
-	public function updateFlux($route) {
+	
+	/* update_flux() allows user to update all feeds to insert new articles in database. */
+	public function update_flux($route) {
 		$this->getConnectionWrapper()->updateFlux();
 	}
 
