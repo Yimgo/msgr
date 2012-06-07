@@ -406,7 +406,7 @@ class RssController extends BaseController {
 
 
 
-	/* 
+	/*
 	 * tags() displays folders management interface, which allows user to add, rename or delete tags
 	 *  POST parameter awaited:
 	 * 	delete_confirmed (optional)
