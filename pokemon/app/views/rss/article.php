@@ -21,13 +21,13 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
                     <li><a href="/pokemon/rss/tags"><i class="icon-tags icon-white"></i> Gérer les tags</a></li>
                     <li class="divider-vertical"></li>
                     <li class="active"><a href="#"><i class="icon-file icon-white"></i> Article</a></li>
-                    <li class="divider-vertical"></li>
-                    <li class=""><a href="/pokemon/rss/report"><i class="icon-book icon-white"></i> Compte-rendu</a></li>
-                    <li class=""><a href="/pokemon/rss/developers"><i class="icon-book icon-white"></i> Développeurs</a></li>
                 </ul>
             </div>
 
         <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li class=""><a href="/pokemon/rss/report"><i class="icon-book icon-white"></i> Compte-rendu</a></li>
+            <li class=""><a href="/pokemon/rss/developers"><i class="icon-book icon-white"></i> Développeurs</a></li>
             <li class="divider-vertical"></li>
             <li><a href="/pokemon/rss/logout"><i class="icon-user icon-white"></i> Déconnexion</a></li>
           </ul>
