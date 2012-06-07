@@ -13,7 +13,7 @@ var article_est_lu = <?php echo $params["lu"] ? 'true' : 'false' ;?> ;
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="#">RSS</a>
+            <div class="brand">RSS</div>
             <div class="nav-collapse">
                 <ul class="nav">
                     <li><a href="/pokemon/rss/listing"><i class="icon-home icon-white"></i> Accueil</a></li>
