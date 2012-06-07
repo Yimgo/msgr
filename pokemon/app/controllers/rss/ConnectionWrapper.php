@@ -326,6 +326,15 @@ class ConnectionWrapper {
 		}
 	}
 
+	public function deleteAbonnement($user_id,$flux_id) {
+		$deleteAbonnement = $this->connection->prepare('DELETE FROM abonnement WHERE user_id=:user_id AND flux_id=:flux_id;');
+		$deleteAbonnement->bindParam(':user_id', $user_id);
+		$deleteAbonnement->bindParam(':flux_id', $flux_id);
+		if ($deleteAbonnement->execute() === FALSE) {
+			return False;
+		}
+	}
+
 	public function addFolder($user_id,$nom) {
 		$insertFolder = $this->connection->prepare('INSERT INTO dossier(nom, user_id) VALUES (:nom, :user_id);');
 		$insertFolder->bindParam(':nom', $nom);
