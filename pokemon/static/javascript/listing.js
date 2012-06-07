@@ -335,9 +335,13 @@ function article_lu_nonlu() {
     id = $(this).parent().parent().parent().data('id');
 
     if ($(this).children().hasClass('icon-eye-open')) {
+        total_unread_count++;
+        update_unread_badge();
         $.post('/pokemon/rss/set_lu', {'article_id' : id, 'lu': 'false'});
         $(this).children().removeClass('icon-eye-open').addClass('icon-eye-close');
     } else {
+        total_unread_count--;
+        update_unread_badge();
         $.post('/pokemon/rss/set_lu', {'article_id' : id, 'lu' : 'true'});
         $(this).children().removeClass('icon-eye-close').addClass('icon-eye-open');
     }
@@ -446,26 +450,7 @@ function add_dossier_to_dom(nom) {
 // Ajouter un flux au tableau contenant la liste des dossiers + flux
 function add_flux_to_dom(titre, nb_nonlus, id) {
     total_unread_count += nb_nonlus;
-
-    $('#total_unread_count').html(total_unread_count);
-
-    if (total_unread_count < 10) {
-    	$('#total_unread_count').removeClass('badge-warning');
-    	$('#total_unread_count').removeClass('badge-important');
-    	$('#total_unread_count').addClass('badge-success');
-    }
-
-    else if (total_unread_count < 50 ){
-    	$('#total_unread_count').removeClass('badge-success');
-    	$('#total_unread_count').removeClass('badge-important');
-    	$('#total_unread_count').addClass('badge-warning');
-   	}
-
-   	else {
-   		$('#total_unread_count').removeClass('badge-success');
-    	$('#total_unread_count').removeClass('badge-warning');
-    	$('#total_unread_count').addClass('badge-important');
-   	}
+    update_unread_badge();
 
     if (nb_nonlus == 0) type_badge = "";
     else if (nb_nonlus > 0 && nb_nonlus < 10) type_badge = "badge-success";
@@ -492,6 +477,27 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
     ;
 }
 
+function update_unread_badge() {
+    $('#total_unread_count').html(total_unread_count);
+
+    if (total_unread_count < 10) {
+        $('#total_unread_count').removeClass('badge-warning');
+        $('#total_unread_count').removeClass('badge-important');
+        $('#total_unread_count').addClass('badge-success');
+    }
+
+    else if (total_unread_count < 50 ){
+        $('#total_unread_count').removeClass('badge-success');
+        $('#total_unread_count').removeClass('badge-important');
+        $('#total_unread_count').addClass('badge-warning');
+    }
+
+    else {
+        $('#total_unread_count').removeClass('badge-success');
+        $('#total_unread_count').removeClass('badge-warning');
+        $('#total_unread_count').addClass('badge-important');
+    }
+}
 
 // Ajouter le tag au DOM
 function add_tag_to_dom(nom, id) {
