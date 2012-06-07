@@ -1,5 +1,5 @@
-<?php 
-	render_partial('header', null); 
+<?php
+	render_partial('header', null);
 	render_partial('menu', array('active' => 'report'));
 ?>
 
@@ -30,7 +30,7 @@
 			<p>
 				Nous avons choisi de nous baser sur le framework Pokemon que nous avons étudié en TD/TP, pour sa simplicité, sa modularité et son extensibilité.<br />
 				Ce choix nous a permis de découper efficacement les traitements de l'application en isolant la manipulation des données, l'interface utilisateur et la communication des ces deux élements, selon les préceptes du patron de conception <acronym title="Modèle Vue Contrôleur">MVC</acronym>.<br />
-				Cette architecture nous offre la possibilité de proposer des vues différentes selon l'utilisateur en considérant le même jeu de données, collant ainsi au plus près de ses besoins.<br /> 
+				Cette architecture nous offre la possibilité de proposer des vues différentes selon l'utilisateur en considérant le même jeu de données, collant ainsi au plus près de ses besoins.<br />
 				Aussi, une <a href="developers">API</a> claire et complète est disponible dans le but de permettre à tous de communiquer avec l'application comme bon lui semble; cela permet surtout la création d'applications multi-plateformes.<br />
 				Enfin, une attention particulière a été portée sur le modèle de l'application, c'est à dire la manipulation des données en base. Une architecture modulaire d'accès à ces dernières a donc été mise en place.
 			</p>
@@ -55,10 +55,10 @@
 			<p>
 				La structure de la base de données nous a tout particulièrement occupés, car nous nous appuyons au maximum sur ses fonctionnalités afin de décharger le code métier de certaines lourdeurs.
 				Certaines opérations sont ainsi effectuées sans subir de vérification au préalable par le code PHP, les contraintes étant gérées par la base de données plus efficacement.
-				De plus, nous utilisons des décelencheurs - ou triggers - afin d'automatiser des insertions ou suppressions dans la base de données. Cela nous permet de clarifier le code PHP tout en nous permettant de respecter automatiquement les contraintes d'intégrité.
+				De plus, nous utilisons des déclencheurs - ou triggers - afin d'automatiser des insertions ou suppressions dans la base de données. Cela nous permet de clarifier le code PHP tout en nous permettant de respecter automatiquement les contraintes d'intégrité.
 			</p>
 
-			
+
 			<h1>Gestion de projet</h1>
 			<p>
 				Nous avons utilisé SVN pour synchroniser notre code et travailler à plusieurs.
