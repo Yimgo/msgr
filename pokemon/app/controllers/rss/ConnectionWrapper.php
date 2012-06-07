@@ -395,6 +395,20 @@ class ConnectionWrapper {
 		return $donnees['id'];
 	}
 
+	public function folderIsEmpty($dossier_id) {
+		$statement = $this->connection->prepare('SELECT * FROM abonnement WHERE dossier_id = :dossier_id;');
+		$statement->bindParam(':dossier_id', $dossier_id);
+		if ($statement->execute() === FALSE) {
+			return False;
+		}
+		if ($statement->fetch() === FALSE) {
+			$result = array("FolderEmpty" => TRUE);
+		} else {
+			$result = array("FolderEmpty" => FALSE);
+		}
+		return $result;
+	}
+
 	public function getNbTotalArticles($flux_id) {
 		$statement = $this->connection->prepare('SELECT * FROM article WHERE flux_id = :flux_id;');
 		$statement->bindParam(':flux_id', $flux_id);

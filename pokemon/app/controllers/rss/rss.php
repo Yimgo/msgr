@@ -339,17 +339,24 @@ class RssController extends BaseController {
 		$this->redirect_to("listing");
 	}
 
-
-
-
-	/* folders() displays folders management interface, which allows user to add, rename or delete folders */
+	/* 
+	 * folders() displays folders management interface, which allows user to add, rename or delete folders 
+	 * POST parameter awaited:
+	 * 	delete_confirmed (optional)
+	 */
 	public function folders($route, $params) {
 		$folder=$this->getConnectionWrapper()->getFolders($this->session_get("user_id", null));
-		if ($this->session_get("folder_suppress_error", null) === null) {
-			$this->render_view("folders", array("Folders" => $folder, "State" => "ok"));
+
+		if(isset($params['delete_confirmed'])) {
+			$this->session_set("delete_folder_anyway",TRUE);
+			$this->redirect_to("delete_folder");
+		}
+
+		if ($this->session_get("folder_not_empty", null) !== null) {
+			$this->session_unset_var('folder_not_empty');
+			$this->render_view("folders", array("Folders" => $folder, "State" => "confirm_delete"));
 		} else {
-			$this->session_unset_var('folder_suppress_error');
-			$this->render_view("folders", array("Folders" => $folder, "State" => "error"));
+			$this->render_view("folders", array("Folders" => $folder, "State" => "ok"));
 		}
 	}
 
@@ -374,8 +381,15 @@ class RssController extends BaseController {
 		}
 		$folder_id = $params['id'];
 
-		if ($this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id) === FALSE) {
-			$this->session_set("folder_suppress_error", TRUE);
+		if ($this->session_get("delete_folder_anyway", null) !== null) {
+			$this->session_unset_var('delete_folder_anyway');
+			$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id);
+		} else {
+			if ($this->getConnectionWrapper()->folderIsEmpty($folder_id)["FolderEmpty"] === FALSE) {
+				$this->session_set("folder_not_empty", TRUE);
+			} else {
+				$this->getConnectionWrapper()->deleteFolder($this->session_get("user_id", null),$folder_id);
+			}
 		}
 		$this->redirect_to("folders");
 	}
