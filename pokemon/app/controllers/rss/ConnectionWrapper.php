@@ -315,7 +315,7 @@ class ConnectionWrapper {
 		$statement->closeCursor();
 		return $exist;
 	}
-	
+
 	public function updateFlux() {
 		$statement = $this->connection->prepare('SELECT url, id FROM flux;');
 		if ($statement->execute() === FALSE) {
@@ -598,7 +598,7 @@ EOD
 
 		return $articles;
 	}
-	
+
 	public function getSearchedArticles($user_id, $tags, $search) {
 		$searchRequest = <<<EOD
 SELECT DISTINCT article_lecture.id id, article_lecture.description description, article_lecture.contenu contenu, article_lecture.titre titre, article_lecture.url url, article_lecture.lu lu, article_lecture.favori favori, article_lecture.date date
@@ -662,6 +662,53 @@ EOD;
 		}
 
 		return $articles;
+	}
+
+	/*
+	 * Returns a OPML export as as string of all the users feeds
+	 */
+	public function opml_export($user_id) {
+		$opml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+		$opml .= '<opml version="1.0">' . PHP_EOL;
+		$opml .= '<head>Export de Monsignor</head>' . PHP_EOL;
+		$opml .= '<body>' . PHP_EOL;
+
+		$request = <<<EOD
+SELECT dossier.nom dossier_nom, dossier.id dossier_id, flux.url flux_url, flux.nom flux_nom
+FROM abonnement, flux, dossier
+WHERE abonnement.user_id = :user_id AND flux.id = abonnement.flux_id AND dossier.id = abonnement.dossier_id
+ORDER BY dossier.id
+EOD;
+		$selectAllArticles = $this->connection->prepare($request);
+		$selectAllArticles->bindParam(':user_id', $user_id);
+
+		if ($selectAllArticles->execute() === FALSE)
+			return "";
+
+		$last_folder_id = -1;
+		$first_folder = true;
+		while ($row = $selectAllArticles->fetch()) {
+			$row["flux_url"] = preg_replace("/feed/", "http", $row["flux_url"], 1);
+
+			if ($first_folder) {
+				$first_folder = false;
+				$last_folder_id = $row["dossier_id"];
+				$opml .= '<outline title="' . $row["dossier_nom"] .'" text="' . $row["dossier_nom"] .'">';
+			}
+
+			if ($last_folder_id != $row["dossier_id"]) {
+				$opml .= '</outline>';
+				$opml .= '<outline title="' . $row["dossier_nom"] .'" text="' . $row["dossier_nom"] .'">';
+			}
+			$opml .= '<outline title="' . $row["flux_nom"] . '" text="' . $row["flux_nom"] . '" ';
+			$opml .= 'type="rss" xmlUrl="' . $row["flux_url"] . '" htmlUrl="' . $row["flux_url"] . '" />'  . PHP_EOL;
+		}
+
+		$opml .= '</outline>';
+		$opml .= '</body>' . PHP_EOL;
+		$opml .= '</opml>' . PHP_EOL;
+
+		return $opml;
 	}
 }
 ?>

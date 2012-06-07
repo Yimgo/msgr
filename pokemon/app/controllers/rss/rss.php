@@ -497,6 +497,13 @@ class RssController extends BaseController {
 	public function developers($route) {
 		$this->render_view('developers', null);
 	}
+
+	/*
+	 * Exports to OPML the user's feeds list
+	 */
+	public function opml($route) {
+		echo $this->getConnectionWrapper()->opml_export($this->session_get("user_id", null));
+	}
 }
 
 ?>
