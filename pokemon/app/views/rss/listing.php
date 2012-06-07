@@ -12,7 +12,6 @@
                 <div class="input-append">
                     <input id="form_add_flux_URL" name="url" type="text" placeholder="Saisir une URL" class="span3" autocomplete="off" />
                     <button type="submit" class="btn" ><i class="icon-plus-sign"></i></button>
-                    <a id='refresh_liste_flux' href='#' class='btn pull-right'><i class='icon-refresh'></i></a>
                 </div>
             </form>
         </div>
