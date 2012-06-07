@@ -266,26 +266,6 @@ class RssController extends BaseController {
 	}
 
 	/*
-	 * add_commentaire() allows user to add a comment related to a specified feed.
-	 * POST parameters awaited:
-	 *	article_id
-	 *	commentaire: content
-	 */
-	public function add_commentaire($route, $params) {
-		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params['article_id'], htmlspecialchars($params['commentaire']));
-		$this->redirect_to('article/'.$params['article_id'].'#comments');
-	}
-
-	/*
-	 * get_commentaires() returns all comments related to a specified feed.
-	 * GET parameters awaited:
-	 *	0: article id
-	 */
-	public function get_commentaires($route) {
-		echo json_encode($this->getConnectionWrapper()->getCommentaires($route[0]));
-	}
-
-	/*
 	 * parse_single_feed() allows user to add a new feed.
 	 * The new feed is added to 'Non classé' folder by default.
 	 * A new suscribtion is also added.
@@ -341,6 +321,8 @@ class RssController extends BaseController {
 	public function update_flux($route) {
 		$this->getConnectionWrapper()->updateFlux();
 	}
+
+
 
 
 	/* folders() displays folders management interface, which allows user to add, rename or delete folders */
@@ -445,6 +427,8 @@ class RssController extends BaseController {
 	}
 
 
+
+
 	/*
 	 * article() displays article interface, which allows user to manage tags and post comments.
 	 * GET parameter awaited:
@@ -456,6 +440,29 @@ class RssController extends BaseController {
 		$params['comments'] = $this->getConnectionWrapper()->getCommentaires($route[0]);
 		$this->render_view('article', $params);
 	}
+	
+	/*
+	 * add_commentaire() allows user to add a comment related to a specified feed.
+	 * POST parameters awaited:
+	 *	article_id
+	 *	commentaire: content
+	 */
+	public function add_commentaire($route, $params) {
+		$this->getConnectionWrapper()->addCommentaire($this->session_get("user_id", null),$params['article_id'], htmlspecialchars($params['commentaire']));
+		$this->redirect_to('article/'.$params['article_id'].'#comments');
+	}
+
+	/*
+	 * get_commentaires() returns all comments related to a specified feed.
+	 * GET parameters awaited:
+	 *	0: article id
+	 */
+	public function get_commentaires($route) {
+		echo json_encode($this->getConnectionWrapper()->getCommentaires($route[0]));
+	}
+
+
+
 
 	/*
 	 * Displays the final report about this project.
@@ -463,6 +470,9 @@ class RssController extends BaseController {
 	public function report($route) {
 		$this->render_view('report', null);
 	}
+	
+	
+	
 
 	/*
 	 * Displays the report about the developers API.
