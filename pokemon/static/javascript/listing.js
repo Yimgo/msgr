@@ -60,6 +60,12 @@ $(document).ready(function() {
             tags_id.push($(this).data('id'));
         });
 
+        // Reset the list of hidden inputs
+        $('#form-search input:hidden').remove();
+
+        $('#pagin-left').hide();
+        $('#pagin-right').hide();
+
         if (tags_id.length > 0) {
             $('#form-search').append(
                 $("<input>")
@@ -68,6 +74,13 @@ $(document).ready(function() {
                     .val(tags_id)
             );
         }
+
+        $.getJSON("/pokemon/rss/search",
+                  $('#form-search').serialize(),
+                  process_search_results
+        );
+
+        return false; // Do not use standard HTML form validation process
      });
 
     // Empecher d'ajouter un flux quand l'URL est vide
@@ -92,6 +105,14 @@ $(document).ready(function() {
         get_liste_article(flux_courant);
     });
 });
+
+
+function process_search_results(data) {
+    $('#flux_container').empty();
+    $.each(data, function(index, elem) {
+        add_article_to_dom(elem.id, elem.titre, elem.description, elem.favori, elem.lu, elem.tags, elem.url, elem.date);
+    });
+}
 
 /* --------------------------------
    GESTION DE LA LISTE DES ARTICLES
