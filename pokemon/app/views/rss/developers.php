@@ -79,6 +79,9 @@
 					<dt>Paramètres GET</dt>
 					<dd><em>0</em>: Recherche texte</dd>
 					<dd><em>1</em>: Liste des tags, séparés par des virgules (optionnel)</dd>
+					<dt>Paramètres Route</dt>
+					<dd><em>0</em>: Offset (optionnel)</dd>
+					<dd><em>1</em>: Nombre d'articles à récupérer (optionnel)</dd>
 				</dl>
 			</p>
 			<h3>Tags</h3>
@@ -110,7 +113,7 @@
 					<dd>get_articles</dd>
 					<dt>Description<dt>
 					<dd>Récupération de la liste des articles pour un flux spécifié, avec pagination</dd>
-					<dt>Paramètres GET</dt>
+					<dt>Paramètres Route</dt>
 					<dd><em>0</em>: feed id</dd>
 					<dd><em>1</em>: offset (optionnel)</dd>
 					<dd><em>2</em>: nombre d'articles à afficher (optionnel)</dd>
@@ -123,7 +126,7 @@
 					<dd>get_latest_articles</dd>
 					<dt>Description<dt>
 					<dd>Récupération de la liste des derniers articles non lus</dd>
-					<dt>Paramètres GET</dt>
+					<dt>Paramètres Route</dt>
 					<dd><em>0</em>: offset (optionnel)</dd>
           <dd><em>1</em>: nombre d'articles à afficher (optionnel)</dd>
 				</dl>
@@ -172,7 +175,7 @@
 					<dd>get_favorite_articles</dd>
 					<dt>Description<dt>
 					<dd>Récupération de la liste des articles favoris</dd>
-					<dt>Paramètres GET</dt>
+					<dt>Paramètres Route</dt>
 					<dd><em>0</em>: offset (optionnel)</dd>
           <dd><em>1</em>: nombre d'articles à afficher (optionnel)</dd>
 				</dl>
