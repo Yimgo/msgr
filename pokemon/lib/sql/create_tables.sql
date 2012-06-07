@@ -23,9 +23,9 @@ CREATE TABLE abonnement (
     user_id INT(10),
     dossier_id INT(10),
     flux_id INT(10),
-    PRIMARY KEY (dossier_id, flux_id, user_id),
+    PRIMARY KEY (flux_id, user_id),
     FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (dossier_id) REFERENCES dossier(id),
+    FOREIGN KEY (dossier_id) REFERENCES dossier(id) ON DELETE CASCADE,
     FOREIGN KEY (flux_id) REFERENCES flux(id)
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE map_tag_article (
     tag_id INT(10),
     PRIMARY KEY (article_id, tag_id),
     FOREIGN KEY (article_id) REFERENCES article(id),
-    FOREIGN KEY (tag_id) REFERENCES tag(id)
+    FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
 );
 
 CREATE TABLE lecture (
@@ -70,6 +70,7 @@ CREATE TABLE commentaire (
     date DATETIME NOT NULL,
     user_id INT(10) NOT NULL,
     article_id INT(10) NOT NULL,
+    PRIMARY KEY (date, user_id, article_id),
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (article_id) REFERENCES article(id)
 );
