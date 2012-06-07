@@ -280,7 +280,9 @@ function get_liste_article(flux_id) {
         // Aucun article à charger
         if (data.length == 0) {
             $("#liste_flux_fin").show();
-            $('#pagin-left').show();
+
+            if (page_courante > 0)
+                $('#pagin-left').show();
             $('#pagin-right').hide();
             return;
         }
