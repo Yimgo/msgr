@@ -698,6 +698,7 @@ EOD;
 
 			if ($last_folder_id != $row["dossier_id"]) {
 				$opml .= '</outline>';
+				$last_folder_id = $row["dossier_id"];
 				$opml .= '<outline title="' . $row["dossier_nom"] .'" text="' . $row["dossier_nom"] .'">';
 			}
 			$opml .= '<outline title="' . $row["flux_nom"] . '" text="' . $row["flux_nom"] . '" ';
