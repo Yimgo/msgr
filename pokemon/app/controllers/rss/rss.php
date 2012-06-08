@@ -237,6 +237,14 @@ class RssController extends BaseController {
 		echo json_encode($this->getConnectionWrapper()->getFavoriteArticles($this->session_get('user_id', null), $begin, $count));
 	}
 
+	public function mark_all_as_read($route, $params) {
+		if(!isset($params["flux_id"]) {
+			$params["flux_id"] = "";
+		}
+
+		$this->getConnectionWrapper()->markAllAsRead($this->session_get('user_id', null), $params["flux_id"]);
+	}
+
 	/*
 	 * set_tag() allows current user to tag or untag the specified article with the specified tag.
 	 * POST parameters awaited:
