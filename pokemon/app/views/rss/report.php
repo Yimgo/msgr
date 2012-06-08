@@ -23,7 +23,7 @@
 			<p>
 				Chaque utilisateur possède son propre compte sur le site et gère ses abonnements indépendamment des autres utilisateurs.
 				Par défaut, une vue des dix derniers articles non lus est affichée, mais l'utilisateur peut classer ses flux dans des dossiers, qu'il gère comme il l'entend.
-				Chaque article a un état <em>lu ou non lu</em> et la possibilité d'être marqué comme <em>favori</em>. De plus, chaque article peut être marqué d'un certain nombre de <em>tags</em>. Ces tags sont spécifiques à chaque utilisateur, ce qui lui permet d'effectuer son propre classement.
+				Chaque article a un état <em>lu ou non lu</em> et la possibilité d'être marqué comme <em>favori</em>. De plus, chaque article peut être marqué d'un certain nombre de <em>tags</em>. Ces tags sont spécifiques à chaque utilisateur, ce qui lui permet d'effectuer son propre classement. L'utilisateur peut également effectuer une recherche en texte plein ou en spécifiant une liste de <em>tags</em> associés aux articles désirés.
 			</p>
 
 			<h1>Architecture</h1>
@@ -31,7 +31,7 @@
 				Nous avons choisi de nous baser sur le framework Pokemon que nous avons étudié en TD/TP, pour sa simplicité, sa modularité et son extensibilité.<br />
 				Ce choix nous a permis de découper efficacement les traitements de l'application en isolant la manipulation des données, l'interface utilisateur et la communication des ces deux élements, selon les préceptes du patron de conception <acronym title="Modèle Vue Contrôleur">MVC</acronym>.<br />
 				Cette architecture nous offre la possibilité de proposer des vues différentes selon l'utilisateur en considérant le même jeu de données, collant ainsi au plus près de ses besoins.<br />
-				Aussi, une <a href="developers">API</a> claire et complète est disponible dans le but de permettre à tous de communiquer avec l'application comme bon lui semble; cela permet surtout la création d'applications multi-plateformes. Cette API REST repose sur les méthodes GET et PUT pour inter-agir avec les jeux de données qui sont retournés dans le format JSON, compréhensible par une multitude de langages de programmation.<br />
+				Aussi, une <a href="developers">API</a> claire et complète est disponible dans le but de permettre à tous de communiquer avec l'application comme bon lui semble; cela permet surtout la création d'applications multi-plateformes. Cette API REST repose sur les méthodes GET et POST pour inter-agir avec les jeux de données qui sont retournés dans le format JSON, compréhensible par une multitude de langages de programmation.<br />
 				Enfin, une attention particulière a été portée sur le modèle de l'application, c'est à dire la manipulation des données en base. Une architecture modulaire d'accès à ces dernières a donc été mise en place.
 			</p>
 
@@ -61,12 +61,12 @@
 
 			<h1>Gestion de projet</h1>
 			<p>
-				Nous avons dès le début du projet décidé d'utiliser des outils de travail collaboratif afin de pouvoir travailler le plus efficacement possible sur notre projet. Pour cela, nous avons créÉ un projet <strong>Google Code Project</strong> qui nous permet d'avoir plusieurs outils de gestion de projet informatique et de travail collaboratif : une partie wiki pour mettre de la documentation, un serveur svn pour héberger le code du projet, et une partie bugtracker permettant de déclarer des bugs et de les assigner à une personne du groupe en fonction de la nature du bug. En effet, chacun des membres de notre équipe s'est spécialisé dans un aspect ou une fonctionnalité de notre site web. Ainsi, la répartition du travail s'est fait comme suit :
+				Nous avons dès le début du projet décidé d'utiliser des outils de travail collaboratif afin de pouvoir travailler le plus efficacement possible sur notre projet. Pour cela, nous avons créé un projet <strong>Google Code</strong> qui nous permet d'avoir plusieurs outils de gestion de projet informatique et de travail collaboratif : une partie wiki pour mettre de la documentation, un serveur svn pour héberger le code du projet, et une partie bugtracker permettant de déclarer des bugs et de les assigner à une personne du groupe en fonction de la nature du bug. En effet, chacun des membres de notre équipe s'est spécialisé dans un aspect ou une fonctionnalité de notre site web. Ainsi, la répartition du travail s'est fait comme suit :
 				<ul>
 					<li>Guillaume Burel : développement de la partie connection à la base de données (utilisation de PDO et développement d'un Wrapper SQL permettant d'éxécuter des requêtes SQL) ainsi que la création de la base SQL.</li>
 					<li>Paul Mougel : développement de la partie interface graphique du site web (vues en PHP, HTML et Javascript).</li>
-					<li>Idris Daikh : développement et implémentation d'un parser de flux RSS. L'implémentation s'étant faite à l'aide d'une librairie qu'il a fallu débuguer et integrer au code de notre site Web.</li>
-					<li>Antoine Allard et Ouassim Karrakchou : réalisation des fonctions du controlleur et celles du Wrapper exécutant les requêtes SQL, ainsi que tests et déclarations de bugs.</li>
+					<li>Idris Daikh : développement et implémentation d'un parser de flux RSS. L'implémentation s'étant faite à l'aide d'une bibliothèque qu'il a fallu débuguer et integrer au code de notre site Web.</li>
+					<li>Antoine Allard et Ouassim Karrakchou : réalisation des fonctions du contrôleur et celles du Wrapper exécutant les requêtes SQL, ainsi que tests et déclarations de bugs.</li>
 				</ul>
 				La spécialisation de chacun des membres du projet dans un aspect du développement nous a permis de rapidement commencer le développement car chacun était conscient de la tâche qu'il avait à accomplir.
 			</p>
