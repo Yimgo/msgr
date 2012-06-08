@@ -487,6 +487,15 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
                         return false;
                     })
             )
+				.append($('<td>')
+                .append($('<i>', {'class': 'icon-ok-circle'}))
+                .click(function() {
+                        $.post('/pokemon/rss/mark_all_as_read', {'flux_id' : id}, function() {
+                            location.reload();
+                        });
+                        return false;
+                    })
+            )
         .appendTo('#liste_flux')
     ;
 }
