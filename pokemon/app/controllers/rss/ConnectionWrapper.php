@@ -762,7 +762,7 @@ EOD;
 	}
 
 	public function markAllAsRead($user_id, $flux_id) {
-	$statement = $this->connection->prepare('UPDATE lecture SET lu=1 WHERE user_id = :user_id AND article_id IN(SELECT article_id FROM article WHERE flux_id=:flux_id);');
+	$statement = $this->connection->prepare('UPDATE lecture SET lu=1 WHERE user_id = :user_id AND article_id IN(SELECT id FROM article WHERE flux_id=:flux_id);');
     $statement->bindParam(':flux_id', $flux_id);
     $statement->bindParam(':user_id', $user_id);
     if ($statement->execute() === FALSE) {
