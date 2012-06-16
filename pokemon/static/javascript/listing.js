@@ -452,7 +452,7 @@ function get_liste_flux() {
 // Ajouter un dossier au tableau contenant la liste des dossiers + flux
 function add_dossier_to_dom(nom) {
     $('<tr>', { class: 'dossier' })
-        .append($('<td>', {colspan: 3, style: 'text-align: center; background-color: #eee;'})
+        .append($('<td>', {colspan: 4, style: 'text-align: center; background-color: #eee;'})
                 .append($('<i>', {class: 'icon-folder-open pull-left'}))
                 .append($('<b>', {html : nom}))
                )
@@ -476,9 +476,6 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
         .click(click_flux)
         .append($('<td>', {'html' : titre }))
         .append($('<td>')
-                .append($('<span>', {'class': 'badge ' + type_badge, 'html':nb_nonlus}))
-               )
-        .append($('<td>')
                 .append($('<i>', {'class': 'icon-minus-sign'}))
                 .click(function() {
                         $.post('/pokemon/rss/delete_abonnement', {'flux_id' : id}, function() {
@@ -496,6 +493,9 @@ function add_flux_to_dom(titre, nb_nonlus, id) {
                         return false;
                     })
             )
+        .append($('<td>')
+                .append($('<span>', {'class': 'badge ' + type_badge, 'html':nb_nonlus}))
+               )
         .appendTo('#liste_flux')
     ;
 }

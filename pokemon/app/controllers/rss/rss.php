@@ -238,7 +238,7 @@ class RssController extends BaseController {
 	}
 
 	public function mark_all_as_read($route, $params) {
-		if(!isset($params["flux_id"]) {
+		if(!isset($params["flux_id"])) {
 			$params["flux_id"] = "";
 		}
 
