@@ -16,7 +16,7 @@ function route_for_request_path($path)
 		$ROUTES['current']['id'] = explode('/', $array[2]);
 	else
 		$ROUTES['current']['id'] = array();
-	
+
 	
 	return $ROUTES['current'];
 }
@@ -25,19 +25,19 @@ function route_to($route)
 {
 	global $ROUTES;
   
-	if (!file_exists('app/controllers/'.$route['controller'].'/'.$route['controller'].'.php'))
+	if (!file_exists('app/controllers/' . $route['controller'] . '/' . $route['controller'] . '.php'))
 	{
 		$route = $ROUTES['default'];
 	}
 
-	require_once('app/controllers/'.$route['controller'].'/'.$route['controller'].'.php');
+	require_once('app/controllers/'. $route['controller'] . '/' . $route['controller'] . '.php');
 
 	/* Determining class name. eg. sample => SampleController */
-	$className = ucfirst($route['controller']).'Controller';
+	$className = ucfirst($route['controller']) . 'Controller';
 
 	$controller = new $className();
 
-	if (method_exists($controller, $route["action"])) {
+	if (method_exists($controller, $route['action'])) {
 		$post_params = (isset($_POST) && !empty($_POST)) ? $_POST : array();
 
 		$controller->$route['action']($route['id'], $post_params);
