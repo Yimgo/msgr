@@ -4,49 +4,43 @@ require_once "conf/routes.php";
 
 function route_for_request_path($path)
 {
-	$array=explode("/",$path,3);
-	if ((array_key_exists(0,$array)==false)||(array_key_exists(1,$array)==false)){
-		return "error";
-	}elseif (array_key_exists(2,$array)==false){
-		return	array(
-				"controller"=>$array[0],
-				"action"=>$array[1]
-			);
-	}else{
-		return	array(
-				"controller"=>$array[0],
-				"action"=>$array[1],
-				"id"=>explode("/", $array[2])
-			);
-	}
+	global $ROUTES;
+
+	$array = explode('/', $path, 3);
+	if ($array === FALSE || empty($array) || !array_key_exists(0, $array) || !array_key_exists (1, $array))
+		return $ROUTES['default'];
+
+	$ROUTES['current']['controller'] = $array[0];
+	$ROUTES['current']['action'] = $array[1];
+	if (array_key_exists(2,$array))
+		$ROUTES['current']['id'] = explode('/', $array[2]);
+	else
+		$ROUTES['current']['id'] = array();
+	
+	
+	return $ROUTES['current'];
 }
 
 function route_to($route)
 {
-	$controller_path="app/controllers/".$route["controller"]."/".$route["controller"].".php";
-	if (file_exists($controller_path)){
-		require_once $controller_path;
-		$class_name=ucwords($route["controller"]."Controller");
-		$controlleur=new $class_name;
-		if (method_exists($controlleur,$route["action"])){
-			if (isset($route["id"])){
-				if(isset($_POST) && !empty($_POST)) {
-				  $controlleur->$route["action"]($route["id"], $_POST);
-				} else {
-				  $controlleur->$route["action"]($route["id"], array());
-				}
-			}else{
-				if(isset($_POST) && !empty($_POST)) {
-					$controlleur->$route["action"](null, $_POST);
-				} else {
-					$controlleur->$route["action"](null, array());
-				}
-			}
-		} else {
-			require_once "static/html/404.php";
-		}
-	}else{
-		require_once "static/html/404.php";
+	global $ROUTES;
+  
+	if (!file_exists('app/controllers/'.$route['controller'].'/'.$route['controller'].'.php'))
+	{
+		$route = $ROUTES['default'];
+	}
+
+	require_once('app/controllers/'.$route['controller'].'/'.$route['controller'].'.php');
+
+	/* Determining class name. eg. sample => SampleController */
+	$className = ucfirst($route['controller']).'Controller';
+
+	$controller = new $className();
+
+	if (method_exists($controller, $route["action"])) {
+		$post_params = (isset($_POST) && !empty($_POST)) ? $_POST : array();
+
+		$controller->$route['action']($route['id'], $post_params);
 	}
 }
 

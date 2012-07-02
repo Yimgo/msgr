@@ -2,5 +2,5 @@
   RewriteEngine on
   RewriteBase /pokemon
   RewriteCond %{REQUEST_URI} !^/pokemon/static(.*)$
-  RewriteRule ^(.*)$ index.php?request_path=$1 [QSA]
+  RewriteRule ^(.*)$ index.php?REQUEST_PATH=$1 [QSA]
 </IfModule>

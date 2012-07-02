@@ -1,10 +1,12 @@
 <?php
 
-$ROUTES = array(
-    "//TODO" => array(),
-    "//TODO" => array("controller", "action", "id"),
-);
+$DEFAULT_ROUTE = array(
+	'controller' => 'sample', 'action' => 'index', 'id' => array());
 
-$DEFAULT_ROUTE = array("send_redirect" => true, "controller" => "sample", "action" => "index");
+$ROUTES = array(
+    'default' => $DEFAULT_ROUTE,
+    'keys' => array('controller', 'action', 'id'),
+    'current' => array()
+);
 
 ?>
