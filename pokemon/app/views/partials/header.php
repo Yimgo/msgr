@@ -8,8 +8,8 @@
         <meta name="author" content="">
 
         <!-- Le styles -->
-        <link href="/pokemon/static/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="/pokemon/static/css/style.css" rel="stylesheet">
+        <link href="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/static/css/style.css" rel="stylesheet">
         <style>
             body {
                 padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */

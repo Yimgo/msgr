@@ -87,5 +87,5 @@ if ($params["State"]==="ok"){
 </div>
 
 <?php render_partial("includes_js", null); ?>
-<script src="/pokemon/static/javascript/tags.js"></script>
+<script src="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/static/javascript/tags.js"></script>
 <?php render_partial("footer", null); ?>

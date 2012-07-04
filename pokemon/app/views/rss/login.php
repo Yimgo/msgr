@@ -65,7 +65,7 @@ else if ($params['type'] == 'signup') {
                             <strong>Erreur</strong> lors de la connexion !
                         </div>
 
-                        <form class="form-horizontal well" method="POST" action="/pokemon/rss/login">
+                        <form class="form-horizontal well" method="POST" action="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/rss/login">
                             <fieldset>
                                 <legend>Connectez-vous...</legend>
 
@@ -95,7 +95,7 @@ else if ($params['type'] == 'signup') {
                             <strong>Erreur</strong> lors de l'inscription !
                         </div>
 
-                        <form class="form-horizontal well" method="POST" action="/pokemon/rss/signup">
+                        <form class="form-horizontal well" method="POST" action="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/rss/signup">
                             <fieldset>
                                 <legend>Inscrivez-vous !</legend>
 

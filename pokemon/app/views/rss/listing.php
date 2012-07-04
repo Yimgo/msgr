@@ -8,7 +8,7 @@
     <div class="row">
         <!-- Ajouter Abonnement -->
         <div class="span4">
-            <form method="POST" action="/pokemon/rss/parse_single_feed" id="form_add_flux">
+            <form method="POST" action="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/rss/parse_single_feed" id="form_add_flux">
                 <div class="input-append">
                     <input id="form_add_flux_URL" name="url" type="text" placeholder="Saisir une URL" class="span3" autocomplete="off" />
                     <button type="submit" class="btn" ><i class="icon-plus-sign"></i></button>
@@ -17,7 +17,7 @@
         </div>
         <!-- Recherche -->
         <div class="span8">
-            <form class="form-search" action="/pokemon/rss/search" id="form-search" >
+            <form class="form-search" action="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/rss/search" id="form-search" >
                 <div class="input-append input-prepend">
                     <span id="tag-list"></span>
                     <input type="text" id="search" name="search" class="search-query typeahead" data-items="4" autocomplete="off" />
@@ -82,5 +82,5 @@
 </div>
 
 <?php render_partial("includes_js", null); ?>
-<script src="/pokemon/static/javascript/listing.js"></script>
+<script src="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/static/javascript/listing.js"></script>
 <?php render_partial("footer", null); ?>

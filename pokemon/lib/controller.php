@@ -7,7 +7,7 @@ function render_partial($name, $params)
 
 function link_to_css($name)
 {
-	echo "<link rel=\"stylesheet\" href=\"/pokemon/static/css/$name.css\" />\n";
+	echo '<link rel="stylesheet" href="' . $GLOBALS['POKEMON_ROOT'] . '/static/css/' . $name . '.css" />' . PHP_EOL;
 }
 
 class BaseController
@@ -60,9 +60,7 @@ class BaseController
 	{
 		$controller_name = explode('controller', strtolower(get_class($this)));
 		$root = $GLOBALS['POKEMON_ROOT'];
-		if (substr($root, -1) != '/')
-			$root .= '/';
-		header("Location: $root" . $controller_name[0] . "/$action");
+		header('Location: ' . $GLOBALS['POKEMON_ROOT'] . '/' . $controller_name[0] . "/$action");
 		exit;
 	}
 }

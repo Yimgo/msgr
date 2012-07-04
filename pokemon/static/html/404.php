@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <meta charset="utf-8" />
-<link rel="stylesheet" href="/pokemon/static/css/style.css" />
+<link rel="stylesheet" href="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/static/css/style.css" />
 
 <style>
 	h1,p{
@@ -20,7 +20,7 @@
         The resource could not be found
     </p>
     <br />
-    <p><img src = "/pokemon/static/images/sad.jpg"></p>
+    <p><img src = "<?php echo $GLOBALS['POKEMON_ROOT']; ?>/static/images/sad.jpg"></p>
 
 </body>
 

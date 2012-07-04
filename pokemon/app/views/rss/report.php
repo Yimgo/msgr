@@ -39,7 +39,7 @@
 
 			<p>
 				Le schéma utilisé par notre application est le suivant (<em>en gras, la clé primaire de chaque table</em>) :
-				<img src="/pokemon/static/images/bdd.png" />
+				<img src="<?php echo $GLOBALS['POKEMON_ROOT']; ?>/static/images/bdd.png" />
 			</p>
 
 			<p>
