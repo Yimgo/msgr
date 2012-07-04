@@ -5,14 +5,20 @@ require_once "conf/routes.php";
 function route_for_request_path($path)
 {
 	global $ROUTES;
+	global $DEFAULT_ACTION;
 
 	$array = explode('/', $path, 3);
-	if ($array === FALSE || empty($array) || !array_key_exists(0, $array) || !array_key_exists (1, $array))
+	if ($array === FALSE || empty($array) || !array_key_exists(0, $array) || empty($array[0]))
 		return $ROUTES['default'];
 
 	$ROUTES['current']['controller'] = $array[0];
-	$ROUTES['current']['action'] = $array[1];
-	if (array_key_exists(2,$array))
+
+	if (!array_key_exists (1, $array) || empty($array[1]))
+		$ROUTES['current']['action'] = $DEFAULT_ACTION;
+	else
+		$ROUTES['current']['action'] = $array[1];
+
+	if (array_key_exists(2,$array) && !empty($array[2]))
 		$ROUTES['current']['id'] = explode('/', $array[2]);
 	else
 		$ROUTES['current']['id'] = array();
